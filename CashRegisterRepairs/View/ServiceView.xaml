@@ -1,17 +1,52 @@
-﻿<UserControl x:Class="CashRegisterRepairShop.View.ServiceView"
+﻿<UserControl x:Class="CashRegisterRepairs.View.ServiceView"
+             xmlns:local="clr-namespace:CashRegisterRepairs.View"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CashRegisterRepairShop.View"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <!-- TextBoxes style-->
+        <Style x:Key="ProfileTextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="IsHitTestVisible" Value="{Binding IsFocusable}"/>
+            <Setter Property="IsReadOnly" Value="{Binding IsUnmodifable}"/>
+        </Style>
+        
+        <!-- Labels style -->
+        <Style x:Key="ProfileLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="40,0,0,0"/>
+            <Setter Property="FontWeight" Value="UltraBold"/>
+            <Setter Property="FontFamily" Value="Rockwell"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <!-- Buttons style -->
+        <Style x:Key="ProfileButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderBrush" Value="DarkGray"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="FontWeight" Value="UltraBold"/>
+        </Style>
+
+    </UserControl.Resources>
     <Grid>
         <Grid Background="PeachPuff">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="700"/>
+                <ColumnDefinition Width="650"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -22,26 +57,28 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Content="Фирма:" VerticalAlignment="Center" FontWeight="UltraBold" FontSize="12" FontFamily="Rockwell"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Height="30" Width="200" VerticalAlignment="Center" IsHitTestVisible="False" IsReadOnly="True" Text="{Binding SerName}" BorderBrush="Transparent" />
+            <Label Grid.Row="0" Grid.Column="0" Style="{DynamicResource ProfileLabelStyle}" Content="Фирма:" />
+            <TextBox Grid.Row="0" Grid.Column="1" Style="{DynamicResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Name}"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Content="Булстат:" VerticalAlignment="Center" FontWeight="UltraBold" FontSize="12" FontFamily="Rockwell"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Height="30" Width="200" VerticalAlignment="Center" IsHitTestVisible="False" IsReadOnly="True" Text="{Binding SerBulstat}" BorderBrush="Transparent" />
+            <Label Grid.Row="1" Grid.Column="0" Style="{DynamicResource ProfileLabelStyle}" Content="Булстат:"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Style="{DynamicResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Bulstat}"/>
 
-            <Label Grid.Row="2" Grid.Column="0" Content="Адрес:" VerticalAlignment="Center" FontWeight="UltraBold" FontSize="12" FontFamily="Rockwell"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Height="30" Width="200" VerticalAlignment="Center" IsHitTestVisible="False" IsReadOnly="True" Text="{Binding SerAddress}" BorderBrush="Transparent" />
+            <Label Grid.Row="2" Grid.Column="0" Style="{DynamicResource ProfileLabelStyle}" Content="Адрес:"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Style="{DynamicResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Address}"/>
 
-            <Label Grid.Row="3" Grid.Column="0" Content="Управител:" VerticalAlignment="Center" FontWeight="UltraBold" FontSize="12" FontFamily="Rockwell"/>
-            <TextBox Grid.Row="3" Grid.Column="1" Height="30" Width="200" VerticalAlignment="Center" IsHitTestVisible="False" IsReadOnly="True" Text="{Binding SerManager}" BorderBrush="Transparent" />
+            <Label Grid.Row="3" Grid.Column="0" Style="{DynamicResource ProfileLabelStyle}" Content="Управител:"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Style="{DynamicResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Manager}"/>
 
-            <Label Grid.Row="4" Grid.Column="0" Content="Телефон:" VerticalAlignment="Center" FontWeight="UltraBold" FontSize="12" FontFamily="Rockwell"/>
-            <TextBox Grid.Row="4" Grid.Column="1" Height="30" Width="200" VerticalAlignment="Center" IsHitTestVisible="False" IsReadOnly="True" Text="{Binding SerPhone}" BorderBrush="Transparent" />
+            <Label Grid.Row="4" Grid.Column="0" Style="{DynamicResource ProfileLabelStyle}" Content="Телефон:"/>
+            <TextBox Grid.Row="4" Grid.Column="1" Style="{DynamicResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Phone}"/>
 
             <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button Command="{Binding EditServiceInfoCommand}" FontWeight="UltraBold" Content="Отключи" Width="70" Margin="0,0,30,0"/>
-                <Button Command="{Binding SaveServiceInfoCommand}" FontWeight="UltraBold" Content="Запази" Width="70"/>
+                <Button Style="{DynamicResource ProfileButtonStyle}" Command="{Binding EnableEditingCommand}" Content="Отключи" Margin="0,0,30,0"/>
+                <Button Style="{DynamicResource ProfileButtonStyle}" Command="{Binding SaveServiceProfileCommand}" Content="Запази"/>
             </StackPanel>
-            <Image Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Source="/Resources/plus-icon.png"/>
+
+            <Image Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Source="{Binding ProfileDisplay.LocationImagePath}"/>
+            
         </Grid>
     </Grid>
 </UserControl>

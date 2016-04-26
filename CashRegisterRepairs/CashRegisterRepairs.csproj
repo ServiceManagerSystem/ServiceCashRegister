@@ -82,6 +82,7 @@
     <Compile Include="Utilities\ClientDisplay.cs" />
     <Compile Include="Utilities\DeviceDisplay.cs" />
     <Compile Include="Utilities\DocumentDisplay.cs" />
+    <Compile Include="Utilities\ServiceProfileDisplay.cs" />
     <Compile Include="Utilities\TransitionContext.cs" />
     <Compile Include="ViewModel\AddClientViewModel.cs" />
     <Compile Include="ViewModel\AddDeviceViewModel.cs" />

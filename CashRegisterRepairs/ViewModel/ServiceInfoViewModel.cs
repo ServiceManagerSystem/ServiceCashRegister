@@ -1,16 +1,17 @@
-﻿using System;
+﻿using CashRegisterRepairs.Utilities;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Windows.Input;
 
 namespace CashRegisterRepairs.ViewModel
 {
     public class ServiceInfoViewModel : INotifyPropertyChanged, IViewModel
     {
-        private readonly string serviceInfoConfigPath;
-        string[] configEntries;
-
+        private bool canExecute = true;
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propName = "")
         {
@@ -20,68 +21,95 @@ namespace CashRegisterRepairs.ViewModel
             }
         }
 
-        public ServiceInfoViewModel()
+        private ServiceProfileDisplay _profileDisplay;
+        public ServiceProfileDisplay ProfileDisplay
         {
-            serviceInfoConfigPath = ResolveAppPath() + @"\Resources\Service.txt";
-            LoadConfigFromFile();
-            DisplayInfo();
+            get { return _profileDisplay; }
+            set { _profileDisplay = value; NotifyPropertyChanged(); }
         }
 
-        private static string ResolveAppPath()
+        private readonly string serviceProfileFile;
+
+        public ServiceInfoViewModel()
+        {
+            serviceProfileFile = ResolveAppPath() + @"\Resources\Service.txt";
+
+            IsFocusable = false;
+            IsUnmodifable = true;
+
+            EnableEditingCommand = new TemplateCommand(EnableEditing, param => this.canExecute);
+            SaveServiceProfileCommand = new TemplateCommand(SaveServiceProfile, param => this.canExecute);
+
+            LoadServiceProfile();
+        }
+
+        private void SaveServiceProfile(object obj)
+        {
+            StringBuilder profileBuilder = new StringBuilder();
+            profileBuilder
+                .AppendLine(ProfileDisplay.Name)
+                .AppendLine(ProfileDisplay.Bulstat)
+                .AppendLine(ProfileDisplay.Address)
+                .AppendLine(ProfileDisplay.Manager)
+                .AppendLine(ProfileDisplay.Phone);
+
+            File.WriteAllText(serviceProfileFile, profileBuilder.ToString());
+        }
+
+        private void EnableEditing(object obj)
+        {
+            IsFocusable = true;
+            IsUnmodifable = false;
+        }
+
+        private void LoadServiceProfile()
+        {
+
+            string[] serviceProfileItems = File.ReadAllText(serviceProfileFile).Split('\n');
+
+            ProfileDisplay = new ServiceProfileDisplay();
+            ProfileDisplay.Name = serviceProfileItems[0];
+            ProfileDisplay.Bulstat = serviceProfileItems[1];
+            ProfileDisplay.Manager = serviceProfileItems[2];
+            ProfileDisplay.Address = serviceProfileItems[3];
+            ProfileDisplay.Phone = serviceProfileItems[4];
+        }
+
+        // May be move to a helper if you need to use it somewhere else
+        private string ResolveAppPath()
         {
             string assemblyPathNode = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             string binPathNode = Directory.GetParent(assemblyPathNode).FullName;
             return Directory.GetParent(binPathNode).FullName;
         }
 
-        private void LoadConfigFromFile()
+        private ICommand _enableEditingCommand;
+        public ICommand EnableEditingCommand
         {
-            string serviceInfoConf = File.ReadAllText(serviceInfoConfigPath);
-            configEntries = serviceInfoConf.Split('\n');
+            get { return _enableEditingCommand; }
+            set { _enableEditingCommand = value; }
         }
 
-        private string _serName;
-        public string SerName
+        private ICommand _saveServiceProfileCommand;
+        public ICommand SaveServiceProfileCommand
         {
-            get { return _serName; }
-            set { _serName = value; NotifyPropertyChanged(); }
+            get { return _saveServiceProfileCommand; }
+            set { _saveServiceProfileCommand = value; }
         }
 
-        private string _serBulstat;
-        public string SerBulstat
+        private bool _isUnmodifable;
+        public bool IsUnmodifable
         {
-            get { return _serBulstat; }
-            set { _serBulstat = value; NotifyPropertyChanged(); }
+            get { return _isUnmodifable; }
+            set { _isUnmodifable = value; NotifyPropertyChanged(); }
         }
 
-        private string _serManager;
-        public string SerManager
+        private bool _isFocusable;
+        public bool IsFocusable
         {
-            get { return _serManager; }
-            set { _serManager = value; NotifyPropertyChanged(); }
+            get { return _isFocusable; }
+            set { _isFocusable = value; NotifyPropertyChanged(); }
         }
 
-        private string _serAddress;
-        public string SerAddress
-        {
-            get { return _serAddress; }
-            set { _serAddress = value; NotifyPropertyChanged(); }
-        }
-
-        private string _serPhone;
-        public string SerPhone
-        {
-            get { return _serPhone; }
-            set { _serPhone = value; NotifyPropertyChanged(); }
-        }
-
-        private void DisplayInfo()
-        {
-            SerName = configEntries[0];
-            SerBulstat = configEntries[1];
-            SerManager = configEntries[2];
-            SerAddress = configEntries[3];
-            SerPhone = configEntries[4];
-        }
     }
 }

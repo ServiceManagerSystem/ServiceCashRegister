@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="CashRegisterRepairShop.View.ModelsDevicesView"
+﻿<UserControl x:Class="CashRegisterRepairs.View.ModelsDevicesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CashRegisterRepairShop.View"
+             xmlns:local="clr-namespace:CashRegisterRepairs.View"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">

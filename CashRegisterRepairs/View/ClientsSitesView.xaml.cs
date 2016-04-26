@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace CashRegisterRepairShop.View
+namespace CashRegisterRepairs.View
 {
 
     public partial class ClientsSitesView : UserControl
