@@ -1,0 +1,42 @@
+﻿<Controls:MetroWindow x:Class="CashRegisterRepairs.View.AddModelView"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:vm="clr-namespace:CashRegisterRepairs.ViewModel"
+                      xmlns:local="clr-namespace:CashRegisterRepairs.View"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      Title="Нов Модел"
+                      Height="240"
+                      Width="270"
+                      GlowBrush="Yellow"
+                      ResizeMode="CanMinimize"
+                      Name="AddModelWindow"
+                      WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:AddModelViewModel/>
+    </Window.DataContext>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Background="PeachPuff">
+        <TextBlock HorizontalAlignment="Left" Margin="40,10,0,0" TextWrapping="Wrap" Text="Производител" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.313"/>
+        <TextBox x:Name="txtProizvoditel" HorizontalAlignment="Left" Height="23" Margin="124,10,0,0" TextWrapping="Wrap" Text="{Binding ModelsManufacturer}" VerticalAlignment="Top" Width="120"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,41,0,0" TextWrapping="Wrap" Text="Модел" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.313"/>
+        <TextBox x:Name="txtModel" HorizontalAlignment="Left" Height="23" Margin="124,41,0,0" TextWrapping="Wrap" Text="{Binding ModelsModel}" VerticalAlignment="Top" Width="120"/>
+        <TextBlock HorizontalAlignment="Left" Margin="44,72,0,0" TextWrapping="Wrap" Text="Свидетелство" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.313"/>
+        <TextBox x:Name="txtSvid" HorizontalAlignment="Left" Height="23" Margin="124,72,0,0" TextWrapping="Wrap" Text="{Binding ModelsCertificate}" VerticalAlignment="Top" Width="120"/>
+        <TextBlock HorizontalAlignment="Left" Margin="34,103,0,0" TextWrapping="Wrap" Text="Сериен НО пре" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.313"/>
+        <TextBox x:Name="txtUstroistvo" HorizontalAlignment="Left" Height="23" Margin="124,103,0,0" TextWrapping="Wrap" Text="{Binding ModelsNumber}" VerticalAlignment="Top" Width="120"/>
+        <TextBlock HorizontalAlignment="Left" Margin="22,134,0,0" TextWrapping="Wrap" Text="Фискална НО пре" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.313"/>
+        <TextBox x:Name="txtFiskPamet" HorizontalAlignment="Left" Height="23" Margin="124,134,0,0" TextWrapping="Wrap" Text="{Binding ModelsFiscalNumber}" VerticalAlignment="Top" Width="120"/>
+        <Button Command="{Binding SaveModelCommand}" Content="Запази" HorizontalAlignment="Left" Margin="169,165,0,0" VerticalAlignment="Top" Width="75"/>
+    </Grid>
+
+</Controls:MetroWindow>
+

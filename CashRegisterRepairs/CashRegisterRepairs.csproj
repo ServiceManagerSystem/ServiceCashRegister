@@ -78,6 +78,65 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Resources\LoginInfo.cs" />
+    <Compile Include="Utilities\ClientDisplay.cs" />
+    <Compile Include="Utilities\DeviceDisplay.cs" />
+    <Compile Include="Utilities\DocumentDisplay.cs" />
+    <Compile Include="Utilities\TransitionContext.cs" />
+    <Compile Include="ViewModel\AddClientViewModel.cs" />
+    <Compile Include="ViewModel\AddDeviceViewModel.cs" />
+    <Compile Include="ViewModel\AddDocumentViewModel.cs" />
+    <Compile Include="ViewModel\AddModelViewModel.cs" />
+    <Compile Include="ViewModel\AddSiteViewModel.cs" />
+    <Compile Include="ViewModel\AddTemplateViewModel.cs" />
+    <Compile Include="ViewModel\Interfaces\IAdditionVM.cs" />
+    <Compile Include="ViewModel\Interfaces\IViewModel.cs" />
+    <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\PlaceholderViewModel.cs" />
+    <Compile Include="ViewModel\ClientsSitesViewModel.cs" />
+    <Compile Include="ViewModel\ModelsDevicesViewModel.cs" />
+    <Compile Include="ViewModel\ServiceInfoViewModel.cs" />
+    <Compile Include="ViewModel\Utilities\TemplateCommand.cs" />
+    <Compile Include="ViewModel\TemplatesDocumentsViewModel.cs" />
+    <Compile Include="View\AddClientView.xaml.cs">
+      <DependentUpon>AddClientView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddDeviceView.xaml.cs">
+      <DependentUpon>AddDeviceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddDocumentView.xaml.cs">
+      <DependentUpon>AddDocumentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddModelView.xaml.cs">
+      <DependentUpon>AddModelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddSiteView.xaml.cs">
+      <DependentUpon>AddSiteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddTemplateView.xaml.cs">
+      <DependentUpon>AddTemplateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ClientsSitesView.xaml.cs">
+      <DependentUpon>ClientsSitesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ModelsDevicesView.xaml.cs">
+      <DependentUpon>ModelsDevicesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PlaceholderView.xaml.cs">
+      <DependentUpon>PlaceholderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PreviewDocumentView.xaml.cs">
+      <DependentUpon>PreviewDocumentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServiceView.xaml.cs">
+      <DependentUpon>ServiceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TemplatesDocumentsView.xaml.cs">
+      <DependentUpon>TemplatesDocumentsView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\CashRegisterServiceModel.Context.cs">
@@ -153,11 +212,7 @@
   <ItemGroup>
     <Resource Include="Resources\plus-icon.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utilities\" />
-    <Folder Include="ViewModel\" />
-    <Folder Include="View\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Model\CashRegisterServiceModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -169,9 +224,64 @@
       <DependentUpon>CashRegisterServiceModel.edmx</DependentUpon>
       <LastGenOutput>CashRegisterServiceModel.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\Service.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="View\AddClientView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AddDeviceView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AddDocumentView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AddModelView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AddSiteView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AddTemplateView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ClientsSitesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ModelsDevicesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\PlaceholderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\PreviewDocumentView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ServiceView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\TemplatesDocumentsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="CashRegisterRepairShop.View.ModelsDevicesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CashRegisterRepairShop.View"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <!-- Addition buttons image -->
+        <ImageBrush x:Key="plus" ImageSource="/Resources/plus-icon.png" />
+        <!-- Custom DataGrid style -->
+        <Style x:Key="CoolDataGridStyle" TargetType="{x:Type DataGrid}">
+            <Setter Property="ColumnHeaderStyle" Value="{DynamicResource CoolColumnHeaderStyle}"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="AlternatingRowBackground" Value="LightGray"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ColumnWidth" Value="*"/>
+            <Setter Property="Height" Value="200"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserResizeColumns" Value="True"/>
+            <Setter Property="CanUserReorderColumns" Value="True"/>
+            <Setter Property="CanUserSortColumns" Value="True"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+        </Style>
+        <!-- Custom DataGridColumnHeader style -->
+        <Style x:Key="CoolColumnHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="PeachPuff">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Модели" FontFamily="Rockwell" FontSize="14" FontWeight="UltraBold"/>
+                <Button Command="{Binding AddModelCommand}" Focusable="False" Width="30" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center">
+                    <StackPanel>
+                        <Image Source="/Resources/plus-icon.png"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <DataGrid Style="{DynamicResource CoolDataGridStyle}"
+                      SelectedItem="{Binding SelectedModel}"
+                      ItemsSource="{Binding Models}"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <!-- Fix BINDINGS to be like in the MODEL fields -->
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding MODEL}" Header="Модел"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding MANUFACTURER}" Header="Производител"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding CERTIFICATE}" Header="Свидетелство"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding DEVICE_NUM_PREFIX}" Header="Сериен № (ПРЕ) "/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding FISCAL_NUM_PREFIX}" Header="Фиск. памет (ПРЕ)"/>
+                </DataGrid.Columns>
+                
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding DisplayDevicesCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                
+            </DataGrid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1">
+            <StackPanel  Orientation="Horizontal" Height="30">
+                <Label Content="Апарати ( избери с двоен клик за изготвяне на договор )" FontFamily="Rockwell" FontSize="14" FontWeight="UltraBold"/>
+            </StackPanel>
+            <DataGrid Style="{DynamicResource CoolDataGridStyle}"
+                      ItemsSource="{Binding Devices}"
+                      SelectedItem="{Binding SelectedDevice}"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <!-- Fix BINDINGS to be like in the MODEL fields for FullDeviceInfo database view -->
+                    <DataGridTextColumn Binding="{Binding SITE_NAME}" Header="Обект"/>
+                    <DataGridTextColumn Binding="{Binding CLIENT_NAME}" Header="Клиент"/>
+                    <DataGridTextColumn Binding="{Binding DEVICE_NUM_POSTFIX}" Header="Сериен № (ПОСТ)"/>
+                    <DataGridTextColumn Binding="{Binding FISCAL_NUM_POSTFIX}" Header="Фиск. памет (ПОСТ)"/>
+                    <DataGridTextColumn Binding="{Binding NAP_NUMBER}" Header="НАП номер"/>
+                    <DataGridTextColumn Binding="{Binding NAP_DATE}" Header="НАП дата"/>
+                    <DataGridTextColumn Binding="{Binding SIM}" Header="СИМ IMSI"/>
+                </DataGrid.Columns>
+
+                <!-- LINK TO DOCUMENTS - CONTRACT( lack of other impl alternative ) -->
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding DraftContractCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</UserControl>

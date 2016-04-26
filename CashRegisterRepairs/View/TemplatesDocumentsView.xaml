@@ -1,0 +1,135 @@
+﻿<UserControl x:Class="CashRegisterRepairShop.View.TemplatesDocumentsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:local="clr-namespace:CashRegisterRepairShop.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="600">
+    <UserControl.Resources>
+        <!-- Addition buttons image -->
+        <ImageBrush x:Key="plus" ImageSource="/Resources/plus-icon.png" />
+        <!-- Custom DataGrid style -->
+        <Style x:Key="CoolDataGridStyle" TargetType="{x:Type DataGrid}">
+            <Setter Property="ColumnHeaderStyle" Value="{DynamicResource CoolColumnHeaderStyle}"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="AlternatingRowBackground" Value="LightGray"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ColumnWidth" Value="*"/>
+            <Setter Property="Height" Value="200"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserResizeColumns" Value="True"/>
+            <Setter Property="CanUserReorderColumns" Value="True"/>
+            <Setter Property="CanUserSortColumns" Value="True"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+        </Style>
+        <!-- Custom DataGridColumnHeader style -->
+        <Style x:Key="CoolColumnHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+    </UserControl.Resources>
+
+    <!-- MAIN GRID -->
+    <Grid Background="PeachPuff">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- MAKE THIS ENABLE ONE BY ONE AFTER SELECTION OF AUTO FILL -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel>
+                <Label Grid.Row="0" Grid.Column="0" Content="Клиент" FontWeight="UltraBold" HorizontalAlignment="Left"/>
+                <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsClientAuto}" ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient}" Height="30" Width="200" HorizontalAlignment="Left"/>
+            </StackPanel>
+
+            <StackPanel Margin="10,0,0,0">
+                <Label Grid.Row="0" Grid.Column="0" Content="Обект" FontWeight="UltraBold" HorizontalAlignment="Left"/>
+                <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsSiteAuto}" ItemsSource="{Binding Sites}" SelectedItem="{Binding SelectedSite}" Height="30" Width="200" HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Margin="10,0,0,0">
+                <Label Grid.Row="0" Grid.Column="0" Content="Апарат" FontWeight="UltraBold" HorizontalAlignment="Left"/>
+                <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsDeviceAuto}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" Height="30" Width="200" HorizontalAlignment="Right"/>
+            </StackPanel>
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="1">
+            <StackPanel Orientation="Horizontal" Height="30">
+                <Label Content="Шаблони" FontWeight="UltraBold"/>
+                <Button Command="{Binding AddTemplateCommand}" Focusable="False" Width="30" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center">
+                    <StackPanel>
+                        <Image Source="/Resources/plus-icon.png"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            
+            <DataGrid  
+                Style="{DynamicResource CoolDataGridStyle}"
+                ItemsSource="{Binding Templates}"
+                SelectedItem="{Binding SelectedTemplate}"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding TYPE}" Header="Tип"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding STATUS}" Header="Статус"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding DATE_ADDED}" Header="Добавен"/>
+                </DataGrid.Columns>
+
+                <!-- Display related documents in grid below -->
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding DisplayDocumentsCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+            </DataGrid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3">
+            <StackPanel Orientation="Horizontal" Height="30">
+                <Label Content="Документи" FontWeight="UltraBold"/>
+                <Button Command="{Binding AddDocumentCommand}" Focusable="False" Width="30" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center">
+                    <StackPanel>
+                        <Image Source="/Resources/plus-icon.png"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            
+            <!-- Display info sorted DESCENDING by expiration !!! -->
+            <DataGrid 
+                Style="{DynamicResource CoolDataGridStyle}"
+                ItemsSource="{Binding Documents}"
+                SelectedItem="{Binding SelectedDocument}"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                    <!-- Make custom DATA object like with device display -->
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding DEVICE}" Header="Апарат"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding SITE}" Header="Oбект"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding CLIENT}" Header="Клиент"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding START_DATE}" Header="В сила от"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding END_DATE}" Header="Изтича"/>
+                </DataGrid.Columns>
+
+                <!-- LINK TO DOCUMENT VIEWER( this is an actual control - use it in a closable form ) -->
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding ViewDocumentCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</UserControl>

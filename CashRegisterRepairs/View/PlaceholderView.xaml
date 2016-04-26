@@ -1,0 +1,40 @@
+﻿<Controls:MetroWindow x:Class="CashRegisterRepairs.View.PlaceholderView"    
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:vm="clr-namespace:CashRegisterRepairs.ViewModel"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CashRegisterRepairShop.View"
+        mc:Ignorable="d"
+        GlowBrush="Yellow"
+        Name="PlaceholderWindow"
+        ResizeMode="CanMinimize"
+        WindowTransitionsEnabled="False"
+        WindowStartupLocation="CenterScreen"
+        Title="СЕРВИЗ" Height="600" Width="1000">
+    <Window.DataContext>
+        <vm:PlaceholderViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <TabControl>
+
+            <Controls:MetroTabItem DataContext="{Binding TabViewModels[0]}" Header="Клиенти">
+                <local:ClientsSitesView />
+            </Controls:MetroTabItem>
+            
+            <Controls:MetroTabItem DataContext="{Binding TabViewModels[1]}" Header="Модели">
+                <local:ModelsDevicesView/>
+            </Controls:MetroTabItem>
+            
+            <Controls:MetroTabItem DataContext="{Binding TabViewModels[2]}" Header="Документи" >
+                <local:TemplatesDocumentsView/>
+            </Controls:MetroTabItem>
+            
+            <Controls:MetroTabItem DataContext="{Binding TabViewModels[3]}" Header="За нас" >
+                <local:ServiceView/>
+            </Controls:MetroTabItem>
+            
+        </TabControl>
+    </Grid>
+</Controls:MetroWindow>

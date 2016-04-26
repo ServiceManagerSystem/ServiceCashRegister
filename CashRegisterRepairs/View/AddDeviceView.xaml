@@ -1,0 +1,71 @@
+﻿<Controls:MetroWindow x:Class="CashRegisterRepairs.View.AddDeviceView"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:vm="clr-namespace:CashRegisterRepairs.ViewModel"
+                      xmlns:local="clr-namespace:CashRegisterRepairs.View"
+                      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      Height="350"
+                      Width="300"
+                      Title="Нов апарат"
+                      ResizeMode="CanMinimize"
+                      Name="AddDeviceWindow"
+                      GlowBrush="Yellow"
+                      WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:AddDeviceViewModel/>
+    </Window.DataContext>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Background="PeachPuff">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="180"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Обект" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Sites}" SelectedItem="{Binding SelectedSite}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Модел" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="СИМ IMSI" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SIM}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Сериен №" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DEVICE_NUM_POSTFIX}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Фискална памет" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding FISCAL_NUM_POSTFIX}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="НАП номер" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding NAP_NUMBER}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="НАП дата" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <DatePicker Grid.Row="6" Grid.Column="1" Margin="0,0,15,0" SelectedDate="{Binding NAP_DATE}" VerticalAlignment="Center"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Grid.Column="0" Content="Добави" Command="{Binding SaveDevice}" FontWeight="UltraBold"  Margin="0,0,20,0"/>
+            <Button Grid.Column="1" Content="Запази" Command="{Binding CommitDevices}" FontWeight="UltraBold"  />
+        </StackPanel>
+
+    </Grid>
+</Controls:MetroWindow>
+
