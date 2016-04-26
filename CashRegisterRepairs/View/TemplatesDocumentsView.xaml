@@ -6,36 +6,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:local="clr-namespace:CashRegisterRepairs.View"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="600">
-    <UserControl.Resources>
-        <!-- Addition buttons image -->
-        <ImageBrush x:Key="plus" ImageSource="/Resources/plus-icon.png" />
-        <!-- Custom DataGrid style -->
-        <Style x:Key="CoolDataGridStyle" TargetType="{x:Type DataGrid}">
-            <Setter Property="ColumnHeaderStyle" Value="{DynamicResource CoolColumnHeaderStyle}"/>
-            <Setter Property="Focusable" Value="False"/>
-            <Setter Property="AlternatingRowBackground" Value="LightGray"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="ColumnWidth" Value="*"/>
-            <Setter Property="Height" Value="200"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Stretch"/>
-            <Setter Property="SelectionMode" Value="Single"/>
-            <Setter Property="CanUserAddRows" Value="False"/>
-            <Setter Property="CanUserResizeColumns" Value="True"/>
-            <Setter Property="CanUserReorderColumns" Value="True"/>
-            <Setter Property="CanUserSortColumns" Value="True"/>
-            <Setter Property="AutoGenerateColumns" Value="False"/>
-        </Style>
-        <!-- Custom DataGridColumnHeader style -->
-        <Style x:Key="CoolColumnHeaderStyle" TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="Black"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="15" />
-        </Style>
-    </UserControl.Resources>
-
+             d:DesignHeight="600" d:DesignWidth="1000">
     <!-- MAIN GRID -->
     <Grid Background="PeachPuff">
         <Grid.RowDefinitions>
@@ -48,17 +19,18 @@
         <!-- MAKE THIS ENABLE ONE BY ONE AFTER SELECTION OF AUTO FILL -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel>
-                <Label Grid.Row="0" Grid.Column="0" Content="Клиент" FontWeight="UltraBold" HorizontalAlignment="Left"/>
+                <!--<Label Grid.Row="0" Grid.Column="0" Content="Клиент" FontWeight="UltraBold" HorizontalAlignment="Left"/>-->
+                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericLabelStyle}" Content="Клиент"/>
                 <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsClientAuto}" ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient}" Height="30" Width="200" HorizontalAlignment="Left"/>
             </StackPanel>
 
             <StackPanel Margin="10,0,0,0">
-                <Label Grid.Row="0" Grid.Column="0" Content="Обект" FontWeight="UltraBold" HorizontalAlignment="Left"/>
+                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericLabelStyle}" Content="Обект"/>
                 <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsSiteAuto}" ItemsSource="{Binding Sites}" SelectedItem="{Binding SelectedSite}" Height="30" Width="200" HorizontalAlignment="Center"/>
             </StackPanel>
 
             <StackPanel Margin="10,0,0,0">
-                <Label Grid.Row="0" Grid.Column="0" Content="Апарат" FontWeight="UltraBold" HorizontalAlignment="Left"/>
+                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericLabelStyle}" Content="Апарат"/>
                 <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsDeviceAuto}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" Height="30" Width="200" HorizontalAlignment="Right"/>
             </StackPanel>
 
@@ -66,16 +38,16 @@
 
         <StackPanel Grid.Row="1">
             <StackPanel Orientation="Horizontal" Height="30">
-                <Label Content="Шаблони" FontWeight="UltraBold"/>
-                <Button Command="{Binding AddTemplateCommand}" Focusable="False" Width="30" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center">
+                <Label Style="{StaticResource GenericLabelStyle}" Content="Шаблони"/>
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddTemplateCommand}">
                     <StackPanel>
-                        <Image Source="/Resources/plus-icon.png"/>
+                        <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
             
             <DataGrid  
-                Style="{DynamicResource CoolDataGridStyle}"
+                Style="{StaticResource CoolDataGridStyle}"
                 ItemsSource="{Binding Templates}"
                 SelectedItem="{Binding SelectedTemplate}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -98,17 +70,17 @@
 
         <StackPanel Grid.Row="3">
             <StackPanel Orientation="Horizontal" Height="30">
-                <Label Content="Документи" FontWeight="UltraBold"/>
-                <Button Command="{Binding AddDocumentCommand}" Focusable="False" Width="30" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center">
+                <Label Style="{StaticResource GenericLabelStyle}" Content="Документи"/>
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddDocumentCommand}">
                     <StackPanel>
-                        <Image Source="/Resources/plus-icon.png"/>
+                        <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
             
             <!-- Display info sorted DESCENDING by expiration !!! -->
             <DataGrid 
-                Style="{DynamicResource CoolDataGridStyle}"
+                Style="{StaticResource CoolDataGridStyle}"
                 ItemsSource="{Binding Documents}"
                 SelectedItem="{Binding SelectedDocument}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"

@@ -1,6 +1,4 @@
-﻿using System.Windows.Media;
-
-namespace CashRegisterRepairs.Utilities
+﻿namespace CashRegisterRepairs.Utilities
 {
     public class ServiceProfileDisplay
     {

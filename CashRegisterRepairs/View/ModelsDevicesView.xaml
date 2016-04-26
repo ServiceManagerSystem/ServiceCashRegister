@@ -7,49 +7,23 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
-    <UserControl.Resources>
-        <!-- Addition buttons image -->
-        <ImageBrush x:Key="plus" ImageSource="/Resources/plus-icon.png" />
-        <!-- Custom DataGrid style -->
-        <Style x:Key="CoolDataGridStyle" TargetType="{x:Type DataGrid}">
-            <Setter Property="ColumnHeaderStyle" Value="{DynamicResource CoolColumnHeaderStyle}"/>
-            <Setter Property="Focusable" Value="False"/>
-            <Setter Property="AlternatingRowBackground" Value="LightGray"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="ColumnWidth" Value="*"/>
-            <Setter Property="Height" Value="200"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Stretch"/>
-            <Setter Property="SelectionMode" Value="Single"/>
-            <Setter Property="CanUserAddRows" Value="False"/>
-            <Setter Property="CanUserResizeColumns" Value="True"/>
-            <Setter Property="CanUserReorderColumns" Value="True"/>
-            <Setter Property="CanUserSortColumns" Value="True"/>
-            <Setter Property="AutoGenerateColumns" Value="False"/>
-        </Style>
-        <!-- Custom DataGridColumnHeader style -->
-        <Style x:Key="CoolColumnHeaderStyle" TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="Black"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="15" />
-        </Style>
-    </UserControl.Resources>
     <Grid Background="PeachPuff">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            
             <StackPanel Orientation="Horizontal">
-                <Label Content="Модели" FontFamily="Rockwell" FontSize="14" FontWeight="UltraBold"/>
-                <Button Command="{Binding AddModelCommand}" Focusable="False" Width="30" Background="Transparent" BorderBrush="Transparent" BorderThickness="0" VerticalAlignment="Center">
+                <Label Style="{StaticResource GenericLabelStyle}" Content="Модели"/>
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddModelCommand}">
                     <StackPanel>
-                        <Image Source="/Resources/plus-icon.png"/>
+                        <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
-            <DataGrid Style="{DynamicResource CoolDataGridStyle}"
+            
+            <DataGrid Style="{StaticResource CoolDataGridStyle}"
                       SelectedItem="{Binding SelectedModel}"
                       ItemsSource="{Binding Models}"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -73,10 +47,8 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1">
-            <StackPanel  Orientation="Horizontal" Height="30">
-                <Label Content="Апарати ( избери с двоен клик за изготвяне на договор )" FontFamily="Rockwell" FontSize="14" FontWeight="UltraBold"/>
-            </StackPanel>
-            <DataGrid Style="{DynamicResource CoolDataGridStyle}"
+            <Label Style="{StaticResource GenericLabelStyle}" Content="Апарати ( избери с двоен клик за изготвяне на договор )"/>
+            <DataGrid Style="{StaticResource CoolDataGridStyle}"
                       ItemsSource="{Binding Devices}"
                       SelectedItem="{Binding SelectedDevice}"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"

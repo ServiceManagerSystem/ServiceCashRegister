@@ -7,40 +7,6 @@
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="1000">
-    <UserControl.Resources>
-        <!-- TextBoxes style-->
-        <Style x:Key="ProfileTextBoxStyle" TargetType="{x:Type TextBox}">
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Width" Value="200"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="LightGray"/>
-            <Setter Property="FontStyle" Value="Italic"/>
-            <Setter Property="FontFamily" Value="Verdana"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="IsHitTestVisible" Value="{Binding IsFocusable}"/>
-            <Setter Property="IsReadOnly" Value="{Binding IsUnmodifable}"/>
-        </Style>
-        
-        <!-- Labels style -->
-        <Style x:Key="ProfileLabelStyle" TargetType="{x:Type Label}">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Margin" Value="40,0,0,0"/>
-            <Setter Property="FontWeight" Value="UltraBold"/>
-            <Setter Property="FontFamily" Value="Rockwell"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-        </Style>
-
-        <!-- Buttons style -->
-        <Style x:Key="ProfileButtonStyle" TargetType="{x:Type Button}">
-            <Setter Property="Width" Value="80"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="BorderBrush" Value="DarkGray"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="FontWeight" Value="UltraBold"/>
-        </Style>
-
-    </UserControl.Resources>
     <Grid>
         <Grid Background="PeachPuff">
             <Grid.ColumnDefinitions>
@@ -57,24 +23,24 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Style="{DynamicResource ProfileLabelStyle}" Content="Фирма:" />
-            <TextBox Grid.Row="0" Grid.Column="1" Style="{DynamicResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Name}"/>
+            <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource ProfileLabelStyle}" Content="Фирма:" />
+            <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Name}"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Style="{DynamicResource ProfileLabelStyle}" Content="Булстат:"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Style="{DynamicResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Bulstat}"/>
+            <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource ProfileLabelStyle}" Content="Булстат:"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Bulstat}"/>
 
-            <Label Grid.Row="2" Grid.Column="0" Style="{DynamicResource ProfileLabelStyle}" Content="Адрес:"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Style="{DynamicResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Address}"/>
+            <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource ProfileLabelStyle}" Content="Адрес:"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Address}"/>
 
-            <Label Grid.Row="3" Grid.Column="0" Style="{DynamicResource ProfileLabelStyle}" Content="Управител:"/>
-            <TextBox Grid.Row="3" Grid.Column="1" Style="{DynamicResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Manager}"/>
+            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource ProfileLabelStyle}" Content="Управител:"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Manager}"/>
 
-            <Label Grid.Row="4" Grid.Column="0" Style="{DynamicResource ProfileLabelStyle}" Content="Телефон:"/>
-            <TextBox Grid.Row="4" Grid.Column="1" Style="{DynamicResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Phone}"/>
+            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource ProfileLabelStyle}" Content="Телефон:"/>
+            <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Phone}"/>
 
             <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button Style="{DynamicResource ProfileButtonStyle}" Command="{Binding EnableEditingCommand}" Content="Отключи" Margin="0,0,30,0"/>
-                <Button Style="{DynamicResource ProfileButtonStyle}" Command="{Binding SaveServiceProfileCommand}" Content="Запази"/>
+                <Button Style="{StaticResource ProfileButtonStyle}" Command="{Binding EnableEditingCommand}" Content="Отключи" Margin="0,0,30,0"/>
+                <Button Style="{StaticResource ProfileButtonStyle}" Command="{Binding SaveServiceProfileCommand}" Content="Запази"/>
             </StackPanel>
 
             <Image Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Source="{Binding ProfileDisplay.LocationImagePath}"/>
