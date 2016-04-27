@@ -14,10 +14,6 @@
                       ResizeMode="CanMinimize"
                       Name="AddSiteWindow"
                       WindowStartupLocation="CenterScreen">
-    <Window.DataContext>
-        <vm:AddSiteViewModel/>
-    </Window.DataContext>
-
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
             <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}"/>

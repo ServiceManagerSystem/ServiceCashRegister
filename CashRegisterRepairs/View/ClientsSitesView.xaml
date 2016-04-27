@@ -16,7 +16,7 @@
         <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <StackPanel Orientation="Horizontal" Height="30">
                 <Label Style="{StaticResource GenericLabelStyle}" Content="Клиенти" FontWeight="UltraBold"/>
-                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddClientCommand}">
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddClientCommand}" CommandParameter="{Binding .}">
                     <StackPanel>
                         <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
@@ -51,7 +51,7 @@
         <StackPanel Grid.Row="1">
             <StackPanel Orientation="Horizontal" Height="30">
                 <Label  Style="{StaticResource GenericLabelStyle}" Content="Обекти"/>
-                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddSiteCommand}">
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddSiteCommand}" CommandParameter="{Binding .}">
                     <StackPanel>
                         <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>

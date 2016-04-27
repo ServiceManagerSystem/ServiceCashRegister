@@ -103,6 +103,7 @@ namespace CashRegisterRepairs.ViewModel
         {
             managerStorage.ToList().ForEach(manager => dbModel.Managers.Add(manager));
             clientStorage.ToList().ForEach(client => dbModel.Clients.Add(client));
+
             dbModel.SaveChanges();
         }
 

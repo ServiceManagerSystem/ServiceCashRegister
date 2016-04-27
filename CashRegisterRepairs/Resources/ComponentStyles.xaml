@@ -1,6 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
+    <!-- App icon -->
+    <BitmapImage x:Key="appIcon" UriSource="/Resources/cash-register-icon.png"/>
+    
+    <!-- Generic labels style -->
+    <Style x:Key="GenericLabelStyle" TargetType="{x:Type Label}">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="UltraBold"/>
+        <Setter Property="FontFamily" Value="Rockwell"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
     <!-- Addition buttons style -->
     <BitmapImage x:Key="addIcon" UriSource="/Resources/plus-icon.png"/>
     
@@ -72,22 +84,5 @@
         <Setter Property="FontWeight" Value="UltraBold"/>
     </Style>
 
-    <!-- Combo box labels style -->
-    <Style x:Key="GenericLabelStyle" TargetType="{x:Type Label}">
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="FontWeight" Value="UltraBold"/>
-        <Setter Property="FontFamily" Value="Rockwell"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-    </Style>
-
-    <!-- Grid labels style -->
-    <Style x:Key="GridLabelStyle" TargetType="{x:Type Label}">
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="FontWeight" Value="UltraBold"/>
-        <Setter Property="FontFamily" Value="Rockwell"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-    </Style>
 
 </ResourceDictionary>

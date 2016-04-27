@@ -28,11 +28,11 @@ namespace CashRegisterRepairShop.ViewModel
             }
         }
 
-        private ObservableCollection<ClientDisplay> _clients;
-        public ObservableCollection<ClientDisplay> Clients
+        private List<ClientDisplay> _clients;
+        public List<ClientDisplay> Clients
         {
             get { return _clients; }
-            set { _clients = value; }
+            set { _clients = value; NotifyPropertyChanged(); }
         }
 
         private ObservableCollection<Site> _sites;
@@ -46,8 +46,14 @@ namespace CashRegisterRepairShop.ViewModel
         {
             // Initializing datagrid backing collections
             _sites = new ObservableCollection<Site>();
-            Clients = new ObservableCollection<ClientDisplay>();
+            Clients = new List<ClientDisplay>();
             LoadClientsToGrid();
+
+            // FROM SITES
+            siteStorage = new List<Site>();
+            SaveSiteCommand = new TemplateCommand(SaveSite, param => this.canExecute);
+            CommitSiteCommand = new TemplateCommand(CommitSite, param => this.canExecute);
+            EnableSubviewDisplay = new TemplateCommand(EnableSubvew, param => this.canExecute);
 
             // Initialize commands
             DisplaySitesCommand = new TemplateCommand(ShowSitesForCLient, param => this.canExecute);
@@ -118,6 +124,7 @@ namespace CashRegisterRepairShop.ViewModel
 
         private void ShowClientAdditionForm(object obj)
         {
+
             // Move on to view ( allow one instance at a time )
             if (TransitionContext.CanOpenSubview())
             {
@@ -135,6 +142,7 @@ namespace CashRegisterRepairShop.ViewModel
                 TransitionContext.selectedClientIndex = (SelectedClient as ClientDisplay).ID;
 
                 AddSiteView addSitesView = new AddSiteView();
+                addSitesView.DataContext = obj;
                 addSitesView.Show();
                 TransitionContext.DisableSubviewOpen();
             }
@@ -167,6 +175,80 @@ namespace CashRegisterRepairShop.ViewModel
         {
             get { return _selectedSiteFromGrid; }
             set { _selectedSiteFromGrid = value; NotifyPropertyChanged(); }
+        }
+
+
+        // FROM SITES - Constructor
+        private List<Site> siteStorage;
+
+
+        // FROM SITES - Methods
+        private void CommitSite(object obj)
+        {
+            siteStorage.ForEach(site => dbModel.Sites.Add(site));
+            siteStorage.ForEach(site => Sites.Add(site));
+            dbModel.SaveChanges();
+        }
+
+        private void EnableSubvew(object obj)
+        {
+            TransitionContext.EnableSubviewOpen();
+        }
+
+        private void SaveSite(object obj)
+        {
+            Site site = new Site();
+            site.NAME = SiteName;
+            site.ADDRESS = SiteAddress;
+            site.PHONE = SitePhone;
+
+            site.Client = dbModel.Clients.Find((SelectedClient as ClientDisplay).ID);
+            //TransitionContext.ConsumeObjectsAfterUse(TransitionContext.selectedClient);
+
+            siteStorage.Add(site);
+        }
+
+        // FROM SITES - PROPERTIES
+        private string _siteName = string.Empty;
+        public string SiteName
+        {
+            get { return _siteName; }
+            set { _siteName = value; NotifyPropertyChanged(); }
+        }
+
+        private string _siteAddress = string.Empty;
+        public string SiteAddress
+        {
+            get { return _siteAddress; }
+            set { _siteAddress = value; NotifyPropertyChanged(); }
+        }
+
+        private string _sitePhone = string.Empty;
+        public string SitePhone
+        {
+            get { return _sitePhone; }
+            set { _sitePhone = value; NotifyPropertyChanged(); }
+        }
+
+        private ICommand _saveSiteCommand;
+        public ICommand SaveSiteCommand
+        {
+            get { return _saveSiteCommand; }
+            set { _saveSiteCommand = value; }
+        }
+
+        private ICommand _enableSubviewDisplay;
+        public ICommand EnableSubviewDisplay
+        {
+            get { return _enableSubviewDisplay; }
+            set { _enableSubviewDisplay = value; }
+        }
+
+        private ICommand _commitSiteCommand;
+        public ICommand CommitSiteCommand
+        {
+            get { return _commitSiteCommand; }
+            set { _commitSiteCommand = value; }
         }
 
     }
