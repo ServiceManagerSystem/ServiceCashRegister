@@ -132,6 +132,8 @@ namespace CashRegisterRepairShop.ViewModel
             // Move on to view ( allow one instance at a time )
             if (TransitionContext.CanOpenSubview())
             {
+                TransitionContext.selectedClientIndex = (SelectedClient as ClientDisplay).ID;
+
                 AddSiteView addSitesView = new AddSiteView();
                 addSitesView.Show();
                 TransitionContext.DisableSubviewOpen();

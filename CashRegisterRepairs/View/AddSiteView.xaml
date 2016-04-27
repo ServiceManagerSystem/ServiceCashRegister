@@ -5,6 +5,7 @@
                       xmlns:local="clr-namespace:CashRegisterRepairShop.View"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Title="Нов Обект"
                       Height="190"
@@ -17,14 +18,35 @@
         <vm:AddSiteViewModel/>
     </Window.DataContext>
 
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid Background="PeachPuff">
-        <TextBlock HorizontalAlignment="Left" Margin="33,10,0,0" TextWrapping="Wrap" Text="Име на обекта" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtObektName" HorizontalAlignment="Left" Height="23" Margin="119,10,0,0" TextWrapping="Wrap" Text="{Binding SiteName}" VerticalAlignment="Top" Width="120" />
-        <TextBlock HorizontalAlignment="Left" Margin="24,41,0,0" TextWrapping="Wrap" Text="Адрес на обекта" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtAdressObekt" HorizontalAlignment="Left" Height="23" Margin="119,41,0,0" TextWrapping="Wrap" Text="{Binding SiteAddress}" VerticalAlignment="Top" Width="120"/>
-        <TextBlock HorizontalAlignment="Left" Margin="9,72,0,0" TextWrapping="Wrap" Text="Телефон на обекта" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtPhoneObekt" HorizontalAlignment="Left" Height="23" Margin="119,72,0,0" TextWrapping="Wrap" Text="{Binding SitePhone}" VerticalAlignment="Top" Width="120"/>
-        <Button Command="{Binding SaveSiteCommand}" Content="Запази" HorizontalAlignment="Left" Margin="164,112,0,0" VerticalAlignment="Top" Width="75"/>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Име на обекта" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtObektName" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" Text="{Binding SiteName}" VerticalAlignment="Center" Width="120" />
+        <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Адрес на обекта" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtAdressObekt" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" Text="{Binding SiteAddress}" VerticalAlignment="Center" Width="120"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Телефон на обекта" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtPhoneObekt" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" Text="{Binding SitePhone}" VerticalAlignment="Center" Width="120"/>
+
+        <Button Grid.Row="3" Grid.Column="1" Command="{Binding CommitSiteCommand}" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Запази" Width="60" Margin="0,0,10,0"/>
+        <Button Grid.Row="3" Grid.Column="1" Command="{Binding SaveSiteCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Добави" Width="60" Margin="10,0,0,0"/>
 
     </Grid>
 

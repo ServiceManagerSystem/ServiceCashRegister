@@ -5,7 +5,7 @@ namespace CashRegisterRepairs.Utilities
 {
     public static class TransitionContext
     {
-        public static Client selectedClient;
+        public static int selectedClientIndex;
         public static Site selectedSite;
         public static Device selectedDevice;
         public static DeviceModel selectedModel;

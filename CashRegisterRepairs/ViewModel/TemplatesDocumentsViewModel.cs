@@ -52,12 +52,12 @@ namespace CashRegisterRepairs.ViewModel
 
             // Move these two groups somwhere so they get detected ( otherwise the constructor is called only once )
             // Initialize combo box states
-            IsClientAuto = (TransitionContext.selectedClient == null);
+            // IsClientAuto = (TransitionContext.selectedClient == null);
             IsSiteAuto = (TransitionContext.selectedSite == null);
             IsDeviceAuto = (TransitionContext.selectedDevice == null);
 
             // Initialize autos
-            SelectedClient = IsClientAuto ? TransitionContext.selectedClient : null ;
+            // SelectedClient = IsClientAuto ? TransitionContext.selectedClient : null ;
             SelectedSite = IsSiteAuto ? TransitionContext.selectedSite : null;
             SelectedDevice = IsDeviceAuto ? TransitionContext.selectedDevice : null;
 
@@ -111,11 +111,11 @@ namespace CashRegisterRepairs.ViewModel
         private void ShowDocumentAdditionForm(object obj)
         {
             // Untested, probably needs some work
-            IsClientAuto = (TransitionContext.selectedClient == null);
+            // IsClientAuto = (TransitionContext.selectedClient == null);
             IsSiteAuto = (TransitionContext.selectedSite == null);
             IsDeviceAuto = (TransitionContext.selectedDevice == null);
 
-            SelectedClient = IsClientAuto ? TransitionContext.selectedClient : null;
+            // SelectedClient = IsClientAuto ? TransitionContext.selectedClient : null;
             SelectedSite = IsSiteAuto ? TransitionContext.selectedSite : null;
             SelectedDevice = IsDeviceAuto ? TransitionContext.selectedDevice : null;
 
