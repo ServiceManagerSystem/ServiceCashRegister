@@ -73,7 +73,7 @@
                 <!-- LINK TO ADD DEVICES FOR THIS SITE -->
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDoubleClick">
-                        <i:InvokeCommandAction Command="{Binding AddDeviceCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding AddDeviceCommand}" CommandParameter="{Binding .}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </DataGrid>
