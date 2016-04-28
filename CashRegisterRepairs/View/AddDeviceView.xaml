@@ -14,10 +14,6 @@
                       Name="AddDeviceWindow"
                       GlowBrush="Yellow"
                       WindowStartupLocation="CenterScreen">
-    <Window.DataContext>
-        <vm:AddDeviceViewModel/>
-    </Window.DataContext>
-
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
             <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}"/>
@@ -41,7 +37,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Обект" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
-        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Sites}" SelectedItem="{Binding SelectedSite}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SitesForCB}" SelectedItem="{Binding SelectedSiteName}" Margin="0,0,15,0" VerticalAlignment="Center"/>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Модел" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
         <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" Margin="0,0,15,0" VerticalAlignment="Center"/>

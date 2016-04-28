@@ -13,9 +13,6 @@
                       GlowBrush="Yellow"
                       WindowStartupLocation="CenterScreen"
                       ResizeMode="CanMinimize">
-    <Window.DataContext>
-        <vm:AddClientViewModel/>
-    </Window.DataContext>
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
@@ -31,7 +28,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/> 
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
