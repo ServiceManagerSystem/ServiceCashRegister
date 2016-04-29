@@ -11,9 +11,9 @@
                       Width="300"
                       Title="Нов апарат"
                       ResizeMode="CanMinimize"
-                      Name="AddDeviceWindow"
                       GlowBrush="Yellow"
                       WindowStartupLocation="CenterScreen">
+    
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
             <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}"/>
@@ -21,10 +21,12 @@
     </i:Interaction.Triggers>
 
     <Grid Background="PeachPuff">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
             <ColumnDefinition Width="180"/>
         </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -36,30 +38,30 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Обект" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
-        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SitesForCB}" SelectedItem="{Binding SelectedSiteName}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Обект"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SitesForCB}" SelectedItem="{Binding SelectedSiteName}" Width="150" Margin="0,0,5,0" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Модел" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Модел"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" Width="150" Margin="0,0,5,0" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="СИМ IMSI" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SIM}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="СИМ IMSI"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SIM}"/>
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Сериен №" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DEVICE_NUM_POSTFIX}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Сериен №"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding DEVICE_NUM_POSTFIX}"/>
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Фискална памет" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding FISCAL_NUM_POSTFIX}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Фискална памет"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding FISCAL_NUM_POSTFIX}"/>
 
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="НАП номер" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding NAP_NUMBER}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="НАП номер"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding NAP_NUMBER}"/>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="НАП дата" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
-        <DatePicker Grid.Row="6" Grid.Column="1" Margin="0,0,15,0" SelectedDate="{Binding NAP_DATE}" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="НАП дата"/>
+        <DatePicker Grid.Row="6" Grid.Column="1" SelectedDate="{Binding NAP_DATE}" Width="150" Margin="0,0,5,0" VerticalAlignment="Center"/>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Grid.Column="0" Content="Добави" Command="{Binding SaveDevice}" FontWeight="UltraBold"  Margin="0,0,20,0"/>
-            <Button Grid.Column="1" Content="Запази" Command="{Binding CommitDevices}" FontWeight="UltraBold"  />
+        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveDevice}" Margin="0,0,5,0"/>
+            <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitDevices}"/>
         </StackPanel>
 
     </Grid>

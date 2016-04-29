@@ -9,10 +9,9 @@
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Title="Нов Обект"
                       Height="190"
-                      Width="270"
+                      Width="300"
                       GlowBrush="Yellow"
                       ResizeMode="CanMinimize"
-                      Name="AddSiteWindow"
                       WindowStartupLocation="CenterScreen">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
@@ -24,7 +23,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="180"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -34,16 +33,20 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Име на обекта" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtObektName" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" Text="{Binding SiteName}" VerticalAlignment="Center" Width="120" />
-        <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Адрес на обекта" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtAdressObekt" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" Text="{Binding SiteAddress}" VerticalAlignment="Center" Width="120"/>
-        <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Телефон на обекта" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtPhoneObekt" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" Text="{Binding SitePhone}" VerticalAlignment="Center" Width="120"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Име(Обект)"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SiteName}"/>
+        
+        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Адрес"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SiteAddress}"/>
+        
+        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Телефон"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SitePhone}"/>
 
-        <Button Grid.Row="3" Grid.Column="1" Command="{Binding CommitSiteCommand}" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Запази" Width="60" Margin="0,0,10,0"/>
-        <Button Grid.Row="3" Grid.Column="1" Command="{Binding SaveSiteCommand}" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Добави" Width="60" Margin="10,0,0,0"/>
-
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitSiteCommand}" Margin="0,0,5,0"/>
+            <Button Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveSiteCommand}"/>
+        </StackPanel>
+     
     </Grid>
 
 </Controls:MetroWindow>

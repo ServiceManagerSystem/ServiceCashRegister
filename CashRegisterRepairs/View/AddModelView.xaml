@@ -9,27 +9,22 @@
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Title="Нов Модел"
                       Height="240"
-                      Width="290"
+                      Width="300"
                       GlowBrush="Yellow"
                       ResizeMode="CanMinimize"
-                      Name="AddModelWindow"
                       WindowStartupLocation="CenterScreen">
-    <!--<Window.DataContext>
-        <vm:AddModelViewModel/>
-    </Window.DataContext>-->
-
+    
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
             <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    
     <Grid Background="PeachPuff">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="170"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -57,8 +52,8 @@
         <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding FiscalNumPre}"/>
         
         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Style="{StaticResource ProfileButtonStyle}" Command="{Binding SaveModelsCommand}" Content="Добави"/>
-            <Button Style="{StaticResource ProfileButtonStyle}" Command="{Binding CommitModelsCommand}" Content="Запази"/>
+            <Button Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveModelsCommand}" Margin="0,0,5,0"/>
+            <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitModelsCommand}"/>
         </StackPanel>
         
     </Grid>

@@ -21,10 +21,12 @@
     </i:Interaction.Triggers>
 
     <Grid Background="PeachPuff">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
             <ColumnDefinition Width="180"/>
         </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -37,33 +39,33 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Клиент" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Клиент"/>
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding NAME}" Margin="0,0,15,0" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="ЕГН" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="ЕГН"/>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding EGN}" Margin="0,0,15,0" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Булстат" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Булстат"/>
         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding BULSTAT}" Margin="0,0,15,0" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Адрес" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Адрес"/>
         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ADDRESS}" Margin="0,0,15,0" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="ТДД" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="ТДД"/>
         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding TDD}" Margin="0,0,15,0" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="Управител" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Управител"/>
         <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding MANAGER}" Margin="0,0,15,0" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="Телефон" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Телефон"/>
         <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding PHONE}" Margin="0,0,15,0" VerticalAlignment="Center"/>
 
-        <TextBlock Grid.Row="7" Grid.Column="0" Text="Коментар" FontWeight="UltraBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Коментар"/>
         <TextBox Grid.Row="7" Grid.Column="1" TextWrapping="Wrap" Text="{Binding COMMENT}"  Margin="0,0,15,0" />
 
-        <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Grid.Column="0" Content="Добави" Command="{Binding SaveClientAndManagerCommand}" FontWeight="UltraBold"  Margin="0,0,20,0"/>
-            <Button Grid.Column="1" Content="Запази" Command="{Binding CommitClientsAndManagersCommand}" FontWeight="UltraBold"  />
+        <StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveClientAndManagerCommand}" Margin="0,0,5,0"/>
+            <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitClientsAndManagersCommand}"/>
         </StackPanel>
 
     </Grid>
