@@ -8,13 +8,15 @@ using System.Windows.Input;
 using CashRegisterRepairs.Model;
 using CashRegisterRepairs.Utilities;
 using CashRegisterRepairs.View;
+using System.Collections.Generic;
 
 namespace CashRegisterRepairs.ViewModel
 {
     public class ModelsDevicesViewModel : INotifyPropertyChanged, IViewModel
     {
-        private readonly CashRegisterServiceContext dbModel = new CashRegisterServiceContext();
-
+        private bool canOpenSubview = true;
+        
+        #region NOTIFY
         private bool canExecute = true;
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propName = "")
@@ -24,7 +26,9 @@ namespace CashRegisterRepairs.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
+        #endregion
 
+        #region Grid Collections
         private ObservableCollection<DeviceModel> _models;
         public ObservableCollection<DeviceModel> Models
         {
@@ -38,15 +42,32 @@ namespace CashRegisterRepairs.ViewModel
             get { return _devices; }
             set { _devices = value; }
         }
+        #endregion
 
+        // Local storage collections
+        private List<DeviceModel> deviceModelStorage;
+
+        private readonly CashRegisterServiceContext dbModel = new CashRegisterServiceContext();
+        
+        // CTOR
         public ModelsDevicesViewModel()
         {
+            // Initialize grid collections + storage
+            deviceModelStorage = new List<DeviceModel>();
             _devices = new ObservableCollection<DeviceDisplay>();
             Models = new ObservableCollection<DeviceModel>(dbModel.DeviceModels);
 
+            // Model addition Commands
+            SaveModelsCommand = new TemplateCommand(SaveModels, param => this.canExecute);
+            CommitModelsCommand = new TemplateCommand(CommitModels, param => this.canExecute);
+        
+            // Form + display commands
             AddModelCommand = new TemplateCommand(ShowModelAdditionForm, param => this.canExecute);
             DisplayDevicesCommand = new TemplateCommand(ShowDevicesOfModel, param => this.canExecute);
+            EnableSubviewDisplay = new TemplateCommand(EnableSubviews, param => this.canExecute);
         }
+
+        #region COMMANDS
 
         private ICommand _addModel;
         public ICommand AddModelCommand
@@ -62,22 +83,79 @@ namespace CashRegisterRepairs.ViewModel
             set { _displayDevicesCommand = value; }
         }
 
+        private ICommand _saveModelsCommand;
+        public ICommand SaveModelsCommand
+        {
+            get { return _saveModelsCommand; }
+            set { _saveModelsCommand = value; }
+        }
+
+        private ICommand _commitModelsCommand;
+        public ICommand CommitModelsCommand
+        {
+            get { return _commitModelsCommand; }
+            set { _commitModelsCommand = value; }
+        }
+
+        private ICommand _enableSubviewDisplay;
+        public ICommand EnableSubviewDisplay
+        {
+            get { return _enableSubviewDisplay; }
+            set { _enableSubviewDisplay = value; }
+        }
+        #endregion
+
+        #region MODELS SAVE+COMMIT+SUBVIEW
+        public void ClearFields()
+        {
+            Manufacturer = string.Empty;
+            Model = string.Empty;
+            Certificate = string.Empty;
+            DeviceNumPre = string.Empty;
+            FiscalNumPre = string.Empty;
+        }
+
+        public void SaveModels(object obj)
+        {
+            DeviceModel devModel = new DeviceModel();
+            devModel.MANUFACTURER = Manufacturer;
+            devModel.MODEL = Model;
+            devModel.CERTIFICATE = Certificate;
+            devModel.DEVICE_NUM_PREFIX = DeviceNumPre;
+            devModel.FISCAL_NUM_PREFIX = FiscalNumPre;
+
+            deviceModelStorage.Add(devModel);
+
+            ClearFields();
+        }
+
+        public void CommitModels(object obj)
+        {
+            deviceModelStorage.ForEach(model => dbModel.DeviceModels.Add(model));
+            deviceModelStorage.ForEach(model => Models.Add(model));
+            dbModel.SaveChanges();
+        }
+
+        private void EnableSubviews(object obj)
+        {
+            canOpenSubview = true;
+        }
+        #endregion
+
+        #region DISPLAY FROM/CONTENT
         private void ShowDevicesOfModel(object obj)
         {
-            // Get rid of previous displays
             Devices.Clear();
 
-            // Avoid selection of empty row
             if (SelectedModel != null && (SelectedModel is DeviceModel))
             {
                 DeviceModel selectedModelFromGrid = SelectedModel as DeviceModel;
 
                 AddDevicesToGrid(selectedModelFromGrid);
 
-                // Extract to helper may be
                 if (Devices.Count == 0)
                 {
-                    MessageBox.Show("No devices of this model!", "NOTIFICATION", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Няма апарати от този модел!", "ИНФО", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }
@@ -99,15 +177,18 @@ namespace CashRegisterRepairs.ViewModel
 
         private void ShowModelAdditionForm(object obj)
         {
-            // Move on to view ( allow one instance at a time )
-            if (TransitionContext.CanOpenSubview())
+            if (canOpenSubview)
             {
                 AddModelView addModelsView = new AddModelView();
+                addModelsView.DataContext = obj;
                 addModelsView.Show();
-                TransitionContext.DisableSubviewOpen();
+                canOpenSubview = false;
             }
         }
+        #endregion
 
+        // Selection props
+        #region SELECTION PROPS(CONTEXT)
         private object _selectedModelFromGrid;
         public object SelectedModel
         {
@@ -121,20 +202,44 @@ namespace CashRegisterRepairs.ViewModel
             get { return _selectedDeviceFromGrid; }
             set { _selectedDeviceFromGrid = value; NotifyPropertyChanged(); }
         }
+        #endregion
 
-        // These might be needed in context( we will see )
-        //private string _site;
-        //public string SITE
-        //{
-        //    get { return _site; }
-        //    set { _site = value; NotifyPropertyChanged(); }
-        //}
+        // Props
+        #region PROPERTIES
+        private string _manufacturer = string.Empty;
+        public string Manufacturer
+        {
+            get { return _manufacturer; }
+            set { _manufacturer = value; NotifyPropertyChanged(); }
+        }
 
-        //private string _client;
-        //public string CLIENT
-        //{
-        //    get { return _client; }
-        //    set { _client = value; NotifyPropertyChanged(); }
-        //}
+        private string _model = string.Empty;
+        public string Model
+        {
+            get { return _model; }
+            set { _model = value; NotifyPropertyChanged(); }
+        }
+
+        private string _certificate = string.Empty;
+        public string Certificate
+        {
+            get { return _certificate; }
+            set { _certificate = value; NotifyPropertyChanged(); }
+        }
+
+        private string _deviceNumPre = string.Empty;
+        public string DeviceNumPre
+        {
+            get { return _deviceNumPre; }
+            set { _deviceNumPre = value; NotifyPropertyChanged(); }
+        }
+
+        private string _fiscalNumPre = string.Empty;
+        public string FiscalNumPre
+        {
+            get { return _fiscalNumPre; }
+            set { _fiscalNumPre = value; NotifyPropertyChanged(); }
+        }
+        #endregion
     }
 }

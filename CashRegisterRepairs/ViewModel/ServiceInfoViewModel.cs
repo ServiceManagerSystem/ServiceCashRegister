@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CashRegisterRepairs.ViewModel
@@ -54,6 +55,8 @@ namespace CashRegisterRepairs.ViewModel
                 .AppendLine(ProfileDisplay.Phone);
 
             File.WriteAllText(serviceProfileFile, profileBuilder.ToString());
+
+            MessageBox.Show("Промените по профила са запазени!","ПРОМЯНА",MessageBoxButton.OK,MessageBoxImage.Information);
         }
 
         private void EnableEditing(object obj)
