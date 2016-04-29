@@ -16,7 +16,8 @@ namespace CashRegisterRepairShop.ViewModel
 {
     public class ClientsSitesViewModel : INotifyPropertyChanged, IViewModel
     {
-        bool canOpenSubviewForm = true;
+        private bool canOpenSubviewForm = true;
+
         // Notify changed bullshit
         #region NOTIFY BLA BLA
         private bool canExecute = true;
@@ -195,7 +196,7 @@ namespace CashRegisterRepairShop.ViewModel
 
                 if (Sites.Count == 0)
                 {
-                    MessageBox.Show("Няма обекти към този клиент!", "НОВ", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Няма обекти към този клиент!", "ИНФО", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }
