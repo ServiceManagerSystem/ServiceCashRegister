@@ -9,14 +9,14 @@
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Title="Нов Модел"
                       Height="240"
-                      Width="270"
+                      Width="290"
                       GlowBrush="Yellow"
                       ResizeMode="CanMinimize"
                       Name="AddModelWindow"
                       WindowStartupLocation="CenterScreen">
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <vm:AddModelViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
@@ -24,18 +24,43 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
+    
     <Grid Background="PeachPuff">
-        <TextBlock HorizontalAlignment="Left" Margin="40,10,0,0" TextWrapping="Wrap" Text="Производител" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.313"/>
-        <TextBox x:Name="txtProizvoditel" HorizontalAlignment="Left" Height="23" Margin="124,10,0,0" TextWrapping="Wrap" Text="{Binding ModelsManufacturer}" VerticalAlignment="Top" Width="120"/>
-        <TextBlock HorizontalAlignment="Left" Margin="82,41,0,0" TextWrapping="Wrap" Text="Модел" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.313"/>
-        <TextBox x:Name="txtModel" HorizontalAlignment="Left" Height="23" Margin="124,41,0,0" TextWrapping="Wrap" Text="{Binding ModelsModel}" VerticalAlignment="Top" Width="120"/>
-        <TextBlock HorizontalAlignment="Left" Margin="44,72,0,0" TextWrapping="Wrap" Text="Свидетелство" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.313"/>
-        <TextBox x:Name="txtSvid" HorizontalAlignment="Left" Height="23" Margin="124,72,0,0" TextWrapping="Wrap" Text="{Binding ModelsCertificate}" VerticalAlignment="Top" Width="120"/>
-        <TextBlock HorizontalAlignment="Left" Margin="34,103,0,0" TextWrapping="Wrap" Text="Сериен НО пре" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.313"/>
-        <TextBox x:Name="txtUstroistvo" HorizontalAlignment="Left" Height="23" Margin="124,103,0,0" TextWrapping="Wrap" Text="{Binding ModelsNumber}" VerticalAlignment="Top" Width="120"/>
-        <TextBlock HorizontalAlignment="Left" Margin="22,134,0,0" TextWrapping="Wrap" Text="Фискална НО пре" VerticalAlignment="Top" RenderTransformOrigin="0.297,0.313"/>
-        <TextBox x:Name="txtFiskPamet" HorizontalAlignment="Left" Height="23" Margin="124,134,0,0" TextWrapping="Wrap" Text="{Binding ModelsFiscalNumber}" VerticalAlignment="Top" Width="120"/>
-        <Button Command="{Binding SaveModelCommand}" Content="Запази" HorizontalAlignment="Left" Margin="169,165,0,0" VerticalAlignment="Top" Width="75"/>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Производител: "/>
+        <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding Manufacturer}"/>
+        
+        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Модел: " />
+        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding Model}"/>
+        
+        <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Свидетелство: " />
+        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding Certificate}"/>
+        
+        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Сериен НО пре: " />
+        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding DeviceNumPre}"/>
+        
+        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Фискална НО пре: "/>
+        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding FiscalNumPre}"/>
+        
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Style="{StaticResource ProfileButtonStyle}" Command="{Binding SaveModelsCommand}" Content="Добави"/>
+            <Button Style="{StaticResource ProfileButtonStyle}" Command="{Binding CommitModelsCommand}" Content="Запази"/>
+        </StackPanel>
+        
     </Grid>
 
 </Controls:MetroWindow>

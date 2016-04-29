@@ -42,9 +42,9 @@
                 <Button Style="{StaticResource ProfileButtonStyle}" Command="{Binding EnableEditingCommand}" Content="Отключи" Margin="0,0,30,0"/>
                 <Button Style="{StaticResource ProfileButtonStyle}" Command="{Binding SaveServiceProfileCommand}" Content="Запази"/>
             </StackPanel>
-
-            <Image Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Source="{Binding ProfileDisplay.LocationImagePath}"/>
             
+            <Image Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Source="{StaticResource mapImage}" Margin="0,35,0,0" />
+
         </Grid>
     </Grid>
 </UserControl>

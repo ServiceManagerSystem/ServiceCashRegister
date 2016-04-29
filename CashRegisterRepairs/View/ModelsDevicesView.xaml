@@ -16,7 +16,7 @@
             
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource GenericLabelStyle}" Content="Модели"/>
-                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddModelCommand}">
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddModelCommand}" CommandParameter="{Binding .}">
                     <StackPanel>
                         <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
@@ -55,13 +55,13 @@
                       ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <DataGrid.Columns>
                     <!-- Fix BINDINGS to be like in the MODEL fields for FullDeviceInfo database view -->
-                    <DataGridTextColumn Binding="{Binding SITE_NAME}" Header="Обект"/>
-                    <DataGridTextColumn Binding="{Binding CLIENT_NAME}" Header="Клиент"/>
-                    <DataGridTextColumn Binding="{Binding DEVICE_NUM_POSTFIX}" Header="Сериен № (ПОСТ)"/>
-                    <DataGridTextColumn Binding="{Binding FISCAL_NUM_POSTFIX}" Header="Фиск. памет (ПОСТ)"/>
-                    <DataGridTextColumn Binding="{Binding NAP_NUMBER}" Header="НАП номер"/>
-                    <DataGridTextColumn Binding="{Binding NAP_DATE}" Header="НАП дата"/>
-                    <DataGridTextColumn Binding="{Binding SIM}" Header="СИМ IMSI"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding SITE_NAME}" Header="Обект"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding CLIENT_NAME}" Header="Клиент"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding DEVICE_NUM_POSTFIX}" Header="Сериен № (ПОСТ)"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding FISCAL_NUM_POSTFIX}" Header="Фиск. памет (ПОСТ)"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding NAP_NUMBER}" Header="НАП номер"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding NAP_DATE}" Header="НАП дата"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding SIM}" Header="СИМ IMSI"/>
                 </DataGrid.Columns>
 
                 <!-- LINK TO DOCUMENTS - CONTRACT( lack of other impl alternative ) -->
