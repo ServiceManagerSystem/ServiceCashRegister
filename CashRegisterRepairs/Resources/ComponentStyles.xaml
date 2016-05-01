@@ -4,6 +4,7 @@
     <!-- Images/Icons -->
     <BitmapImage x:Key="appIcon" UriSource="/Resources/cash-register-icon.png"/>
     <BitmapImage x:Key="addIcon" UriSource="/Resources/plus-icon.png"/>
+    <BitmapImage x:Key="clearIcon" UriSource="/Resources/clear-icon.png"/>
     <BitmapImage x:Key="mapImage" UriSource="/Resources/service_map.png"/>
   
     <!-- Generic labels style -->

@@ -14,11 +14,13 @@
         WindowTransitionsEnabled="False"
         WindowStartupLocation="CenterScreen"
         Title="СЕРВИЗ" Height="600" Width="1000">
+    
     <Window.DataContext>
         <vm:PlaceholderViewModel/>
     </Window.DataContext>
+
     <Grid>
-        <TabControl>
+        <TabControl SelectedIndex="{Binding SelectedTab,Mode=OneWay,UpdateSourceTrigger=PropertyChanged, IsAsync=True}">
 
             <Controls:MetroTabItem DataContext="{Binding TabViewModels[0]}" Header="Клиенти">
                 <local:ClientsSitesView />
@@ -27,12 +29,12 @@
             <Controls:MetroTabItem DataContext="{Binding TabViewModels[1]}" Header="Модели">
                 <local:ModelsDevicesView/>
             </Controls:MetroTabItem>
-            
-            <Controls:MetroTabItem DataContext="{Binding TabViewModels[2]}" Header="Документи" >
+
+            <Controls:MetroTabItem DataContext="{Binding TabViewModels[2]}" Header="Документи">
                 <local:TemplatesDocumentsView/>
             </Controls:MetroTabItem>
             
-            <Controls:MetroTabItem DataContext="{Binding TabViewModels[3]}" Header="За нас" >
+            <Controls:MetroTabItem DataContext="{Binding TabViewModels[3]}" Header="За нас">
                 <local:ServiceView/>
             </Controls:MetroTabItem>
             

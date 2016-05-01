@@ -8,9 +8,6 @@ namespace CashRegisterRepairs.ViewModel
 {
     public class PlaceholderViewModel : INotifyPropertyChanged,IViewModel
     {
-        private ObservableCollection<IViewModel> _tabViewModels;
-        public ObservableCollection<IViewModel> TabViewModels { get { return _tabViewModels; } }
-
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propName = "")
         {
@@ -20,12 +17,22 @@ namespace CashRegisterRepairs.ViewModel
             }
         }
 
+        private ObservableCollection<IViewModel> _tabViewModels;
+        public ObservableCollection<IViewModel> TabViewModels { get { return _tabViewModels; } }
+
+        private int _selectedTab;
+        public int SelectedTab
+        {
+            get { return _selectedTab; }
+            set { _selectedTab = value; NotifyPropertyChanged(); }
+        }
+
         public PlaceholderViewModel()
         {
             // Initialize VMs of all TABS
             _tabViewModels = new ObservableCollection<IViewModel>();
             _tabViewModels.Add(new ClientsSitesViewModel());
-            _tabViewModels.Add(new ModelsDevicesViewModel());
+            _tabViewModels.Add(new ModelsDevicesViewModel(this));
             _tabViewModels.Add(new TemplatesDocumentsViewModel());
             _tabViewModels.Add(new ServiceInfoViewModel());
         }

@@ -7,6 +7,13 @@
              xmlns:local="clr-namespace:CashRegisterRepairs.View"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadAutosCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <!-- MAIN GRID -->
     <Grid Background="PeachPuff">
         <Grid.RowDefinitions>
@@ -19,21 +26,39 @@
         <!-- MAKE THIS ENABLE ONE BY ONE AFTER SELECTION OF AUTO FILL -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel>
-                <!--<Label Grid.Row="0" Grid.Column="0" Content="Клиент" FontWeight="UltraBold" HorizontalAlignment="Left"/>-->
                 <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericLabelStyle}" Content="Клиент"/>
-                <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsClientAuto}" ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient}" Height="30" Width="200" HorizontalAlignment="Left"/>
+                <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsClientEnabled}" ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient}" Height="30" Width="200" HorizontalAlignment="Left">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding FillCommand}" CommandParameter="client"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
             </StackPanel>
 
             <StackPanel Margin="10,0,0,0">
                 <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericLabelStyle}" Content="Обект"/>
-                <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsSiteAuto}" ItemsSource="{Binding Sites}" SelectedItem="{Binding SelectedSite}" Height="30" Width="200" HorizontalAlignment="Center"/>
+                <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsSiteEnabled}" ItemsSource="{Binding Sites}" SelectedItem="{Binding SelectedSite}" Height="30" Width="200" HorizontalAlignment="Center">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding FillCommand}" CommandParameter="site"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                </ComboBox>
             </StackPanel>
 
             <StackPanel Margin="10,0,0,0">
                 <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericLabelStyle}" Content="Апарат"/>
-                <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsDeviceAuto}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" Height="30" Width="200" HorizontalAlignment="Right"/>
+                <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsDeviceEnabled}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" Height="30" Width="200" HorizontalAlignment="Right"/>
             </StackPanel>
 
+            <StackPanel Orientation="Horizontal" Height="30" VerticalAlignment="Bottom">
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding ClearCBCommand}" Margin="10,0,0,0">
+                    <StackPanel>
+                        <Image Source="{StaticResource clearIcon}"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="1">
@@ -70,12 +95,12 @@
 
         <StackPanel Grid.Row="3">
             <StackPanel Orientation="Horizontal" Height="30">
-                <Label Style="{StaticResource GenericLabelStyle}" Content="Документи"/>
-                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddDocumentCommand}">
+                <Label Style="{StaticResource GenericLabelStyle}" Content="Документи( двоен клик за преглед )"/>
+                <!--<Button Style="{StaticResource AdditionButton}" Command="{Binding AddDocumentCommand}">
                     <StackPanel>
                         <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
-                </Button>
+                </Button>-->
             </StackPanel>
             
             <!-- Display info sorted DESCENDING by expiration !!! -->
@@ -97,7 +122,7 @@
                 <!-- LINK TO DOCUMENT VIEWER( this is an actual control - use it in a closable form ) -->
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDoubleClick">
-                        <i:InvokeCommandAction Command="{Binding ViewDocumentCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding PreviewDocumentCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 

@@ -7,7 +7,9 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
+    
     <Grid Background="PeachPuff">
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -29,7 +31,6 @@
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
                       ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <DataGrid.Columns>
-                    <!-- Fix BINDINGS to be like in the MODEL fields -->
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding MODEL}" Header="Модел"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding MANUFACTURER}" Header="Производител"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding CERTIFICATE}" Header="Свидетелство"/>
@@ -54,7 +55,6 @@
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
                       ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <DataGrid.Columns>
-                    <!-- Fix BINDINGS to be like in the MODEL fields for FullDeviceInfo database view -->
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding SITE_NAME}" Header="Обект"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding CLIENT_NAME}" Header="Клиент"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding DEVICE_NUM_POSTFIX}" Header="Сериен № (ПОСТ)"/>
@@ -64,10 +64,10 @@
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding SIM}" Header="СИМ IMSI"/>
                 </DataGrid.Columns>
 
-                <!-- LINK TO DOCUMENTS - CONTRACT( lack of other impl alternative ) -->
+                <!-- LINK TO DOCUMENTS - CONTRACT -->
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDoubleClick">
-                        <i:InvokeCommandAction Command="{Binding DraftContractCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding DraftContractCommand}" CommandParameter="{Binding SelectedDevice}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 

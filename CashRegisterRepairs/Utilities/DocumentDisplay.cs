@@ -13,7 +13,7 @@ namespace CashRegisterRepairs.Utilities
         public DateTime? START_DATE { get; set; }
         public DateTime? END_DATE { get; set; }
 
-        public DocumentDisplay(Client client, Site site, Device device, Document document)
+        public DocumentDisplay(Document document, Client client, Site site, Device device)
         {
             ID = document.CLIENT_ID;
             CLIENT = client.NAME;

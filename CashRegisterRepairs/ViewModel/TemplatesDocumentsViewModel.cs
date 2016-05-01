@@ -7,12 +7,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CashRegisterRepairs.ViewModel
 {
     public class TemplatesDocumentsViewModel : INotifyPropertyChanged, IViewModel
     {
+        public static DeviceDisplay selectedDeviceTest;
         // Subview disable/enable control field
         private bool canOpenSubviewForm = true;
 
@@ -43,47 +45,44 @@ namespace CashRegisterRepairs.ViewModel
             set { _templates = value; }
         }
 
-        private ObservableCollection<Document> _documents;
-        public ObservableCollection<Document> Documents
+        private ObservableCollection<DocumentDisplay> _documents;
+        public ObservableCollection<DocumentDisplay> Documents
         {
             get { return _documents; }
             set { _documents = value; }
         }
         #endregion
 
-        // CTOR(NEEDS REFACTOR)
+        // CTOR
         public TemplatesDocumentsViewModel()
         {
             // Initialize backing datagrid collections
-            _documents = new ObservableCollection<Document>();
-            Templates = new ObservableCollection<Template>(dbModel.Templates);
+            _templates = new ObservableCollection<Template>(dbModel.Templates);
+            Documents = new ObservableCollection<DocumentDisplay>();
 
             // Initialize backing collections for combo boxes and their content 
-            Sites = new List<string>();
-            Clients = new List<string>();
-            Devices = new List<string>();
+            Sites = new ObservableCollection<string>();
+            Clients = new ObservableCollection<string>();
+            Devices = new ObservableCollection<string>();
 
-            // Move these two groups somwhere so they get detected ( otherwise the constructor is called only once )
-            // Initialize combo box states
-            // IsClientAuto = (TransitionContext.selectedClient == null);
-            IsSiteAuto = (TransitionContext.selectedSite == null);
-            IsDeviceAuto = (TransitionContext.selectedDevice == null);
+            // CB enables
+            IsClientEnabled = true;
+            IsSiteEnabled = false;
+            IsDeviceEnabled = false;
 
-            // Initialize autos
-            // SelectedClient = IsClientAuto ? TransitionContext.selectedClient : null ;
-            SelectedSite = IsSiteAuto ? TransitionContext.selectedSite : null;
-            SelectedDevice = IsDeviceAuto ? TransitionContext.selectedDevice : null;
-
-            // Fill combo box lists
-            dbModel.Sites.ToList().ForEach(site => Sites.Add(site.NAME));
+            // Fill combo box for clients
             dbModel.Clients.ToList().ForEach(client => Clients.Add(client.NAME));
-            dbModel.Devices.ToList().ForEach(device => Devices.Add(device.DeviceModel.DEVICE_NUM_PREFIX + device.DEVICE_NUM_POSTFIX));
+
+            AddTemplateCommand = new TemplateCommand(ShowTemplateAdditionForm, param => this.canExecute);
+            AddDocumentCommand = new TemplateCommand(ShowDocumentAdditionForm, param => this.canExecute);
 
             // Initialize commands
             EnableSubviewDisplay = new TemplateCommand(EnableSubview, param => this.canExecute);
+            LoadAutosCommand = new TemplateCommand(FillCBAutomatically, param => this.canExecute);
+            ClearCBCommand = new TemplateCommand(ClearCB, param => this.canExecute);
+            FillCommand = new TemplateCommand(FillCB, param => this.canExecute);
+            PreviewDocumentCommand = new TemplateCommand(PreviewDocument, param => this.canExecute);
             DisplayDocumentsCommand = new TemplateCommand(ShowDocumentsOfTemplate, param => this.canExecute);
-            AddTemplateCommand = new TemplateCommand(ShowTemplateAdditionForm, param => this.canExecute);
-            AddDocumentCommand = new TemplateCommand(ShowDocumentAdditionForm, param => this.canExecute);
         }
 
         // COMMANDS
@@ -115,6 +114,34 @@ namespace CashRegisterRepairs.ViewModel
             get { return _displayDocumentsCommand; }
             set { _displayDocumentsCommand = value; }
         }
+
+        private ICommand _loadAutosCommand;
+        public ICommand LoadAutosCommand
+        {
+            get { return _loadAutosCommand; }
+            set { _loadAutosCommand = value; }
+        }
+
+        private ICommand _clearCBCommand;
+        public ICommand ClearCBCommand
+        {
+            get { return _clearCBCommand; }
+            set { _clearCBCommand = value; }
+        }
+
+        private ICommand _fillCommand;
+        public ICommand FillCommand
+        {
+            get { return _fillCommand; }
+            set { _fillCommand = value; }
+        }
+
+        private ICommand _viewDocumentCommand;
+        public ICommand PreviewDocumentCommand
+        {
+            get { return _viewDocumentCommand; }
+            set { _viewDocumentCommand = value; }
+        }
         #endregion
 
         // METHODS
@@ -128,7 +155,52 @@ namespace CashRegisterRepairs.ViewModel
         #region SHOW FORM METHODS (NEEDS REFACTOR)
         private void ShowDocumentsOfTemplate(object obj)
         {
-            throw new NotImplementedException();
+            if (SelectedTemplate == null)
+            {
+                MessageBox.Show("Няма избран шаблон!", "ЛИПСВАЩ ШАБЛОН", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Clear old display
+            Documents.Clear();
+
+            // NEEDS FIXING
+            foreach (Document doc in dbModel.Documents)
+            {
+                if (doc.Template.TYPE.Equals((SelectedTemplate as Template).TYPE))
+                {
+                    // Display all if nothing is selected
+                    if (SelectedClient == null)
+                    {
+                        Site site = dbModel.Sites.Where(si => si.Client.Equals(doc.Client)).FirstOrDefault();
+                        Device device = dbModel.Devices.Where(dev => dev.Site.Equals(site)).FirstOrDefault();
+                        DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, site, device);
+
+                        Documents.Add(docDisplay);
+                    }
+                    // Match if anything is selected
+                    else if (doc.Client.NAME == SelectedClient)
+                    {
+                        Site site = dbModel.Sites.Where(si => si.Client.NAME.Equals(SelectedClient)).FirstOrDefault();
+                        Device device = dbModel.Devices.Where(dev => dev.Site.Equals(site)).FirstOrDefault();
+                        DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, site, device);
+
+                        Documents.Add(docDisplay);
+                    }
+                }
+
+
+            }
+
+            Documents.OrderByDescending(document => document.END_DATE);
+        }
+
+        private void LoadDocumentToGrid(Document doc)
+        {
+            Device device = dbModel.Devices.Where(dev => (dev.DeviceModel.DEVICE_NUM_PREFIX + dev.DEVICE_NUM_POSTFIX) == SelectedDevice).FirstOrDefault();
+            DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, device.Site, device);
+
+            Documents.Add(docDisplay);
         }
 
         private void ShowTemplateAdditionForm(object obj)
@@ -144,15 +216,6 @@ namespace CashRegisterRepairs.ViewModel
 
         private void ShowDocumentAdditionForm(object obj)
         {
-            // Untested, probably needs some work
-            // IsClientAuto = (TransitionContext.selectedClient == null);
-            IsSiteAuto = (TransitionContext.selectedSite == null);
-            IsDeviceAuto = (TransitionContext.selectedDevice == null);
-
-            // SelectedClient = IsClientAuto ? TransitionContext.selectedClient : null;
-            SelectedSite = IsSiteAuto ? TransitionContext.selectedSite : null;
-            SelectedDevice = IsDeviceAuto ? TransitionContext.selectedDevice : null;
-
             // Move on to view ( allow one instance at a time )
             if (canOpenSubviewForm)
             {
@@ -161,50 +224,104 @@ namespace CashRegisterRepairs.ViewModel
                 canOpenSubviewForm = false;
             }
         }
+
+        private void FillCBAutomatically(object obj)
+        {
+            if (selectedDeviceTest != null)
+            {
+                IsClientEnabled = false;
+                IsSiteEnabled = false;
+                IsDeviceEnabled = false;
+
+                SelectedClient = selectedDeviceTest.CLIENT_NAME;
+                SelectedSite = selectedDeviceTest.SITE_NAME;
+                Device actual = dbModel.Devices.Find(selectedDeviceTest.ID);
+                SelectedDevice = actual.DeviceModel.DEVICE_NUM_PREFIX + selectedDeviceTest.DEVICE_NUM_POSTFIX;
+            }
+        }
+
+        private void ClearCB(object obj)
+        {
+            SelectedClient = null;
+            SelectedSite = null;
+            SelectedDevice = null;
+
+            IsClientEnabled = true;
+        }
+
+        private void FillCB(object obj)
+        {
+            switch (obj as string)
+            {
+                case "client":
+                    IsSiteEnabled = true;
+                    SelectedSite = null;
+
+                    Sites.Clear();
+                    dbModel.Sites.ToList().Where(site => site.Client.NAME == SelectedClient).ToList().ForEach(s => Sites.Add(s.NAME));
+                    break;
+                case "site":
+                    IsDeviceEnabled = true;
+                    SelectedDevice = null;
+
+                    Devices.Clear();
+                    dbModel.Devices.ToList().Where(device => device.Site.NAME == SelectedSite).ToList().ForEach(d => Devices.Add(d.DeviceModel.DEVICE_NUM_PREFIX + d.DEVICE_NUM_POSTFIX));
+                    break;
+                default:
+                    break;
+            }
+
+            ShowDocumentsOfTemplate(null);
+        }
+
+        private void PreviewDocument(object obj)
+        {
+
+        }
         #endregion
 
-        // ComboBox filler collections(maybe make them fields - see other tabs)
+        // ComboBox filler collections
         #region ComboBox FILLERS
-        private List<string> _sitesFromDB;
-        public List<string> Sites
+        private ObservableCollection<string> _sitesFromDB;
+        public ObservableCollection<string> Sites
         {
             get { return _sitesFromDB; }
-            set { _sitesFromDB = value; NotifyPropertyChanged(); }
+            set { _sitesFromDB = value; }
         }
 
-        private List<string> _clientsFromDB;
-        public List<string> Clients
+        private ObservableCollection<string> _clientsFromDB;
+        public ObservableCollection<string> Clients
         {
             get { return _clientsFromDB; }
-            set { _clientsFromDB = value; NotifyPropertyChanged(); }
+            set { _clientsFromDB = value; }
         }
 
-        private List<string> _devicesFromDB;
-        public List<string> Devices
+        private ObservableCollection<string> _devicesFromDB;
+        public ObservableCollection<string> Devices
         {
             get { return _devicesFromDB; }
-            set { _devicesFromDB = value; NotifyPropertyChanged(); }
+            set { _devicesFromDB = value; }
         }
         #endregion
 
         // SELECTION PROPS
         #region SELECTION PROPS
-        private Client _selectedClient;
-        public Client SelectedClient
+        private string _selectedClient;
+        public string SelectedClient
         {
             get { return _selectedClient; }
             set { _selectedClient = value; NotifyPropertyChanged(); }
         }
 
-        private Site _selectedSite;
-        public Site SelectedSite
+        private string _selectedSite;
+        public string SelectedSite
         {
             get { return _selectedSite; }
             set { _selectedSite = value; NotifyPropertyChanged(); }
         }
 
-        private Device _selectedDevice;
-        public Device SelectedDevice
+        private string _selectedDevice;
+        public string SelectedDevice
         {
             get { return _selectedDevice; }
             set { _selectedDevice = value; NotifyPropertyChanged(); }
@@ -228,21 +345,21 @@ namespace CashRegisterRepairs.ViewModel
         // PROPS - NEEDS A LOT MORE PROPERTIES SEE VIEW`s BINDINGS...
         #region PROPS
         private bool _isClientAuto;
-        public bool IsClientAuto
+        public bool IsClientEnabled
         {
             get { return _isClientAuto; }
             set { _isClientAuto = value; NotifyPropertyChanged(); }
         }
 
         private bool _isSiteAuto;
-        public bool IsSiteAuto
+        public bool IsSiteEnabled
         {
             get { return _isSiteAuto; }
             set { _isSiteAuto = value; NotifyPropertyChanged(); }
         }
 
         private bool _isDeviceAuto;
-        public bool IsDeviceAuto
+        public bool IsDeviceEnabled
         {
             get { return _isDeviceAuto; }
             set { _isDeviceAuto = value; NotifyPropertyChanged(); }

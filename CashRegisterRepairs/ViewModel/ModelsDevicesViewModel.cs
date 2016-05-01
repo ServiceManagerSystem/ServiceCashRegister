@@ -14,8 +14,10 @@ namespace CashRegisterRepairs.ViewModel
 {
     public class ModelsDevicesViewModel : INotifyPropertyChanged, IViewModel
     {
+        PlaceholderViewModel navigator;
+
         private bool canOpenSubview = true;
-        
+
         #region NOTIFY
         private bool canExecute = true;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -60,11 +62,32 @@ namespace CashRegisterRepairs.ViewModel
             // Model addition Commands
             SaveModelsCommand = new TemplateCommand(SaveModels, param => this.canExecute);
             CommitModelsCommand = new TemplateCommand(CommitModels, param => this.canExecute);
-        
+
             // Form + display commands
-            AddModelCommand = new TemplateCommand(ShowModelAdditionForm, param => this.canExecute);
-            DisplayDevicesCommand = new TemplateCommand(ShowDevicesOfModel, param => this.canExecute);
             EnableSubviewDisplay = new TemplateCommand(EnableSubviews, param => this.canExecute);
+            DraftContractCommand = new TemplateCommand(SwitchToDocumentsTab, param => this.canExecute);
+            DisplayDevicesCommand = new TemplateCommand(ShowDevicesOfModel, param => this.canExecute);
+            AddModelCommand = new TemplateCommand(ShowModelAdditionForm, param => this.canExecute);
+        }
+
+        public ModelsDevicesViewModel(PlaceholderViewModel nav)
+        {
+            navigator = nav;
+
+            // Initialize grid collections + storage
+            deviceModelStorage = new List<DeviceModel>();
+            _devices = new ObservableCollection<DeviceDisplay>();
+            Models = new ObservableCollection<DeviceModel>(dbModel.DeviceModels);
+
+            // Model addition Commands
+            SaveModelsCommand = new TemplateCommand(SaveModels, param => this.canExecute);
+            CommitModelsCommand = new TemplateCommand(CommitModels, param => this.canExecute);
+
+            // Form + display commands
+            EnableSubviewDisplay = new TemplateCommand(EnableSubviews, param => this.canExecute);
+            DraftContractCommand = new TemplateCommand(SwitchToDocumentsTab, param => this.canExecute);
+            DisplayDevicesCommand = new TemplateCommand(ShowDevicesOfModel, param => this.canExecute);
+            AddModelCommand = new TemplateCommand(ShowModelAdditionForm, param => this.canExecute);
         }
 
         #region COMMANDS
@@ -102,6 +125,13 @@ namespace CashRegisterRepairs.ViewModel
         {
             get { return _enableSubviewDisplay; }
             set { _enableSubviewDisplay = value; }
+        }
+
+        private ICommand _draftContractCommand;
+        public ICommand DraftContractCommand
+        {
+            get { return _draftContractCommand; }
+            set { _draftContractCommand = value; }
         }
         #endregion
 
@@ -184,6 +214,12 @@ namespace CashRegisterRepairs.ViewModel
                 addModelsView.Show();
                 canOpenSubview = false;
             }
+        }
+
+        private void SwitchToDocumentsTab(object obj)
+        {
+            TemplatesDocumentsViewModel.selectedDeviceTest = obj as DeviceDisplay;
+            navigator.SelectedTab = 2;
         }
         #endregion
 
