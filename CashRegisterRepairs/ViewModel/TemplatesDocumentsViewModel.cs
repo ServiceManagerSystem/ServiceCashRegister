@@ -14,7 +14,9 @@ namespace CashRegisterRepairs.ViewModel
 {
     public class TemplatesDocumentsViewModel : INotifyPropertyChanged, IViewModel
     {
-        public static DeviceDisplay selectedDeviceTest;
+        // A neccessary evil for exchanging information between separate VMs
+        public static DeviceDisplay selectedDevice;
+
         // Subview disable/enable control field
         private bool canOpenSubviewForm = true;
 
@@ -65,15 +67,16 @@ namespace CashRegisterRepairs.ViewModel
             Clients = new ObservableCollection<string>();
             Devices = new ObservableCollection<string>();
 
-            // CB enables
+            // Enable client choice only at first
             IsClientEnabled = true;
             IsSiteEnabled = false;
             IsDeviceEnabled = false;
 
-            // Fill combo box for clients
+            // Fill combo box for clients ONLY
             dbModel.Clients.ToList().ForEach(client => Clients.Add(client.NAME));
 
             AddTemplateCommand = new TemplateCommand(ShowTemplateAdditionForm, param => this.canExecute);
+            // MAY BE WE WON`T NEED THIS ONE(WE HAVE PREVIEW COMMAND)
             AddDocumentCommand = new TemplateCommand(ShowDocumentAdditionForm, param => this.canExecute);
 
             // Initialize commands
@@ -155,43 +158,35 @@ namespace CashRegisterRepairs.ViewModel
         #region SHOW FORM METHODS (NEEDS REFACTOR)
         private void ShowDocumentsOfTemplate(object obj)
         {
-            if (SelectedTemplate == null)
-            {
-                MessageBox.Show("Няма избран шаблон!", "ЛИПСВАЩ ШАБЛОН", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
             // Clear old display
             Documents.Clear();
 
-            // NEEDS FIXING
             foreach (Document doc in dbModel.Documents)
             {
-                if (doc.Template.TYPE.Equals((SelectedTemplate as Template).TYPE))
+                if (SelectedTemplate != null && doc.Template.TYPE.Equals((SelectedTemplate as Template).TYPE))
                 {
-                    // Display all if nothing is selected
+                    // Display all docs if no client is selected
                     if (SelectedClient == null)
                     {
-                        Site site = dbModel.Sites.Where(si => si.Client.Equals(doc.Client)).FirstOrDefault();
-                        Device device = dbModel.Devices.Where(dev => dev.Site.Equals(site)).FirstOrDefault();
+                        Site site = dbModel.Sites.Where(si => si.Client.ID.Equals(doc.Client.ID)).FirstOrDefault();
+                        Device device = dbModel.Devices.Where(dev => dev.Site.ID.Equals(site.ID)).FirstOrDefault();
                         DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, site, device);
 
                         Documents.Add(docDisplay);
                     }
-                    // Match if anything is selected
+                    // Match specific docs if client is selected
                     else if (doc.Client.NAME == SelectedClient)
                     {
                         Site site = dbModel.Sites.Where(si => si.Client.NAME.Equals(SelectedClient)).FirstOrDefault();
-                        Device device = dbModel.Devices.Where(dev => dev.Site.Equals(site)).FirstOrDefault();
+                        Device device = dbModel.Devices.Where(dev => dev.Site.ID.Equals(site.ID)).FirstOrDefault();
                         DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, site, device);
 
                         Documents.Add(docDisplay);
                     }
                 }
-
-
             }
 
+            // Order by expiring documents on the TOP
             Documents.OrderByDescending(document => document.END_DATE);
         }
 
@@ -216,10 +211,11 @@ namespace CashRegisterRepairs.ViewModel
 
         private void ShowDocumentAdditionForm(object obj)
         {
-            // Move on to view ( allow one instance at a time )
+            // Remove this in favor of PreviewDocument or reuse this
             if (canOpenSubviewForm)
             {
                 AddDocumentView addDocumentsView = new AddDocumentView();
+                addDocumentsView.DataContext = obj;
                 addDocumentsView.Show();
                 canOpenSubviewForm = false;
             }
@@ -227,16 +223,16 @@ namespace CashRegisterRepairs.ViewModel
 
         private void FillCBAutomatically(object obj)
         {
-            if (selectedDeviceTest != null)
+            if (selectedDevice != null)
             {
+                SelectedClient = selectedDevice.CLIENT_NAME;
+                SelectedSite = selectedDevice.SITE_NAME;
+                Device actualDeviceObject = dbModel.Devices.Find(selectedDevice.ID);
+                SelectedDevice = actualDeviceObject.DeviceModel.DEVICE_NUM_PREFIX + selectedDevice.DEVICE_NUM_POSTFIX;
+
                 IsClientEnabled = false;
                 IsSiteEnabled = false;
                 IsDeviceEnabled = false;
-
-                SelectedClient = selectedDeviceTest.CLIENT_NAME;
-                SelectedSite = selectedDeviceTest.SITE_NAME;
-                Device actual = dbModel.Devices.Find(selectedDeviceTest.ID);
-                SelectedDevice = actual.DeviceModel.DEVICE_NUM_PREFIX + selectedDeviceTest.DEVICE_NUM_POSTFIX;
             }
         }
 
@@ -276,7 +272,7 @@ namespace CashRegisterRepairs.ViewModel
 
         private void PreviewDocument(object obj)
         {
-
+            // Implement using DocumentViewer, make another view for this -> simple with button for print
         }
         #endregion
 

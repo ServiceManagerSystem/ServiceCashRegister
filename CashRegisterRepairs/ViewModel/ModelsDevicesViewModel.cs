@@ -218,7 +218,7 @@ namespace CashRegisterRepairs.ViewModel
 
         private void SwitchToDocumentsTab(object obj)
         {
-            TemplatesDocumentsViewModel.selectedDeviceTest = obj as DeviceDisplay;
+            TemplatesDocumentsViewModel.selectedDevice = obj as DeviceDisplay;
             navigator.SelectedTab = 2;
         }
         #endregion
