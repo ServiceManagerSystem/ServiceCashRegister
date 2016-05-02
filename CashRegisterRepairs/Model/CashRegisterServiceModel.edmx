@@ -10,12 +10,12 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="EGN" Type="varchar" MaxLength="10" />
-          <Property Name="NAME" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="BULSTAT" Type="varchar" MaxLength="9" />
-          <Property Name="ADDRESS" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="TDD" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="COMMENT" Type="varchar" MaxLength="255" />
+          <Property Name="EGN" Type="nvarchar" MaxLength="10" />
+          <Property Name="NAME" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BULSTAT" Type="nvarchar" MaxLength="9" />
+          <Property Name="ADDRESS" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="TDD" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="COMMENT" Type="nvarchar" MaxLength="255" />
           <Property Name="MANAGER_ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="DeviceModels">
@@ -23,21 +23,21 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="MANUFACTURER" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="MODEL" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="CERTIFICATE" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="DEVICE_NUM_PREFIX" Type="varchar" MaxLength="2" Nullable="false" />
-          <Property Name="FISCAL_NUM_PREFIX" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="MANUFACTURER" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="MODEL" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CERTIFICATE" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="DEVICE_NUM_PREFIX" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="FISCAL_NUM_PREFIX" Type="nvarchar" MaxLength="2" Nullable="false" />
         </EntityType>
         <EntityType Name="Devices">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SIM" Type="varchar" MaxLength="15" Nullable="false" />
-          <Property Name="DEVICE_NUM_POSTFIX" Type="varchar" MaxLength="6" Nullable="false" />
-          <Property Name="FISCAL_NUM_POSTFIX" Type="varchar" MaxLength="6" Nullable="false" />
-          <Property Name="NAP_NUMBER" Type="varchar" MaxLength="7" Nullable="false" />
+          <Property Name="SIM" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="DEVICE_NUM_POSTFIX" Type="nvarchar" MaxLength="6" Nullable="false" />
+          <Property Name="FISCAL_NUM_POSTFIX" Type="nvarchar" MaxLength="6" Nullable="false" />
+          <Property Name="NAP_NUMBER" Type="nvarchar" MaxLength="7" Nullable="false" />
           <Property Name="NAP_DATE" Type="date" Nullable="false" />
           <Property Name="MODEL_ID" Type="int" Nullable="false" />
           <Property Name="SITE_ID" Type="int" Nullable="false" />
@@ -52,7 +52,7 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
           </Key>
           <Property Name="START_DATE" Type="date" />
           <Property Name="END_DATE" Type="date" />
-          <Property Name="DOC" Type="xml" Nullable="false" />
+          <Property Name="DOC" Type="nvarchar(max)" Nullable="false" />
           <Property Name="CLIENT_ID" Type="int" Nullable="false" />
           <Property Name="TEMPLATE_ID" Type="int" Nullable="false" />
         </EntityType>
@@ -61,17 +61,17 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NAME" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="PHONE" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="NAME" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="PHONE" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="Sites">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NAME" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="ADDRESS" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="PHONE" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="NAME" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ADDRESS" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PHONE" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="CLIENT_ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Templates">
@@ -79,9 +79,10 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TYPE" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="STATUS" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="TYPE" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="STATUS" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="DATE_ADDED" Type="date" Nullable="false" />
+          <Property Name="TEMPLATE_CONTENT" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <Association Name="FK_Client_Doc_Id">
           <End Role="Clients" Type="Self.Clients" Multiplicity="1" />
@@ -205,12 +206,12 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EGN" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="BULSTAT" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
-          <Property Name="ADDRESS" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="TDD" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="COMMENT" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="EGN" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BULSTAT" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <Property Name="ADDRESS" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TDD" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="COMMENT" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="MANAGER_ID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Documents" Relationship="Self.FK_Client_Doc_Id" FromRole="Clients" ToRole="Documents" />
           <NavigationProperty Name="Sites" Relationship="Self.FK_Client_Id" FromRole="Clients" ToRole="Sites" />
@@ -221,11 +222,11 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MANUFACTURER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="MODEL" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CERTIFICATE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="DEVICE_NUM_PREFIX" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FISCAL_NUM_PREFIX" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MANUFACTURER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MODEL" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CERTIFICATE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DEVICE_NUM_PREFIX" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FISCAL_NUM_PREFIX" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Devices" Relationship="Self.FK_Devices_Models" FromRole="DeviceModels" ToRole="Devices" />
         </EntityType>
         <EntityType Name="Device">
@@ -233,10 +234,10 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SIM" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="DEVICE_NUM_POSTFIX" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FISCAL_NUM_POSTFIX" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="NAP_NUMBER" Type="String" MaxLength="7" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SIM" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DEVICE_NUM_POSTFIX" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FISCAL_NUM_POSTFIX" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NAP_NUMBER" Type="String" MaxLength="7" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="NAP_DATE" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="MODEL_ID" Type="Int32" Nullable="false" />
           <Property Name="SITE_ID" Type="Int32" Nullable="false" />
@@ -248,8 +249,8 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NAME" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="PHONE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NAME" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PHONE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Clients" Relationship="Self.FK_Manager_Id" FromRole="Managers" ToRole="Clients" />
         </EntityType>
         <EntityType Name="Site">
@@ -257,9 +258,9 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ADDRESS" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="PHONE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ADDRESS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PHONE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CLIENT_ID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Client" Relationship="Self.FK_Client_Id" FromRole="Sites" ToRole="Clients" />
           <NavigationProperty Name="Devices" Relationship="Self.FK_Devices_SiteId" FromRole="Sites" ToRole="Devices" />
@@ -376,9 +377,10 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TYPE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="STATUS" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TYPE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="STATUS" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DATE_ADDED" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="TEMPLATE_CONTENT" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Documents" Relationship="CashRegisterServiceModel.FK_Template_Doc_Id" FromRole="Template" ToRole="Document" />
         </EntityType>
         <Association Name="FK_Template_Doc_Id">
@@ -473,6 +475,7 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
           <EntitySetMapping Name="Templates">
             <EntityTypeMapping TypeName="CashRegisterServiceModel.Template">
               <MappingFragment StoreEntitySet="Templates">
+                <ScalarProperty Name="TEMPLATE_CONTENT" ColumnName="TEMPLATE_CONTENT" />
                 <ScalarProperty Name="DATE_ADDED" ColumnName="DATE_ADDED" />
                 <ScalarProperty Name="STATUS" ColumnName="STATUS" />
                 <ScalarProperty Name="TYPE" ColumnName="TYPE" />

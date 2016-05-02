@@ -188,10 +188,15 @@ namespace CashRegisterRepairs.ViewModel
                     if (SelectedClient == null)
                     {
                         Site site = dbModel.Sites.Where(si => si.Client.ID.Equals(doc.Client.ID)).FirstOrDefault();
-                        Device device = dbModel.Devices.Where(dev => dev.Site.ID.Equals(site.ID)).FirstOrDefault();
-                        DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, site, device);
-
-                        Documents.Add(docDisplay);
+                        if(site != null)
+                        {
+                            Device device = dbModel.Devices.Where(dev => dev.Site.ID.Equals(site.ID)).FirstOrDefault();
+                            if(device != null)
+                            {
+                                DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, site, device);
+                                Documents.Add(docDisplay);
+                            }
+                        }
                     }
                     // Match specific docs if client is selected
                     else if (doc.Client.NAME == SelectedClient)
