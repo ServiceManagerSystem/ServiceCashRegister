@@ -8,13 +8,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CashRegisterRepairs.View"
         mc:Ignorable="d"
-        Height="400"
-        Width="300"
+        Height="500"
+        Width="700"
         GlowBrush="Yellow"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize"
         Title="PreviewDocumentView">
-    <Grid>
 
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Background="PeachPuff">
+        <DockPanel Margin="10">
+            <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
+                <Button Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding PrintDocumentCommand}" Content="PRINT"/>
+            </WrapPanel>
+            <TextBox Text="{Binding DocumentContent}"/>         
+        </DockPanel>
     </Grid>
 </Controls:MetroWindow>

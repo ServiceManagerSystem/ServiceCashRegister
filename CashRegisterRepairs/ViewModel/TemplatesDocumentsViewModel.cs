@@ -1,10 +1,12 @@
 ﻿using CashRegisterRepairs.Model;
 using CashRegisterRepairs.Utilities;
 using CashRegisterRepairs.View;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -75,17 +77,19 @@ namespace CashRegisterRepairs.ViewModel
             // Fill combo box for clients ONLY
             dbModel.Clients.ToList().ForEach(client => Clients.Add(client.NAME));
 
-            AddTemplateCommand = new TemplateCommand(ShowTemplateAdditionForm, param => this.canExecute);
-            // MAY BE WE WON`T NEED THIS ONE(WE HAVE PREVIEW COMMAND)
-            AddDocumentCommand = new TemplateCommand(ShowDocumentAdditionForm, param => this.canExecute);
-
             // Initialize commands
             EnableSubviewDisplay = new TemplateCommand(EnableSubview, param => this.canExecute);
-            LoadAutosCommand = new TemplateCommand(FillCBAutomatically, param => this.canExecute);
-            ClearCBCommand = new TemplateCommand(ClearCB, param => this.canExecute);
-            FillCommand = new TemplateCommand(FillCB, param => this.canExecute);
-            PreviewDocumentCommand = new TemplateCommand(PreviewDocument, param => this.canExecute);
-            DisplayDocumentsCommand = new TemplateCommand(ShowDocumentsOfTemplate, param => this.canExecute);
+
+            AddDocumentCommand = new TemplateCommand(AddDocument, param => this.canExecute);
+            AddTemplateCommand = new TemplateCommand(ShowTemplateAdditionForm, param => this.canExecute);
+            DisplayDocumentsInGridCommand = new TemplateCommand(ShowDocumentsOfTemplate, param => this.canExecute);
+
+            AutofillComboBoxCommand = new TemplateCommand(FillCBAutomatically, param => this.canExecute);
+            ClearComboBoxCommand = new TemplateCommand(ClearCB, param => this.canExecute);
+            FillComboBoxCommand = new TemplateCommand(FillCB, param => this.canExecute);
+
+            ShowDocumentPreviewCommand = new TemplateCommand(ShowDocumentPreviewForm, param => this.canExecute);
+            PrintDocumentCommand = new TemplateCommand(PrintDocument, param => this.canExecute);
         }
 
         // COMMANDS
@@ -111,36 +115,51 @@ namespace CashRegisterRepairs.ViewModel
             set { _addDocumentCommand = value; }
         }
 
+
+        private ICommand _openFileCommand;
+        public ICommand OpenDocumentCommand
+        {
+            get { return _openFileCommand; }
+            set { _openFileCommand = value; }
+        }
+
+        private ICommand _printDocumentCommand;
+        public ICommand PrintDocumentCommand
+        {
+            get { return _printDocumentCommand; }
+            set { _printDocumentCommand = value; }
+        }
+
         private ICommand _displayDocumentsCommand;
-        public ICommand DisplayDocumentsCommand
+        public ICommand DisplayDocumentsInGridCommand
         {
             get { return _displayDocumentsCommand; }
             set { _displayDocumentsCommand = value; }
         }
 
         private ICommand _loadAutosCommand;
-        public ICommand LoadAutosCommand
+        public ICommand AutofillComboBoxCommand
         {
             get { return _loadAutosCommand; }
             set { _loadAutosCommand = value; }
         }
 
         private ICommand _clearCBCommand;
-        public ICommand ClearCBCommand
+        public ICommand ClearComboBoxCommand
         {
             get { return _clearCBCommand; }
             set { _clearCBCommand = value; }
         }
 
         private ICommand _fillCommand;
-        public ICommand FillCommand
+        public ICommand FillComboBoxCommand
         {
             get { return _fillCommand; }
             set { _fillCommand = value; }
         }
 
         private ICommand _viewDocumentCommand;
-        public ICommand PreviewDocumentCommand
+        public ICommand ShowDocumentPreviewCommand
         {
             get { return _viewDocumentCommand; }
             set { _viewDocumentCommand = value; }
@@ -209,16 +228,52 @@ namespace CashRegisterRepairs.ViewModel
             }
         }
 
-        private void ShowDocumentAdditionForm(object obj)
+        private void AddDocument(object obj)
         {
-            // Remove this in favor of PreviewDocument or reuse this
+            Document doc = new Document();
+            doc.Client = dbModel.Clients.Where(client => client.NAME.Equals(SelectedClient)).FirstOrDefault();
+            doc.START_DATE = DateTime.Today;
+            doc.END_DATE = doc.START_DATE.Value.AddYears(1);
+            doc.Template = SelectedTemplate as Template;
+
+            // Generirano ot template-a
+            // doc.DOC
+
+            dbModel.Documents.Add(doc);
+            dbModel.SaveChanges();
+        }
+
+        private void ShowDocumentPreviewForm(object obj)
+        {
             if (canOpenSubviewForm)
             {
-                AddDocumentView addDocumentsView = new AddDocumentView();
-                addDocumentsView.DataContext = obj;
-                addDocumentsView.Show();
+                LoadDocumentContent();
+
+                PreviewDocumentView previewDocumentView = new PreviewDocumentView();
+                previewDocumentView.DataContext = obj;
+                previewDocumentView.Show();
                 canOpenSubviewForm = false;
             }
+        }
+
+        private void LoadDocumentContent()
+        {
+            Document foundDoc = null;
+            string type = (SelectedDocument as DocumentDisplay).TEMPLATE;
+
+            if (SelectedClient != null)
+            {
+                string clientName = SelectedClient;
+                foundDoc = dbModel.Documents.Where(doc => doc.Client.NAME.Equals(clientName) && doc.Template.TYPE.Equals(type)).FirstOrDefault();
+            }
+            else
+            {
+                DateTime? start = (SelectedDocument as DocumentDisplay).START_DATE;
+                DateTime? end = (SelectedDocument as DocumentDisplay).END_DATE;
+                foundDoc = dbModel.Documents.Where(doc => doc.START_DATE.Value.Equals(start.Value) && doc.END_DATE.Value.Equals(end.Value) && doc.Template.TYPE.Equals(type)).FirstOrDefault();
+            }
+
+            DocumentContent = foundDoc.DOC;
         }
 
         private void FillCBAutomatically(object obj)
@@ -270,7 +325,7 @@ namespace CashRegisterRepairs.ViewModel
             ShowDocumentsOfTemplate(null);
         }
 
-        private void PreviewDocument(object obj)
+        private void PrintDocument(object obj)
         {
             // Implement using DocumentViewer, make another view for this -> simple with button for print
         }
@@ -340,6 +395,13 @@ namespace CashRegisterRepairs.ViewModel
 
         // PROPS - NEEDS A LOT MORE PROPERTIES SEE VIEW`s BINDINGS...
         #region PROPS
+        private string _documentContent;
+        public string DocumentContent
+        {
+            get { return _documentContent; }
+            set { _documentContent = value; NotifyPropertyChanged(); }
+        }
+
         private bool _isClientAuto;
         public bool IsClientEnabled
         {

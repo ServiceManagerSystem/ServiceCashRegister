@@ -48,12 +48,13 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1">
-            <Label Style="{StaticResource GenericLabelStyle}" Content="Апарати ( избери с двоен клик за изготвяне на договор )"/>
+            <Label Style="{StaticResource GenericLabelStyle}" Content="Апарати"/>
             <DataGrid Style="{StaticResource CoolDataGridStyle}"
                       ItemsSource="{Binding Devices}"
                       SelectedItem="{Binding SelectedDevice}"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto">
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ToolTip="Избери с двоен клик за подготвяне на документ.">
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding SITE_NAME}" Header="Обект"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding CLIENT_NAME}" Header="Клиент"/>

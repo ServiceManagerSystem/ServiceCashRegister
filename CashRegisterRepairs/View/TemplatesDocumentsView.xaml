@@ -10,11 +10,10 @@
     
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadAutosCommand}"/>
+            <i:InvokeCommandAction Command="{Binding AutofillComboBoxCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     
-    <!-- MAIN GRID -->
     <Grid Background="PeachPuff">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -23,14 +22,13 @@
             <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
         
-        <!-- MAKE THIS ENABLE ONE BY ONE AFTER SELECTION OF AUTO FILL -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel>
                 <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericLabelStyle}" Content="Клиент"/>
                 <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsClientEnabled}" ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient}" Height="30" Width="200" HorizontalAlignment="Left">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding FillCommand}" CommandParameter="client"/>
+                            <i:InvokeCommandAction Command="{Binding FillComboBoxCommand}" CommandParameter="client"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
@@ -41,7 +39,7 @@
                 <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsSiteEnabled}" ItemsSource="{Binding Sites}" SelectedItem="{Binding SelectedSite}" Height="30" Width="200" HorizontalAlignment="Center">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding FillCommand}" CommandParameter="site"/>
+                            <i:InvokeCommandAction Command="{Binding FillComboBoxCommand}" CommandParameter="site"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 </ComboBox>
@@ -53,7 +51,7 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Height="30" VerticalAlignment="Bottom">
-                <Button Style="{StaticResource AdditionButton}" Command="{Binding ClearCBCommand}" Margin="10,0,0,0">
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding ClearComboBoxCommand}" Margin="10,0,0,0">
                     <StackPanel>
                         <Image Source="{StaticResource clearIcon}"/>
                     </StackPanel>
@@ -64,7 +62,7 @@
         <StackPanel Grid.Row="1">
             <StackPanel Orientation="Horizontal" Height="30">
                 <Label Style="{StaticResource GenericLabelStyle}" Content="Шаблони"/>
-                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddTemplateCommand}">
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddTemplateCommand}" CommandParameter="{Binding .}">
                     <StackPanel>
                         <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
@@ -82,11 +80,10 @@
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding STATUS}" Header="Статус"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding DATE_ADDED}" Header="Добавен"/>
                 </DataGrid.Columns>
-
-                <!-- Display related documents in grid below -->
+                
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding DisplayDocumentsCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding DisplayDocumentsInGridCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 
@@ -95,23 +92,22 @@
 
         <StackPanel Grid.Row="3">
             <StackPanel Orientation="Horizontal" Height="30">
-                <Label Style="{StaticResource GenericLabelStyle}" Content="Документи( двоен клик за преглед )"/>
-                <!--<Button Style="{StaticResource AdditionButton}" Command="{Binding AddDocumentCommand}">
+                <Label Style="{StaticResource GenericLabelStyle}" Content="Документи"/>
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddDocumentCommand}">
                     <StackPanel>
                         <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
-                </Button>-->
+                </Button>
             </StackPanel>
             
-            <!-- Display info sorted DESCENDING by expiration !!! -->
             <DataGrid 
                 Style="{StaticResource CoolDataGridStyle}"
                 ItemsSource="{Binding Documents}"
                 SelectedItem="{Binding SelectedDocument}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ToolTip="Избери с двоен клик за преглед(preview) на документ.">
                 <DataGrid.Columns>
-                    <!-- Make custom DATA object like with device display -->
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding DEVICE}" Header="Апарат"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding SITE}" Header="Oбект"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding CLIENT}" Header="Клиент"/>
@@ -119,10 +115,10 @@
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding END_DATE}" Header="Изтича"/>
                 </DataGrid.Columns>
 
-                <!-- LINK TO DOCUMENT VIEWER( this is an actual control - use it in a closable form ) -->
+                <!-- LINK TO DOCUMENT VIEWER -->
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDoubleClick">
-                        <i:InvokeCommandAction Command="{Binding PreviewDocumentCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding ShowDocumentPreviewCommand}" CommandParameter="{Binding .}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 

@@ -3,13 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:vm="clr-namespace:CashRegisterRepairs.ViewModel"
         xmlns:local="clr-namespace:CashRegisterRepairs.View"
         mc:Ignorable="d"
-        Height="300" 
-        Width="300">
-    <Grid>
-        
+        Height="500" 
+        Width="700">
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
+    <Grid Background="PeachPuff">
+
     </Grid>
 </Controls:MetroWindow>
