@@ -42,14 +42,11 @@
           <Property Name="MODEL_ID" Type="int" Nullable="false" />
           <Property Name="SITE_ID" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Documents">
           <Key>
-            <PropertyRef Name="DOC" />
-            <PropertyRef Name="CLIENT_ID" />
-            <PropertyRef Name="TEMPLATE_ID" />
+            <PropertyRef Name="ID" />
           </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="START_DATE" Type="date" />
           <Property Name="END_DATE" Type="date" />
           <Property Name="DOC" Type="nvarchar(max)" Nullable="false" />
@@ -61,7 +58,7 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NAME" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="NAME" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="PHONE" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="Sites">
@@ -70,7 +67,7 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="NAME" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ADDRESS" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ADDRESS" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="PHONE" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="CLIENT_ID" Type="int" Nullable="false" />
         </EntityType>
@@ -80,7 +77,7 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TYPE" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="STATUS" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="STATUS" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="DATE_ADDED" Type="date" Nullable="false" />
           <Property Name="TEMPLATE_CONTENT" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
@@ -160,18 +157,10 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
           <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeviceModels" EntityType="Self.DeviceModels" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Devices" EntityType="Self.Devices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Documents" EntityType="Self.Documents" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Managers" EntityType="Self.Managers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sites" EntityType="Self.Sites" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Templates" EntityType="Self.Templates" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Documents" EntityType="Self.Documents" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Documents].[START_DATE] AS [START_DATE], 
-    [Documents].[END_DATE] AS [END_DATE], 
-    [Documents].[DOC] AS [DOC], 
-    [Documents].[CLIENT_ID] AS [CLIENT_ID], 
-    [Documents].[TEMPLATE_ID] AS [TEMPLATE_ID]
-    FROM [dbo].[Documents] AS [Documents]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK_Client_Doc_Id" Association="Self.FK_Client_Doc_Id">
             <End Role="Clients" EntitySet="Clients" />
             <End Role="Documents" EntitySet="Documents" />
@@ -213,9 +202,9 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
           <Property Name="TDD" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="COMMENT" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="MANAGER_ID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Documents" Relationship="Self.FK_Client_Doc_Id" FromRole="Clients" ToRole="Documents" />
           <NavigationProperty Name="Sites" Relationship="Self.FK_Client_Id" FromRole="Clients" ToRole="Sites" />
           <NavigationProperty Name="Manager" Relationship="Self.FK_Manager_Id" FromRole="Clients" ToRole="Managers" />
+          <NavigationProperty Name="Documents" Relationship="CashRegisterServiceModel.FK_Client_Doc_Id" FromRole="Client" ToRole="Document" />
         </EntityType>
         <EntityType Name="DeviceModel">
           <Key>
@@ -249,7 +238,7 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NAME" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PHONE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Clients" Relationship="Self.FK_Manager_Id" FromRole="Managers" ToRole="Clients" />
         </EntityType>
@@ -259,38 +248,12 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ADDRESS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ADDRESS" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PHONE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CLIENT_ID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Client" Relationship="Self.FK_Client_Id" FromRole="Sites" ToRole="Clients" />
           <NavigationProperty Name="Devices" Relationship="Self.FK_Devices_SiteId" FromRole="Sites" ToRole="Devices" />
         </EntityType>
-        <EntityType Name="Document">
-          <Key>
-            <PropertyRef Name="DOC" />
-            <PropertyRef Name="CLIENT_ID" />
-            <PropertyRef Name="TEMPLATE_ID" />
-          </Key>
-          <Property Name="START_DATE" Type="DateTime" Precision="0" />
-          <Property Name="END_DATE" Type="DateTime" Precision="0" />
-          <Property Name="DOC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CLIENT_ID" Type="Int32" Nullable="false" />
-          <Property Name="TEMPLATE_ID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Client" Relationship="Self.FK_Client_Doc_Id" FromRole="Documents" ToRole="Clients" />
-          <NavigationProperty Name="Template" Relationship="CashRegisterServiceModel.FK_Template_Doc_Id" FromRole="Document" ToRole="Template" />
-        </EntityType>
-        <Association Name="FK_Client_Doc_Id">
-          <End Role="Clients" Type="Self.Client" Multiplicity="1" />
-          <End Role="Documents" Type="Self.Document" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Clients">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Documents">
-              <PropertyRef Name="CLIENT_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Client_Id">
           <End Role="Clients" Type="Self.Client" Multiplicity="1" />
           <End Role="Sites" Type="Self.Site" Multiplicity="*" />
@@ -345,11 +308,6 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
           <EntitySet Name="Devices" EntityType="Self.Device" />
           <EntitySet Name="Managers" EntityType="Self.Manager" />
           <EntitySet Name="Sites" EntityType="Self.Site" />
-          <EntitySet Name="Documents" EntityType="Self.Document" />
-          <AssociationSet Name="FK_Client_Doc_Id" Association="Self.FK_Client_Doc_Id">
-            <End Role="Clients" EntitySet="Clients" />
-            <End Role="Documents" EntitySet="Documents" />
-          </AssociationSet>
           <AssociationSet Name="FK_Client_Id" Association="Self.FK_Client_Id">
             <End Role="Clients" EntitySet="Clients" />
             <End Role="Sites" EntitySet="Sites" />
@@ -367,6 +325,11 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
             <End Role="Devices" EntitySet="Devices" />
           </AssociationSet>
           <EntitySet Name="Templates" EntityType="CashRegisterServiceModel.Template" />
+          <EntitySet Name="Documents" EntityType="CashRegisterServiceModel.Document" />
+          <AssociationSet Name="FK_Client_Doc_Id" Association="CashRegisterServiceModel.FK_Client_Doc_Id">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Document" EntitySet="Documents" />
+          </AssociationSet>
           <AssociationSet Name="FK_Template_Doc_Id" Association="CashRegisterServiceModel.FK_Template_Doc_Id">
             <End Role="Template" EntitySet="Templates" />
             <End Role="Document" EntitySet="Documents" />
@@ -378,11 +341,36 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TYPE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="STATUS" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="STATUS" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="DATE_ADDED" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="TEMPLATE_CONTENT" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Documents" Relationship="CashRegisterServiceModel.FK_Template_Doc_Id" FromRole="Template" ToRole="Document" />
         </EntityType>
+        <EntityType Name="Document">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="START_DATE" Type="DateTime" Precision="0" />
+          <Property Name="END_DATE" Type="DateTime" Precision="0" />
+          <Property Name="DOC" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CLIENT_ID" Type="Int32" Nullable="false" />
+          <Property Name="TEMPLATE_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="CashRegisterServiceModel.FK_Client_Doc_Id" FromRole="Document" ToRole="Client" />
+          <NavigationProperty Name="Template" Relationship="CashRegisterServiceModel.FK_Template_Doc_Id" FromRole="Document" ToRole="Template" />
+        </EntityType>
+        <Association Name="FK_Client_Doc_Id">
+          <End Type="CashRegisterServiceModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="CashRegisterServiceModel.Document" Role="Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="CLIENT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Template_Doc_Id">
           <End Type="CashRegisterServiceModel.Template" Role="Template" Multiplicity="1" />
           <End Type="CashRegisterServiceModel.Document" Role="Document" Multiplicity="*" />
@@ -461,17 +449,6 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Documents">
-            <EntityTypeMapping TypeName="CashRegisterServiceModel.Document">
-              <MappingFragment StoreEntitySet="Documents">
-                <ScalarProperty Name="START_DATE" ColumnName="START_DATE" />
-                <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
-                <ScalarProperty Name="DOC" ColumnName="DOC" />
-                <ScalarProperty Name="CLIENT_ID" ColumnName="CLIENT_ID" />
-                <ScalarProperty Name="TEMPLATE_ID" ColumnName="TEMPLATE_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Templates">
             <EntityTypeMapping TypeName="CashRegisterServiceModel.Template">
               <MappingFragment StoreEntitySet="Templates">
@@ -479,6 +456,18 @@ warning 6002: The table/view 'SERVICE.dbo.Documents' does not have a primary key
                 <ScalarProperty Name="DATE_ADDED" ColumnName="DATE_ADDED" />
                 <ScalarProperty Name="STATUS" ColumnName="STATUS" />
                 <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Documents">
+            <EntityTypeMapping TypeName="CashRegisterServiceModel.Document">
+              <MappingFragment StoreEntitySet="Documents">
+                <ScalarProperty Name="TEMPLATE_ID" ColumnName="TEMPLATE_ID" />
+                <ScalarProperty Name="CLIENT_ID" ColumnName="CLIENT_ID" />
+                <ScalarProperty Name="DOC" ColumnName="DOC" />
+                <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
+                <ScalarProperty Name="START_DATE" ColumnName="START_DATE" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

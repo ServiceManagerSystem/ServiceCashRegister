@@ -1,16 +1,13 @@
 ﻿using CashRegisterRepairs.Model;
 using CashRegisterRepairs.Utilities;
 using CashRegisterRepairs.View;
-using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
+using System.Xml;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -235,17 +232,83 @@ namespace CashRegisterRepairs.ViewModel
 
         private void AddDocument(object obj)
         {
+            // Setup document table info
             Document doc = new Document();
             doc.Client = dbModel.Clients.Where(client => client.NAME.Equals(SelectedClient)).FirstOrDefault();
             doc.START_DATE = DateTime.Today;
             doc.END_DATE = doc.START_DATE.Value.AddYears(1);
             doc.Template = SelectedTemplate as Template;
 
-            // Generirano ot template-a
-            // doc.DOC
+            // FILL XML TEMPLATE WORKFLOW(EXTRACT TO MEHTOD -> FillXmlTemplate)
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(doc.Template.TEMPLATE_CONTENT);
+
+            // Find out count of documents of that template and increment it
+            int hackedId = dbModel.Documents.Where(x => x.Template.TYPE.Equals(doc.Template.TYPE)).Count();
+            hackedId++;
+
+            string[] serviceProfileItems = ExtractionHelper.FetchServiceProfile();
+
+            switch (doc.Template.TYPE)
+            {
+                case "Договор": // Extract to method -> FillContract
+                    // Title
+                    document.SelectSingleNode("ContractTemplate/Title/ContractNumber").InnerText = hackedId.ToString();
+                    document.SelectSingleNode("ContractTemplate/FreeText/Value").InnerText = DateTime.Today.ToString();
+
+                    // Service
+                    document.SelectSingleNode("ContractTemplate/Service/ServiceName/Value").InnerText = serviceProfileItems[0];
+                    document.SelectSingleNode("ContractTemplate/Service/ServiceManager/Value").InnerText = serviceProfileItems[2];
+
+                    // Client
+                    document.SelectSingleNode("ContractTemplate/Client/ClientName/Value").InnerText = doc.Client.NAME;
+                    document.SelectSingleNode("ContractTemplate/Client/ClientBulstat/Value").InnerText = doc.Client.BULSTAT;
+                    document.SelectSingleNode("ContractTemplate/Client/ClientAddress/Value").InnerText = doc.Client.ADDRESS;
+                    document.SelectSingleNode("ContractTemplate/Client/ClientManager/Value").InnerText = doc.Client.Manager.NAME;
+
+                    // Device
+                    Device device = selectedDevice != null ? dbModel.Devices.Find(selectedDevice.ID) : dbModel.Devices.Where(dev => (dev.DeviceModel.DEVICE_NUM_PREFIX+dev.DEVICE_NUM_POSTFIX).Equals(SelectedDevice)).FirstOrDefault();
+                    document.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceModel/Value").InnerText = device.DeviceModel.MODEL;
+                    document.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceNumber/Value").InnerText = device.DEVICE_NUM_POSTFIX;
+                    document.SelectSingleNode("ContractTemplate/DeviceInfo/FiskalNumber/Value").InnerText = device.FISCAL_NUM_POSTFIX;
+                    document.SelectSingleNode("ContractTemplate/DeviceInfo/Value").InnerText = "5500 лв.";
+
+                    // Contract
+                    document.SelectSingleNode("ContractTemplate/ContractText/Text/StartDate").InnerText = doc.START_DATE.Value.ToString();
+                    document.SelectSingleNode("ContractTemplate/ContractText/Text/EndDate").InnerText = doc.END_DATE.Value.ToString();
+
+                    // Annex 1
+                    document.SelectSingleNode("ContractTemplate/ContractText/ServiceAddres/Value").InnerText = serviceProfileItems[3];
+                    document.SelectSingleNode("ContractTemplate/ContractText/ServicePhone/Value").InnerText = serviceProfileItems[4];
+                    break;
+                case "Свидетелство": // Extract to method -> FillCertificate
+                    // SIMILAR
+                    break;
+                case "Протокол": // Extract to method -> FillProtocol
+                    // SIMILAR
+                    break;
+                default:
+                    // Display user control box instead of MessageBox
+                    break;
+            }
+
+            // Save filled XML to DB
+            doc.DOC = document.OuterXml;
+
+            //// THESE WILL LATER GO IN PREVIEW METHOD
+            //// Save to temp memory
+            //MemoryStream temp = new MemoryStream();
+            //document.Save(temp);
+
+            //// Convert to doc
+            //Spire.Doc.Document d = new Spire.Doc.Document();
+            //d.LoadFromStream(temp,Spire.Doc.FileFormat.Xml);
+            //d.SaveToFile(temp,Spire.Doc.FileFormat.Docx);
 
             dbModel.Documents.Add(doc);
             dbModel.SaveChanges();
+
+            ShowDocumentsOfTemplate(null);
         }
 
         private void ShowDocumentPreviewForm(object obj)

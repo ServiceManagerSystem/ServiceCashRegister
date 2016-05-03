@@ -14,6 +14,7 @@ namespace CashRegisterRepairs.Model
     
     public partial class Document
     {
+        public int ID { get; set; }
         public Nullable<System.DateTime> START_DATE { get; set; }
         public Nullable<System.DateTime> END_DATE { get; set; }
         public string DOC { get; set; }

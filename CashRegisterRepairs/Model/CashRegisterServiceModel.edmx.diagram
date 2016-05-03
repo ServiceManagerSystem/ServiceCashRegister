@@ -10,13 +10,13 @@
         <EntityTypeShape EntityType="CashRegisterServiceModel.Device" Width="1.5" PointX="7.5" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="CashRegisterServiceModel.Manager" Width="1.5" PointX="0.75" PointY="5" IsExpanded="true" />
         <EntityTypeShape EntityType="CashRegisterServiceModel.Site" Width="1.5" PointX="5.25" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="CashRegisterServiceModel.Document" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
-        <AssociationConnector Association="CashRegisterServiceModel.FK_Client_Doc_Id" ManuallyRouted="false" />
         <AssociationConnector Association="CashRegisterServiceModel.FK_Client_Id" ManuallyRouted="false" />
         <AssociationConnector Association="CashRegisterServiceModel.FK_Manager_Id" ManuallyRouted="false" />
         <AssociationConnector Association="CashRegisterServiceModel.FK_Devices_Models" ManuallyRouted="false" />
         <AssociationConnector Association="CashRegisterServiceModel.FK_Devices_SiteId" ManuallyRouted="false" />
         <EntityTypeShape EntityType="CashRegisterServiceModel.Template" Width="1.5" PointX="0.75" PointY="0.875" />
+        <EntityTypeShape EntityType="CashRegisterServiceModel.Document" Width="1.5" PointX="5.25" PointY="0.875" />
+        <AssociationConnector Association="CashRegisterServiceModel.FK_Client_Doc_Id" />
         <AssociationConnector Association="CashRegisterServiceModel.FK_Template_Doc_Id" />
       </Diagram>
     </edmx:Diagrams>
