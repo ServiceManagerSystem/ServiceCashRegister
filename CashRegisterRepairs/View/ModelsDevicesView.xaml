@@ -48,7 +48,14 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1">
-            <Label Style="{StaticResource GenericLabelStyle}" Content="Апарати"/>
+            <StackPanel Orientation="Horizontal" Height="30">
+                <Label Style="{StaticResource GenericLabelStyle}" Content="Апарати"/>
+                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddDeviceCommand}" CommandParameter="{Binding .}">
+                    <StackPanel>
+                        <Image Source="{StaticResource addIcon}"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
             <DataGrid Style="{StaticResource CoolDataGridStyle}"
                       ItemsSource="{Binding Devices}"
                       SelectedItem="{Binding SelectedDevice}"

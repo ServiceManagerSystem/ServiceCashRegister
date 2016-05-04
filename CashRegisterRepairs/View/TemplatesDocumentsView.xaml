@@ -62,11 +62,11 @@
         <StackPanel Grid.Row="1">
             <StackPanel Orientation="Horizontal" Height="30">
                 <Label Style="{StaticResource GenericLabelStyle}" Content="Шаблони"/>
-                <Button Style="{StaticResource AdditionButton}" Command="{Binding AddTemplateCommand}" CommandParameter="{Binding .}">
+                <!--<Button Style="{StaticResource AdditionButton}" Command="{Binding AddTemplateCommand}" CommandParameter="{Binding .}">
                     <StackPanel>
                         <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
-                </Button>
+                </Button>-->
             </StackPanel>
             
             <DataGrid  

@@ -2,7 +2,6 @@
 
 namespace CashRegisterRepairs.View
 {
-
     public partial class ClientsSitesView : UserControl
     {
         public ClientsSitesView()

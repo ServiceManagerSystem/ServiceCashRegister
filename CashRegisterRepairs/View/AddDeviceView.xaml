@@ -16,7 +16,7 @@
     
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
-            <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}"/>
+            <i:InvokeCommandAction Command="{Binding EnableSubviewDisplay}" CommandParameter="device"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
@@ -39,10 +39,10 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Обект"/>
-        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SitesForCB}" SelectedItem="{Binding SelectedSiteName}" Width="150" Margin="0,0,5,0" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SitesList}" SelectedItem="{Binding SelectedSiteName}" Width="150" Margin="0,0,5,0" VerticalAlignment="Center"/>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Модел"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Models}" SelectedItem="{Binding SelectedModel}" Width="150" Margin="0,0,5,0" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ModelsList}" SelectedItem="{Binding SelectedDeviceModel}" Width="150" Margin="0,0,5,0" VerticalAlignment="Center"/>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="СИМ IMSI"/>
         <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SIM}"/>
@@ -60,8 +60,8 @@
         <DatePicker Grid.Row="6" Grid.Column="1" SelectedDate="{Binding NAP_DATE}" Width="150" Margin="0,0,5,0" VerticalAlignment="Center"/>
 
         <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveDevice}" Margin="0,0,5,0"/>
-            <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitDevices}"/>
+            <Button IsDefault="True" Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveDeviceCommand}" Margin="0,0,5,0"/>
+            <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitDevicesCommand}"/>
         </StackPanel>
 
     </Grid>
