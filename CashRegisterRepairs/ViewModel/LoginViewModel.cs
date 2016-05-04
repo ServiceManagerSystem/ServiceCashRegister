@@ -4,8 +4,7 @@ using System.Windows.Input;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CashRegisterRepairs.View;
-using System.Security;
-using CashRegisterRepairs.Utilities;
+using CashRegisterRepairs.Config;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -46,7 +45,7 @@ namespace CashRegisterRepairs.ViewModel
                 home.Show();
 
                 loginView.Close();
-                
+
             }
             else
             {
