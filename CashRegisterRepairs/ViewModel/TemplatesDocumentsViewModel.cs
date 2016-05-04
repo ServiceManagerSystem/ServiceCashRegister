@@ -238,6 +238,7 @@ namespace CashRegisterRepairs.ViewModel
             doc.START_DATE = DateTime.Today;
             doc.END_DATE = doc.START_DATE.Value.AddYears(1);
             doc.Template = SelectedTemplate as Template;
+            
 
             // FILL XML TEMPLATE WORKFLOW(EXTRACT TO MEHTOD -> FillXmlTemplate)
             XmlDocument document = new XmlDocument();
@@ -282,7 +283,36 @@ namespace CashRegisterRepairs.ViewModel
                     document.SelectSingleNode("ContractTemplate/ContractText/ServicePhone/Value").InnerText = serviceProfileItems[4];
                     break;
                 case "Свидетелство": // Extract to method -> FillCertificate
-                    // SIMILAR
+                    //Client
+                    document.SelectSingleNode("CertificateTemplate/Title/CurrDaate").InnerText = DateTime.Today.ToString();
+                    document.SelectSingleNode("CertificateTemplate/Bulstat/Value").InnerText = doc.Client.BULSTAT;
+                    document.SelectSingleNode("CertificateTemplate/EGN/Value").InnerText = doc.Client.EGN;
+                    document.SelectSingleNode("CertificateTemplate/Owner/Client/Value").InnerText = doc.Client.NAME;
+                    document.SelectSingleNode("CertificateTemplate/Owner/Address/Value").InnerText = doc.Client.ADDRESS;
+                    document.SelectSingleNode("CertificateTemplate/Owner/Manager/Value").InnerText = doc.Client.Manager.NAME;
+                    //Site
+                    Site site = dbModel.Sites.Where(s => s.CLIENT_ID == doc.CLIENT_ID).FirstOrDefault();
+                    document.SelectSingleNode("CertificateTemplate/Owner/Site/Value").InnerText = site.NAME;
+
+                    //Device                                                     ?? && d.Model_ID == DeviceMode.ID
+                    Device devv = dbModel.Devices.Where(d => d.SITE_ID == site.ID ).FirstOrDefault();
+                    document.SelectSingleNode("CertificateTemplate/Device/Model/Value").InnerText = devv.DeviceModel.MODEL;
+                    document.SelectSingleNode("CertificateTemplate/Device/Certificate/Value").InnerText = devv.DeviceModel.CERTIFICATE;
+                    document.SelectSingleNode("CertificateTemplate/Device/DeviceNum/Value").InnerText = devv.DeviceModel.DEVICE_NUM_PREFIX + devv.DEVICE_NUM_POSTFIX;
+                    document.SelectSingleNode("CertificateTemplate/Device/FiscalNum/Value").InnerText = devv.DeviceModel.FISCAL_NUM_PREFIX + devv.FISCAL_NUM_POSTFIX;
+
+                    //Service
+                    document.SelectSingleNode("CertificateTemplate/ServiceInfo/BulstatAndName/Value").InnerText = serviceProfileItems[0] + serviceProfileItems[1];
+                    document.SelectSingleNode("CertificateTemplate/ServiceInfo/AddressAndPhone/Value").InnerText = serviceProfileItems[3] + serviceProfileItems[4];
+                    document.SelectSingleNode("CertificateTemplate/ServiceInfo/Manager/Value").InnerText = serviceProfileItems[2];
+                    document.SelectSingleNode("CertificateTemplate/ServiceInfo/Contract/Value").InnerText = hackedId.ToString();
+                    document.SelectSingleNode("CertificateTemplate/ServiceInfo/StartDate/Value").InnerText = doc.START_DATE.ToString();
+
+                    //NAP info
+                    document.SelectSingleNode("CertificateTemplate/NAPInfo/NAPNumber/Value").InnerText = devv.NAP_NUMBER;
+                    document.SelectSingleNode("CertificateTemplate/NAPInfo/NAPDate/Value").InnerText = devv.NAP_DATE.ToString();
+                    
+
                     break;
                 case "Протокол": // Extract to method -> FillProtocol
                     // SIMILAR
