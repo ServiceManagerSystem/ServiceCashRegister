@@ -5,6 +5,13 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CashRegisterRepairs.View;
 using CashRegisterRepairs.Config;
+using System.Windows.Interactivity;
+using System.Windows.Controls;
+using System.Security;
+using System.Windows.Data;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using CashRegisterRepairs.Utilities;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -20,6 +27,9 @@ namespace CashRegisterRepairs.ViewModel
             }
         }
 
+        private SecureString _password;
+        IAuthenticationService _authService = new AuthenticationService();
+
         public LoginViewModel()
         {
             Login = new TemplateCommand(TryLogin, param => this.canExecute);
@@ -27,12 +37,13 @@ namespace CashRegisterRepairs.ViewModel
 
         private void TryLogin(object obj)
         {
-            if(string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
+            if (string.IsNullOrEmpty(Username) || Password == null)
             {
                 MessageBox.Show("Липсват данни", "ГРЕШКА", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            else if (LoginInfo.username.Equals(Username.Trim()) && LoginInfo.password.Equals(Password.Trim()))
+
+            if (_authService.Login(Username, Password))
             {
                 var loginView = Application.Current.Windows[0] as Window;
 
@@ -41,11 +52,13 @@ namespace CashRegisterRepairs.ViewModel
                 home.Show();
 
                 loginView.Close();
+
             }
             else
             {
                 MessageBox.Show("Грешни данни", "ГРЕШКА", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
         }
 
         private ICommand _login;
@@ -62,8 +75,7 @@ namespace CashRegisterRepairs.ViewModel
             set { _username = value; NotifyPropertyChanged(); }
         }
 
-        private string _password;
-        public string Password
+        public SecureString Password
         {
             get { return _password; }
             set { _password = value; NotifyPropertyChanged(); }
