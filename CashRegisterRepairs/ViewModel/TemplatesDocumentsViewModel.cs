@@ -94,7 +94,6 @@ namespace CashRegisterRepairs.ViewModel
 
             // Addition commands
             AddDocumentCommand = new TemplateCommand(AddDocument, param => this.canExecuteCommand);
-            AddTemplateCommand = new TemplateCommand(ShowTemplateAdditionForm, param => this.canExecuteCommand);
 
             // ComboBox manipulation commands
             AutofillComboBoxCommand = new TemplateCommand(FillComboBoxAutomatically, param => this.canExecuteCommand);
@@ -174,19 +173,6 @@ namespace CashRegisterRepairs.ViewModel
             DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, device.Site, device);
 
             Documents.Add(docDisplay);
-        }
-        #endregion
-
-        #region Display addition form methods
-        private void ShowTemplateAdditionForm(object templatesDataContext)
-        {
-            if (canOpenSubviewForm)
-            {
-                AddTemplateView addTemplatesView = new AddTemplateView();
-                addTemplatesView.DataContext = templatesDataContext;
-                addTemplatesView.Show();
-                canOpenSubviewForm = false;
-            }
         }
         #endregion
 

@@ -59,6 +59,9 @@ namespace CashRegisterRepairs.ViewModel
 
             // TODO: Replace this with metro dialog
             MessageBox.Show("Промените по профила са запазени!","ПРОМЯНА",MessageBoxButton.OK,MessageBoxImage.Information);
+
+            IsFocusable = false;
+            IsUnmodifable = true;
         }
         #endregion
 
@@ -76,6 +79,13 @@ namespace CashRegisterRepairs.ViewModel
         {
             get { return _saveServiceProfileCommand; }
             set { _saveServiceProfileCommand = value; }
+        }
+
+        private ICommand _resetFocusCommand;
+        public ICommand ResetFocusCommand
+        {
+            get { return _resetFocusCommand; }
+            set { _resetFocusCommand = value; }
         }
         #endregion
 
