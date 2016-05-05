@@ -18,10 +18,10 @@ namespace CashRegisterRepairs.Model
         public Nullable<System.DateTime> START_DATE { get; set; }
         public Nullable<System.DateTime> END_DATE { get; set; }
         public string DOC { get; set; }
-        public int CLIENT_ID { get; set; }
+        public int DEVICE_ID { get; set; }
         public int TEMPLATE_ID { get; set; }
     
-        public virtual Client Client { get; set; }
+        public virtual Device Device { get; set; }
         public virtual Template Template { get; set; }
     }
 }

@@ -18,7 +18,6 @@ namespace CashRegisterRepairs.Model
         public Client()
         {
             this.Sites = new HashSet<Site>();
-            this.Documents = new HashSet<Document>();
         }
     
         public int ID { get; set; }
@@ -33,7 +32,5 @@ namespace CashRegisterRepairs.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Site> Sites { get; set; }
         public virtual Manager Manager { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Document> Documents { get; set; }
     }
 }

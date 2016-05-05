@@ -50,7 +50,7 @@
           <Property Name="START_DATE" Type="date" />
           <Property Name="END_DATE" Type="date" />
           <Property Name="DOC" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="CLIENT_ID" Type="int" Nullable="false" />
+          <Property Name="DEVICE_ID" Type="int" Nullable="false" />
           <Property Name="TEMPLATE_ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Managers">
@@ -81,18 +81,6 @@
           <Property Name="DATE_ADDED" Type="date" Nullable="false" />
           <Property Name="TEMPLATE_CONTENT" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Client_Doc_Id">
-          <End Role="Clients" Type="Self.Clients" Multiplicity="1" />
-          <End Role="Documents" Type="Self.Documents" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Clients">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Documents">
-              <PropertyRef Name="CLIENT_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Client_Id">
           <End Role="Clients" Type="Self.Clients" Multiplicity="1" />
           <End Role="Sites" Type="Self.Sites" Multiplicity="*" />
@@ -102,6 +90,18 @@
             </Principal>
             <Dependent Role="Sites">
               <PropertyRef Name="CLIENT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Device_Doc_Id">
+          <End Role="Devices" Type="Self.Devices" Multiplicity="1" />
+          <End Role="Documents" Type="Self.Documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Devices">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Documents">
+              <PropertyRef Name="DEVICE_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -161,13 +161,13 @@
           <EntitySet Name="Managers" EntityType="Self.Managers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sites" EntityType="Self.Sites" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Templates" EntityType="Self.Templates" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Client_Doc_Id" Association="Self.FK_Client_Doc_Id">
-            <End Role="Clients" EntitySet="Clients" />
-            <End Role="Documents" EntitySet="Documents" />
-          </AssociationSet>
           <AssociationSet Name="FK_Client_Id" Association="Self.FK_Client_Id">
             <End Role="Clients" EntitySet="Clients" />
             <End Role="Sites" EntitySet="Sites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Device_Doc_Id" Association="Self.FK_Device_Doc_Id">
+            <End Role="Devices" EntitySet="Devices" />
+            <End Role="Documents" EntitySet="Documents" />
           </AssociationSet>
           <AssociationSet Name="FK_Devices_Models" Association="Self.FK_Devices_Models">
             <End Role="DeviceModels" EntitySet="DeviceModels" />
@@ -204,7 +204,6 @@
           <Property Name="MANAGER_ID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Sites" Relationship="Self.FK_Client_Id" FromRole="Clients" ToRole="Sites" />
           <NavigationProperty Name="Manager" Relationship="Self.FK_Manager_Id" FromRole="Clients" ToRole="Managers" />
-          <NavigationProperty Name="Documents" Relationship="CashRegisterServiceModel.FK_Client_Doc_Id" FromRole="Client" ToRole="Document" />
         </EntityType>
         <EntityType Name="DeviceModel">
           <Key>
@@ -216,22 +215,7 @@
           <Property Name="CERTIFICATE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DEVICE_NUM_PREFIX" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="FISCAL_NUM_PREFIX" Type="String" MaxLength="2" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Devices" Relationship="Self.FK_Devices_Models" FromRole="DeviceModels" ToRole="Devices" />
-        </EntityType>
-        <EntityType Name="Device">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SIM" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="DEVICE_NUM_POSTFIX" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="FISCAL_NUM_POSTFIX" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="NAP_NUMBER" Type="String" MaxLength="7" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="NAP_DATE" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="MODEL_ID" Type="Int32" Nullable="false" />
-          <Property Name="SITE_ID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="DeviceModel" Relationship="Self.FK_Devices_Models" FromRole="Devices" ToRole="DeviceModels" />
-          <NavigationProperty Name="Site" Relationship="Self.FK_Devices_SiteId" FromRole="Devices" ToRole="Sites" />
+          <NavigationProperty Name="Devices" Relationship="CashRegisterServiceModel.FK_Devices_Models" FromRole="DeviceModel" ToRole="Device" />
         </EntityType>
         <EntityType Name="Manager">
           <Key>
@@ -252,7 +236,7 @@
           <Property Name="PHONE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CLIENT_ID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Client" Relationship="Self.FK_Client_Id" FromRole="Sites" ToRole="Clients" />
-          <NavigationProperty Name="Devices" Relationship="Self.FK_Devices_SiteId" FromRole="Sites" ToRole="Devices" />
+          <NavigationProperty Name="Devices" Relationship="CashRegisterServiceModel.FK_Devices_SiteId" FromRole="Site" ToRole="Device" />
         </EntityType>
         <Association Name="FK_Client_Id">
           <End Role="Clients" Type="Self.Client" Multiplicity="1" />
@@ -278,34 +262,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Devices_Models">
-          <End Role="DeviceModels" Type="Self.DeviceModel" Multiplicity="1" />
-          <End Role="Devices" Type="Self.Device" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DeviceModels">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Devices">
-              <PropertyRef Name="MODEL_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Devices_SiteId">
-          <End Role="Sites" Type="Self.Site" Multiplicity="1" />
-          <End Role="Devices" Type="Self.Device" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Sites">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Devices">
-              <PropertyRef Name="SITE_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="CashRegisterServiceContext" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Clients" EntityType="Self.Client" />
           <EntitySet Name="DeviceModels" EntityType="Self.DeviceModel" />
-          <EntitySet Name="Devices" EntityType="Self.Device" />
           <EntitySet Name="Managers" EntityType="Self.Manager" />
           <EntitySet Name="Sites" EntityType="Self.Site" />
           <AssociationSet Name="FK_Client_Id" Association="Self.FK_Client_Id">
@@ -316,25 +275,26 @@
             <End Role="Managers" EntitySet="Managers" />
             <End Role="Clients" EntitySet="Clients" />
           </AssociationSet>
-          <AssociationSet Name="FK_Devices_Models" Association="Self.FK_Devices_Models">
-            <End Role="DeviceModels" EntitySet="DeviceModels" />
-            <End Role="Devices" EntitySet="Devices" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Devices_SiteId" Association="Self.FK_Devices_SiteId">
-            <End Role="Sites" EntitySet="Sites" />
-            <End Role="Devices" EntitySet="Devices" />
-          </AssociationSet>
           <EntitySet Name="Templates" EntityType="CashRegisterServiceModel.Template" />
+          <EntitySet Name="Devices" EntityType="CashRegisterServiceModel.Device" />
           <EntitySet Name="Documents" EntityType="CashRegisterServiceModel.Document" />
-          <AssociationSet Name="FK_Client_Doc_Id" Association="CashRegisterServiceModel.FK_Client_Doc_Id">
-            <End Role="Client" EntitySet="Clients" />
+          <AssociationSet Name="FK_Devices_Models" Association="CashRegisterServiceModel.FK_Devices_Models">
+            <End Role="DeviceModel" EntitySet="DeviceModels" />
+            <End Role="Device" EntitySet="Devices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Device_Doc_Id" Association="CashRegisterServiceModel.FK_Device_Doc_Id">
+            <End Role="Device" EntitySet="Devices" />
             <End Role="Document" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Devices_SiteId" Association="CashRegisterServiceModel.FK_Devices_SiteId">
+            <End Role="Site" EntitySet="Sites" />
+            <End Role="Device" EntitySet="Devices" />
           </AssociationSet>
           <AssociationSet Name="FK_Template_Doc_Id" Association="CashRegisterServiceModel.FK_Template_Doc_Id">
             <End Role="Template" EntitySet="Templates" />
             <End Role="Document" EntitySet="Documents" />
           </AssociationSet>
-        </EntityContainer>
+          </EntityContainer>
         <EntityType Name="Template">
           <Key>
             <PropertyRef Name="ID" />
@@ -346,6 +306,22 @@
           <Property Name="TEMPLATE_CONTENT" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Documents" Relationship="CashRegisterServiceModel.FK_Template_Doc_Id" FromRole="Template" ToRole="Document" />
         </EntityType>
+        <EntityType Name="Device">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SIM" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="DEVICE_NUM_POSTFIX" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="FISCAL_NUM_POSTFIX" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="NAP_NUMBER" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="true" />
+          <Property Name="NAP_DATE" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="MODEL_ID" Type="Int32" Nullable="false" />
+          <Property Name="SITE_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DeviceModel" Relationship="CashRegisterServiceModel.FK_Devices_Models" FromRole="Device" ToRole="DeviceModel" />
+          <NavigationProperty Name="Documents" Relationship="CashRegisterServiceModel.FK_Device_Doc_Id" FromRole="Device" ToRole="Document" />
+          <NavigationProperty Name="Site" Relationship="CashRegisterServiceModel.FK_Devices_SiteId" FromRole="Device" ToRole="Site" />
+        </EntityType>
         <EntityType Name="Document">
           <Key>
             <PropertyRef Name="ID" />
@@ -354,20 +330,44 @@
           <Property Name="START_DATE" Type="DateTime" Precision="0" />
           <Property Name="END_DATE" Type="DateTime" Precision="0" />
           <Property Name="DOC" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CLIENT_ID" Type="Int32" Nullable="false" />
+          <Property Name="DEVICE_ID" Type="Int32" Nullable="false" />
           <Property Name="TEMPLATE_ID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Client" Relationship="CashRegisterServiceModel.FK_Client_Doc_Id" FromRole="Document" ToRole="Client" />
+          <NavigationProperty Name="Device" Relationship="CashRegisterServiceModel.FK_Device_Doc_Id" FromRole="Document" ToRole="Device" />
           <NavigationProperty Name="Template" Relationship="CashRegisterServiceModel.FK_Template_Doc_Id" FromRole="Document" ToRole="Template" />
         </EntityType>
-        <Association Name="FK_Client_Doc_Id">
-          <End Type="CashRegisterServiceModel.Client" Role="Client" Multiplicity="1" />
+        <Association Name="FK_Devices_Models">
+          <End Type="CashRegisterServiceModel.DeviceModel" Role="DeviceModel" Multiplicity="1" />
+          <End Type="CashRegisterServiceModel.Device" Role="Device" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeviceModel">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Device">
+              <PropertyRef Name="MODEL_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Device_Doc_Id">
+          <End Type="CashRegisterServiceModel.Device" Role="Device" Multiplicity="1" />
           <End Type="CashRegisterServiceModel.Document" Role="Document" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Client">
+            <Principal Role="Device">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Document">
-              <PropertyRef Name="CLIENT_ID" />
+              <PropertyRef Name="DEVICE_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Devices_SiteId">
+          <End Type="CashRegisterServiceModel.Site" Role="Site" Multiplicity="1" />
+          <End Type="CashRegisterServiceModel.Device" Role="Device" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Site">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Device">
+              <PropertyRef Name="SITE_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -383,7 +383,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -412,20 +412,6 @@
                 <ScalarProperty Name="CERTIFICATE" ColumnName="CERTIFICATE" />
                 <ScalarProperty Name="DEVICE_NUM_PREFIX" ColumnName="DEVICE_NUM_PREFIX" />
                 <ScalarProperty Name="FISCAL_NUM_PREFIX" ColumnName="FISCAL_NUM_PREFIX" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Devices">
-            <EntityTypeMapping TypeName="CashRegisterServiceModel.Device">
-              <MappingFragment StoreEntitySet="Devices">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="SIM" ColumnName="SIM" />
-                <ScalarProperty Name="DEVICE_NUM_POSTFIX" ColumnName="DEVICE_NUM_POSTFIX" />
-                <ScalarProperty Name="FISCAL_NUM_POSTFIX" ColumnName="FISCAL_NUM_POSTFIX" />
-                <ScalarProperty Name="NAP_NUMBER" ColumnName="NAP_NUMBER" />
-                <ScalarProperty Name="NAP_DATE" ColumnName="NAP_DATE" />
-                <ScalarProperty Name="MODEL_ID" ColumnName="MODEL_ID" />
-                <ScalarProperty Name="SITE_ID" ColumnName="SITE_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -460,11 +446,25 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Devices">
+            <EntityTypeMapping TypeName="CashRegisterServiceModel.Device">
+              <MappingFragment StoreEntitySet="Devices">
+                <ScalarProperty Name="SITE_ID" ColumnName="SITE_ID" />
+                <ScalarProperty Name="MODEL_ID" ColumnName="MODEL_ID" />
+                <ScalarProperty Name="NAP_DATE" ColumnName="NAP_DATE" />
+                <ScalarProperty Name="NAP_NUMBER" ColumnName="NAP_NUMBER" />
+                <ScalarProperty Name="FISCAL_NUM_POSTFIX" ColumnName="FISCAL_NUM_POSTFIX" />
+                <ScalarProperty Name="DEVICE_NUM_POSTFIX" ColumnName="DEVICE_NUM_POSTFIX" />
+                <ScalarProperty Name="SIM" ColumnName="SIM" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Documents">
             <EntityTypeMapping TypeName="CashRegisterServiceModel.Document">
               <MappingFragment StoreEntitySet="Documents">
                 <ScalarProperty Name="TEMPLATE_ID" ColumnName="TEMPLATE_ID" />
-                <ScalarProperty Name="CLIENT_ID" ColumnName="CLIENT_ID" />
+                <ScalarProperty Name="DEVICE_ID" ColumnName="DEVICE_ID" />
                 <ScalarProperty Name="DOC" ColumnName="DOC" />
                 <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
                 <ScalarProperty Name="START_DATE" ColumnName="START_DATE" />

@@ -285,7 +285,7 @@ namespace CashRegisterRepairs.ViewModel
             device.FISCAL_NUM_POSTFIX = FISCAL_NUM_POSTFIX;
             device.NAP_NUMBER = NAP_NUMBER;
             device.NAP_DATE = NAP_DATE ?? DateTime.Today;
-            device.Site = dbModel.Sites.Where(site => site.NAME.Equals(SelectedSite)).FirstOrDefault();
+            device.Site = dbModel.Sites.Where(site => site.NAME.Equals(SelectedSiteName)).FirstOrDefault();
             device.DeviceModel = dbModel.DeviceModels.Find((SelectedModel as DeviceModel).ID);
 
             // TODO: Validate fields
@@ -389,11 +389,11 @@ namespace CashRegisterRepairs.ViewModel
 
         // SELECTION PROPERTIES (CURRENT CONTEXT)
         #region SELECTION PROPERTIES (CURRENT CONTEXT)
-        private string _selectedSite;
-        public string SelectedSite
+        private string _selectedSiteName;
+        public string SelectedSiteName
         {
-            get { return _selectedSite; }
-            set { _selectedSite = value; NotifyPropertyChanged(); }
+            get { return _selectedSiteName; }
+            set { _selectedSiteName = value; NotifyPropertyChanged(); }
         }
 
         private string _selectedDeviceModel;

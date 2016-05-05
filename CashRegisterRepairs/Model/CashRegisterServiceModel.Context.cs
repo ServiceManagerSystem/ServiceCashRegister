@@ -27,10 +27,10 @@ namespace CashRegisterRepairs.Model
     
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<DeviceModel> DeviceModels { get; set; }
-        public virtual DbSet<Device> Devices { get; set; }
         public virtual DbSet<Manager> Managers { get; set; }
         public virtual DbSet<Site> Sites { get; set; }
         public virtual DbSet<Template> Templates { get; set; }
+        public virtual DbSet<Device> Devices { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
     }
 }

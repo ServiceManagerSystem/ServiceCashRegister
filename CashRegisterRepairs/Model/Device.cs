@@ -14,6 +14,12 @@ namespace CashRegisterRepairs.Model
     
     public partial class Device
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Device()
+        {
+            this.Documents = new HashSet<Document>();
+        }
+    
         public int ID { get; set; }
         public string SIM { get; set; }
         public string DEVICE_NUM_POSTFIX { get; set; }
@@ -24,6 +30,8 @@ namespace CashRegisterRepairs.Model
         public int SITE_ID { get; set; }
     
         public virtual DeviceModel DeviceModel { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Document> Documents { get; set; }
         public virtual Site Site { get; set; }
     }
 }

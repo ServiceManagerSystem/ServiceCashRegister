@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Microsoft.Office.Interop.Word;
 using System.Xml;
+using System.Collections.Generic;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -108,25 +109,41 @@ namespace CashRegisterRepairs.ViewModel
             {
                 if (SelectedTemplate != null && doc.Template.TYPE.Equals((SelectedTemplate as Model.Template).TYPE))
                 {
-                    if (SelectedClient == null)
+                    if(!string.IsNullOrEmpty(SelectedClient) && doc.Device.Site.Client.NAME.Equals(SelectedClient))
                     {
-                        Site site = dbModel.Sites.Where(si => si.Client.ID.Equals(doc.Client.ID)).FirstOrDefault();
-                        if (site != null)
+                        Documents.Clear();
+
+                        foreach (Model.Document foundDoc in dbModel.Documents.Where(d => d.Device.Site.Client.NAME.Equals(SelectedClient)))
                         {
-                            Device device = dbModel.Devices.Where(dev => dev.Site.ID.Equals(site.ID)).FirstOrDefault();
-                            if (device != null)
+                            DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Device.Site.Client, doc.Device.Site, doc.Device);
+                            Documents.Add(docDisplay);
+                        }
+
+                        if (!string.IsNullOrEmpty(SelectedSite))
+                        {
+                            Documents.Clear();
+
+                            foreach (Model.Document foundDoc in dbModel.Documents.Where(d => d.Device.Site.NAME.Equals(SelectedSite)))
                             {
-                                DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, site, device);
+                                DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Device.Site.Client, doc.Device.Site, doc.Device);
                                 Documents.Add(docDisplay);
+                            }
+
+                            if (!string.IsNullOrEmpty(SelectedDevice))
+                            {
+                                Documents.Clear();
+
+                                foreach (Model.Document foundDoc in dbModel.Documents.Where(d => (d.Device.DeviceModel.DEVICE_NUM_PREFIX + doc.Device.DEVICE_NUM_POSTFIX).Equals(SelectedDevice)))
+                                {
+                                    DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Device.Site.Client, doc.Device.Site, doc.Device);
+                                    Documents.Add(docDisplay);
+                                }
                             }
                         }
                     }
-                    else if (doc.Client.NAME == SelectedClient)
+                    else if (SelectedDevice == null && SelectedClient == null && SelectedSite == null)
                     {
-                        Site site = dbModel.Sites.Where(si => si.Client.NAME.Equals(SelectedClient)).FirstOrDefault();
-                        Device device = dbModel.Devices.Where(dev => dev.Site.ID.Equals(site.ID)).FirstOrDefault();
-                        DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, site, device);
-
+                        DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Device.Site.Client, doc.Device.Site, doc.Device);
                         Documents.Add(docDisplay);
                     }
                 }
@@ -135,10 +152,11 @@ namespace CashRegisterRepairs.ViewModel
             Documents.OrderByDescending(document => document.END_DATE);
         }
 
+        // TODO see if you need this
         private void LoadDocumentInGrid(Model.Document doc)
         {
             Device device = dbModel.Devices.Where(dev => (dev.DeviceModel.DEVICE_NUM_PREFIX + dev.DEVICE_NUM_POSTFIX) == SelectedDevice).FirstOrDefault();
-            DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, device.Site, device);
+            DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Device.Site.Client, doc.Device.Site, device);
 
             Documents.Add(docDisplay);
         }
@@ -175,14 +193,14 @@ namespace CashRegisterRepairs.ViewModel
             {
                 case "client":
                     IsSiteEnabled = true;
-                    SelectedSite = null;
+                    //SelectedSite = null;
 
                     Sites.Clear();
                     dbModel.Sites.ToList().Where(site => site.Client.NAME == SelectedClient).ToList().ForEach(s => Sites.Add(s.NAME));
                     break;
                 case "site":
                     IsDeviceEnabled = true;
-                    SelectedDevice = null;
+                    //SelectedDevice = null;
 
                     Devices.Clear();
                     dbModel.Devices.ToList().Where(device => device.Site.NAME == SelectedSite).ToList().ForEach(d => Devices.Add(d.DeviceModel.DEVICE_NUM_PREFIX + d.DEVICE_NUM_POSTFIX));
@@ -206,7 +224,9 @@ namespace CashRegisterRepairs.ViewModel
 
             Model.Document document = new Model.Document();
             document.Template = SelectedTemplate as Model.Template;
-            document.Client = dbModel.Clients.Where(client => client.NAME.Equals(SelectedClient)).FirstOrDefault();
+            document.Device = dbModel.Devices.Where(d => (d.DeviceModel.DEVICE_NUM_PREFIX+ d.DEVICE_NUM_POSTFIX).Equals(SelectedDevice)).FirstOrDefault();
+            document.Device.Site = dbModel.Sites.Where(s => s.NAME.Equals(SelectedSite)).FirstOrDefault();
+            document.Device.Site.Client = dbModel.Clients.Where(client => client.NAME.Equals(SelectedClient)).FirstOrDefault();
             document.START_DATE = DateTime.Today;
             document.END_DATE = document.START_DATE.Value.AddYears(1);
 
@@ -250,21 +270,20 @@ namespace CashRegisterRepairs.ViewModel
         {
             //Client
             template.SelectSingleNode("CertificateTemplate/Title/CurrDate").InnerText = DateTime.Today.ToString();
-            template.SelectSingleNode("CertificateTemplate/Bulstat/Value").InnerText = document.Client.BULSTAT;
-            template.SelectSingleNode("CertificateTemplate/EGN/Value").InnerText = document.Client.EGN;
-            template.SelectSingleNode("CertificateTemplate/Owner/Client/Value").InnerText = document.Client.NAME;
-            template.SelectSingleNode("CertificateTemplate/Owner/Address/Value").InnerText = document.Client.ADDRESS;
-            template.SelectSingleNode("CertificateTemplate/Owner/Manager/Value").InnerText = document.Client.Manager.NAME;
+            template.SelectSingleNode("CertificateTemplate/Bulstat/Value").InnerText = document.Device.Site.Client.BULSTAT;
+            template.SelectSingleNode("CertificateTemplate/EGN/Value").InnerText = document.Device.Site.Client.EGN;
+            template.SelectSingleNode("CertificateTemplate/Owner/Client/Value").InnerText = document.Device.Site.Client.NAME;
+            template.SelectSingleNode("CertificateTemplate/Owner/Address/Value").InnerText = document.Device.Site.Client.ADDRESS;
+            template.SelectSingleNode("CertificateTemplate/Owner/Manager/Value").InnerText = document.Device.Site.Client.Manager.NAME;
+            
             //Site
-            Site site = dbModel.Sites.Where(s => s.CLIENT_ID == document.Client.ID).FirstOrDefault();
-            template.SelectSingleNode("CertificateTemplate/Owner/Site/Value").InnerText = site.NAME;
+            template.SelectSingleNode("CertificateTemplate/Owner/Site/Value").InnerText = document.Device.Site.NAME;
 
             //Device
-            Device dev = dbModel.Devices.Where(d => d.SITE_ID == site.ID).FirstOrDefault();
-            template.SelectSingleNode("CertificateTemplate/Device/Model/Value").InnerText = dev.DeviceModel.MODEL;
-            template.SelectSingleNode("CertificateTemplate/Device/Certficate/Value").InnerText = dev.DeviceModel.CERTIFICATE;
-            template.SelectSingleNode("CertificateTemplate/Device/DeviceNum/Value").InnerText = dev.DeviceModel.DEVICE_NUM_PREFIX + dev.DEVICE_NUM_POSTFIX;
-            template.SelectSingleNode("CertificateTemplate/Device/FiscalNum/Value").InnerText = dev.DeviceModel.FISCAL_NUM_PREFIX + dev.FISCAL_NUM_POSTFIX;
+            template.SelectSingleNode("CertificateTemplate/Device/Model/Value").InnerText = document.Device.DeviceModel.MODEL;
+            template.SelectSingleNode("CertificateTemplate/Device/Certficate/Value").InnerText = document.Device.DeviceModel.CERTIFICATE;
+            template.SelectSingleNode("CertificateTemplate/Device/DeviceNum/Value").InnerText = document.Device.DeviceModel.DEVICE_NUM_PREFIX + document.Device.DEVICE_NUM_POSTFIX;
+            template.SelectSingleNode("CertificateTemplate/Device/FiscalNum/Value").InnerText = document.Device.DeviceModel.FISCAL_NUM_PREFIX + document.Device.FISCAL_NUM_POSTFIX;
 
             //Service
             template.SelectSingleNode("CertificateTemplate/ServiceInfo/BulstatAndName/Value").InnerText = serviceProfileItems[0] + serviceProfileItems[1];
@@ -274,8 +293,8 @@ namespace CashRegisterRepairs.ViewModel
             template.SelectSingleNode("CertificateTemplate/ServiceInfo/Contract/StartDate/Value").InnerText = document.START_DATE.ToString();
 
             //NAP info
-            template.SelectSingleNode("CertificateTemplate/NAPInfo/NAPNumber/Value").InnerText = dev.NAP_NUMBER;
-            template.SelectSingleNode("CertificateTemplate/NAPInfo/NAPDate/Value").InnerText = dev.NAP_DATE.ToString();
+            template.SelectSingleNode("CertificateTemplate/NAPInfo/NAPNumber/Value").InnerText = document.Device.NAP_NUMBER;
+            template.SelectSingleNode("CertificateTemplate/NAPInfo/NAPDate/Value").InnerText = document.Device.NAP_DATE.ToString();
         }
 
         private void FillContract(Model.Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
@@ -290,10 +309,10 @@ namespace CashRegisterRepairs.ViewModel
             template.SelectSingleNode("ContractTemplate/Service/ServiceManager/Value").InnerText = serviceProfileItems[2];
 
             // Client
-            template.SelectSingleNode("ContractTemplate/Client/ClientName/Value").InnerText = document.Client.NAME;
-            template.SelectSingleNode("ContractTemplate/Client/ClientBulstat/Value").InnerText = document.Client.BULSTAT;
-            template.SelectSingleNode("ContractTemplate/Client/ClientAddress/Value").InnerText = document.Client.ADDRESS;
-            template.SelectSingleNode("ContractTemplate/Client/ClientManager/Value").InnerText = document.Client.Manager.NAME;
+            template.SelectSingleNode("ContractTemplate/Client/ClientName/Value").InnerText = document.Device.Site.Client.NAME;
+            template.SelectSingleNode("ContractTemplate/Client/ClientBulstat/Value").InnerText = document.Device.Site.Client.BULSTAT;
+            template.SelectSingleNode("ContractTemplate/Client/ClientAddress/Value").InnerText = document.Device.Site.Client.ADDRESS;
+            template.SelectSingleNode("ContractTemplate/Client/ClientManager/Value").InnerText = document.Device.Site.Client.Manager.NAME;
 
             // Device
             Site site = dbModel.Sites.Where(s => s.NAME.Equals(SelectedSite)).FirstOrDefault();
