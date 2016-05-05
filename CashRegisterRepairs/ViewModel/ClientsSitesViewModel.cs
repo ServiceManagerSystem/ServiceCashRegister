@@ -310,9 +310,10 @@ namespace CashRegisterRepairs.ViewModel
                 clientsCache.ForEach(client => dbModel.Clients.Add(client));
                 dbModel.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // TODO: Handle error
+                // TODO: Replace with metro dialog or custom control
+                MessageBox.Show("ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
                 throw;
             }
 
@@ -343,14 +344,14 @@ namespace CashRegisterRepairs.ViewModel
             try
             {
                 sitesCache.ForEach(site => dbModel.Sites.Add(site));
-                sitesCache.ForEach(site => Sites.Add(site));
                 dbModel.SaveChanges();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 // TODO: Replace with metro dialog or custom control
-                MessageBox.Show("ПРОБЛЕМ С БАЗАТА: " + e.InnerException.Message);
+                MessageBox.Show("ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
             }
+            sitesCache.ForEach(site => Sites.Add(site));
 
             isCommitExecuted = true;
         }
@@ -385,7 +386,7 @@ namespace CashRegisterRepairs.ViewModel
             catch (Exception e)
             {
                 // TODO: Replace with metro dialog or custom control
-                MessageBox.Show("ПРОБЛЕМ С БАЗАТА: " + e.InnerException.Message);
+                MessageBox.Show("ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
             }
 
             isCommitExecuted = true;

@@ -34,13 +34,13 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Име(Обект)"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SiteName}"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SiteName, UpdateSourceTrigger=PropertyChanged}"/>
         
         <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Адрес"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SiteAddress}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SiteAddress, UpdateSourceTrigger=PropertyChanged}"/>
         
         <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource GenericAdditionTextBlockStyle}" Text="Телефон"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SitePhone}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SitePhone, UpdateSourceTrigger=PropertyChanged}"/>
 
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button IsDefault="{Binding FocusSaveButton}" Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveSiteCommand}" Margin="0,0,5,0"/>

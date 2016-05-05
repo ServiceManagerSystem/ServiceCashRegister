@@ -19,7 +19,6 @@ namespace CashRegisterRepairs.ViewModel
         public static DeviceDisplay selectedDevice;
         private bool canExecuteCommand = true; // command enable/disable
         private bool canOpenSubviewForm = true; // addition forms enable/disable
-        private bool isCommitExecuted = false; // flag whether the commit was executed or not
         #endregion
 
         // COLLECTIONS
