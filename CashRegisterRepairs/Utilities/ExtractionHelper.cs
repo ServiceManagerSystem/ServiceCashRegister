@@ -15,7 +15,7 @@ namespace CashRegisterRepairs.Utilities
             return ResolveAppPath() + @"\Resources\Service.txt";
         }
 
-        private static string ResolveAppPath()
+        public static string ResolveAppPath()
         {
             string assemblyPathNode = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             string binPathNode = Directory.GetParent(assemblyPathNode).FullName;

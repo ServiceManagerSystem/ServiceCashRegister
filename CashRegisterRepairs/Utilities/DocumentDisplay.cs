@@ -6,6 +6,7 @@ namespace CashRegisterRepairs.Utilities
 
     public class DocumentDisplay
     {
+        public int ID { get; set; }
         public string TEMPLATE { get; set; }
         public string CLIENT { get; set; }
         public string SITE { get; set; }
@@ -15,6 +16,7 @@ namespace CashRegisterRepairs.Utilities
 
         public DocumentDisplay(Document document, Client client, Site site, Device device)
         {
+            ID = document.ID;
             TEMPLATE = document.Template.TYPE;
             CLIENT = client.NAME;
             SITE = site.NAME;

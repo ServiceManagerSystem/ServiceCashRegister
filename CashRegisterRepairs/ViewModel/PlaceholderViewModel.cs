@@ -2,6 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using System.IO;
+using CashRegisterRepairs.Utilities;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -10,11 +13,30 @@ namespace CashRegisterRepairs.ViewModel
         private ObservableCollection<IViewModel> _tabViewModels;
         public ObservableCollection<IViewModel> TabViewModels { get { return _tabViewModels; } }
 
+        private bool canExecuteCommand = true;
+
         private int _selectedTab;
         public int SelectedTab
         {
             get { return _selectedTab; }
             set { _selectedTab = value; NotifyPropertyChanged(); }
+        }
+
+        private ICommand _removeTempDocsCommand;
+        public ICommand RemoveTempDocsCommand
+        {
+            get { return _removeTempDocsCommand; }
+            set { _removeTempDocsCommand = value; }
+        }
+
+        private void RemoveTempDocs(object commandParameter)
+        {
+            string[] tempDocs = Directory.GetFiles(ExtractionHelper.ResolveAppPath() + @"\Resources\TemporaryDocuments\");
+
+            foreach (string path in tempDocs)
+            {
+                File.Delete(path);
+            }
         }
 
         public PlaceholderViewModel()
@@ -25,6 +47,8 @@ namespace CashRegisterRepairs.ViewModel
             _tabViewModels.Add(new ModelsDevicesViewModel(this));
             _tabViewModels.Add(new TemplatesDocumentsViewModel());
             _tabViewModels.Add(new ServiceInfoViewModel());
+
+            RemoveTempDocsCommand = new TemplateCommand(RemoveTempDocs,param => this.canExecuteCommand);
         }
 
         #region INotifyPropertyChanged implementation

@@ -32,7 +32,6 @@ namespace CashRegisterRepairs.ViewModel
 
             if (string.IsNullOrEmpty(Username) || Password == null)
             {
-                //await DialogManager.ShowMessageAsync(loginView, "ГРЕШКА", "Липсват данни!", MessageDialogStyle.Affirmative, new MetroDialogSettings());
                 await loginView.ShowMessageAsync("ГРЕШКА", "Липсват данни!");
                 return;
             }
@@ -47,7 +46,6 @@ namespace CashRegisterRepairs.ViewModel
             }
             else
             {
-                //await DialogManager.ShowMessageAsync(loginView, "ГРЕШКА", "Грешни данни!", MessageDialogStyle.Affirmative, new MetroDialogSettings());
                 await loginView.ShowMessageAsync("ГРЕШКА", "Грешни данни!");
             }
 

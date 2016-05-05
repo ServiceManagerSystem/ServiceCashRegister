@@ -1,12 +1,12 @@
 ﻿using CashRegisterRepairs.Model;
 using CashRegisterRepairs.Utilities;
-using CashRegisterRepairs.View;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using Microsoft.Office.Interop.Word;
 using System.Xml;
 
 namespace CashRegisterRepairs.ViewModel
@@ -18,14 +18,13 @@ namespace CashRegisterRepairs.ViewModel
         private readonly CashRegisterServiceContext dbModel;
         public static DeviceDisplay selectedDevice;
         private bool canExecuteCommand = true; // command enable/disable
-        private bool canOpenSubviewForm = true; // addition forms enable/disable
         #endregion
 
         // COLLECTIONS
         #region COLLECTIONS
         #region Grid filling collections
-        private ObservableCollection<Template> _templates;
-        public ObservableCollection<Template> Templates
+        private ObservableCollection<Model.Template> _templates;
+        public ObservableCollection<Model.Template> Templates
         {
             get { return _templates; }
             set { _templates = value; }
@@ -69,7 +68,7 @@ namespace CashRegisterRepairs.ViewModel
             dbModel = new CashRegisterServiceContext();
 
             // Initialize backing datagrid collections
-            _templates = new ObservableCollection<Template>(dbModel.Templates);
+            _templates = new ObservableCollection<Model.Template>(dbModel.Templates);
             Documents = new ObservableCollection<DocumentDisplay>();
 
             // Initialize backing collections for combo boxes and their content 
@@ -86,10 +85,8 @@ namespace CashRegisterRepairs.ViewModel
             dbModel.Clients.ToList().ForEach(client => Clients.Add(client.NAME));
 
             // Initialize commands
-            EnableSubviewDisplay = new TemplateCommand(EnableSubview, param => this.canExecuteCommand);
             DisplayDocumentsInGridCommand = new TemplateCommand(ShowDocumentsOfSelectedTemplate, param => this.canExecuteCommand);
             ShowDocumentPreviewCommand = new TemplateCommand(ShowDocumentPreviewForm, param => this.canExecuteCommand);
-            PrintDocumentCommand = new TemplateCommand(PrintDocument, param => this.canExecuteCommand);
 
             // Addition commands
             AddDocumentCommand = new TemplateCommand(AddDocument, param => this.canExecuteCommand);
@@ -102,42 +99,14 @@ namespace CashRegisterRepairs.ViewModel
 
         // METHODS
         #region METHODS
-        #region Utility extension methods implementation
-        private void EnableSubview(object commandParameter)
-        {
-            canOpenSubviewForm = true;
-        }
-
-        // Might be unnecessary
-        private void LoadDocumentContent()
-        {
-            Document foundDoc = null;
-            string type = (SelectedDocument as DocumentDisplay).TEMPLATE;
-
-            if (SelectedClient != null)
-            {
-                string clientName = SelectedClient;
-                foundDoc = dbModel.Documents.Where(doc => doc.Client.NAME.Equals(clientName) && doc.Template.TYPE.Equals(type)).FirstOrDefault();
-            }
-            else
-            {
-                DateTime? start = (SelectedDocument as DocumentDisplay).START_DATE;
-                DateTime? end = (SelectedDocument as DocumentDisplay).END_DATE;
-                foundDoc = dbModel.Documents.Where(doc => doc.START_DATE.Value.Equals(start.Value) && doc.END_DATE.Value.Equals(end.Value) && doc.Template.TYPE.Equals(type)).FirstOrDefault();
-            }
-
-            DocumentContent = foundDoc.DOC;
-        }
-        #endregion
-
         #region Grid loading methods
         private void ShowDocumentsOfSelectedTemplate(object commandParameter)
         {
             Documents.Clear();
 
-            foreach (Document doc in dbModel.Documents)
+            foreach (Model.Document doc in dbModel.Documents)
             {
-                if (SelectedTemplate != null && doc.Template.TYPE.Equals((SelectedTemplate as Template).TYPE))
+                if (SelectedTemplate != null && doc.Template.TYPE.Equals((SelectedTemplate as Model.Template).TYPE))
                 {
                     if (SelectedClient == null)
                     {
@@ -166,7 +135,7 @@ namespace CashRegisterRepairs.ViewModel
             Documents.OrderByDescending(document => document.END_DATE);
         }
 
-        private void LoadDocumentInGrid(Document doc)
+        private void LoadDocumentInGrid(Model.Document doc)
         {
             Device device = dbModel.Devices.Where(dev => (dev.DeviceModel.DEVICE_NUM_PREFIX + dev.DEVICE_NUM_POSTFIX) == SelectedDevice).FirstOrDefault();
             DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Client, device.Site, device);
@@ -235,8 +204,8 @@ namespace CashRegisterRepairs.ViewModel
                 return;
             }
 
-            Document document = new Document();
-            document.Template = SelectedTemplate as Template;
+            Model.Document document = new Model.Document();
+            document.Template = SelectedTemplate as Model.Template;
             document.Client = dbModel.Clients.Where(client => client.NAME.Equals(SelectedClient)).FirstOrDefault();
             document.START_DATE = DateTime.Today;
             document.END_DATE = document.START_DATE.Value.AddYears(1);
@@ -272,28 +241,28 @@ namespace CashRegisterRepairs.ViewModel
             ShowDocumentsOfSelectedTemplate(null);
         }
 
-        private void FillProtocol(Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
+        private void FillProtocol(Model.Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
         {
             throw new NotImplementedException();
         }
 
-        private void FillCertificate(Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
+        private void FillCertificate(Model.Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
         {
             //Client
-            template.SelectSingleNode("CertificateTemplate/Title/CurrDaate").InnerText = DateTime.Today.ToString();
+            template.SelectSingleNode("CertificateTemplate/Title/CurrDate").InnerText = DateTime.Today.ToString();
             template.SelectSingleNode("CertificateTemplate/Bulstat/Value").InnerText = document.Client.BULSTAT;
             template.SelectSingleNode("CertificateTemplate/EGN/Value").InnerText = document.Client.EGN;
             template.SelectSingleNode("CertificateTemplate/Owner/Client/Value").InnerText = document.Client.NAME;
             template.SelectSingleNode("CertificateTemplate/Owner/Address/Value").InnerText = document.Client.ADDRESS;
             template.SelectSingleNode("CertificateTemplate/Owner/Manager/Value").InnerText = document.Client.Manager.NAME;
             //Site
-            Site site = dbModel.Sites.Where(s => s.CLIENT_ID == document.CLIENT_ID).FirstOrDefault();
+            Site site = dbModel.Sites.Where(s => s.CLIENT_ID == document.Client.ID).FirstOrDefault();
             template.SelectSingleNode("CertificateTemplate/Owner/Site/Value").InnerText = site.NAME;
 
-            //Device ?? && d.Model_ID == DeviceMode.ID
+            //Device
             Device dev = dbModel.Devices.Where(d => d.SITE_ID == site.ID).FirstOrDefault();
             template.SelectSingleNode("CertificateTemplate/Device/Model/Value").InnerText = dev.DeviceModel.MODEL;
-            template.SelectSingleNode("CertificateTemplate/Device/Certificate/Value").InnerText = dev.DeviceModel.CERTIFICATE;
+            template.SelectSingleNode("CertificateTemplate/Device/Certficate/Value").InnerText = dev.DeviceModel.CERTIFICATE;
             template.SelectSingleNode("CertificateTemplate/Device/DeviceNum/Value").InnerText = dev.DeviceModel.DEVICE_NUM_PREFIX + dev.DEVICE_NUM_POSTFIX;
             template.SelectSingleNode("CertificateTemplate/Device/FiscalNum/Value").InnerText = dev.DeviceModel.FISCAL_NUM_PREFIX + dev.FISCAL_NUM_POSTFIX;
 
@@ -302,18 +271,19 @@ namespace CashRegisterRepairs.ViewModel
             template.SelectSingleNode("CertificateTemplate/ServiceInfo/AddressAndPhone/Value").InnerText = serviceProfileItems[3] + serviceProfileItems[4];
             template.SelectSingleNode("CertificateTemplate/ServiceInfo/Manager/Value").InnerText = serviceProfileItems[2];
             template.SelectSingleNode("CertificateTemplate/ServiceInfo/Contract/Value").InnerText = hackedId.ToString();
-            template.SelectSingleNode("CertificateTemplate/ServiceInfo/StartDate/Value").InnerText = document.START_DATE.ToString();
+            template.SelectSingleNode("CertificateTemplate/ServiceInfo/Contract/StartDate/Value").InnerText = document.START_DATE.ToString();
 
             //NAP info
             template.SelectSingleNode("CertificateTemplate/NAPInfo/NAPNumber/Value").InnerText = dev.NAP_NUMBER;
             template.SelectSingleNode("CertificateTemplate/NAPInfo/NAPDate/Value").InnerText = dev.NAP_DATE.ToString();
         }
 
-        private void FillContract(Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
+        private void FillContract(Model.Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
         {
             // Title
             template.SelectSingleNode("ContractTemplate/Title/ContractNumber").InnerText = hackedId.ToString();
-            template.SelectSingleNode("ContractTemplate/FreeText/Value").InnerText = DateTime.Today.ToString();
+            template.SelectSingleNode("ContractTemplate/Title/CurrDate").InnerText = DateTime.Today.Date.ToString();
+            template.SelectSingleNode("ContractTemplate/FreeText/Value").InnerText = DateTime.Today.Date.ToString();
 
             // Service
             template.SelectSingleNode("ContractTemplate/Service/ServiceName/Value").InnerText = serviceProfileItems[0];
@@ -326,7 +296,8 @@ namespace CashRegisterRepairs.ViewModel
             template.SelectSingleNode("ContractTemplate/Client/ClientManager/Value").InnerText = document.Client.Manager.NAME;
 
             // Device
-            Device device = selectedDevice != null ? dbModel.Devices.Find(selectedDevice.ID) : dbModel.Devices.Where(d => (d.DeviceModel.DEVICE_NUM_PREFIX + d.DEVICE_NUM_POSTFIX).Equals(SelectedDevice)).FirstOrDefault();
+            Site site = dbModel.Sites.Where(s => s.CLIENT_ID == document.CLIENT_ID).FirstOrDefault();
+            Device device = dbModel.Devices.Where(d => d.SITE_ID == site.ID).FirstOrDefault();
             template.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceModel/Value").InnerText = device.DeviceModel.MODEL;
             template.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceNumber/Value").InnerText = device.DEVICE_NUM_POSTFIX;
             template.SelectSingleNode("ContractTemplate/DeviceInfo/FiskalNumber/Value").InnerText = device.FISCAL_NUM_POSTFIX;
@@ -341,33 +312,73 @@ namespace CashRegisterRepairs.ViewModel
             template.SelectSingleNode("ContractTemplate/ContractText/ServicePhone/Value").InnerText = serviceProfileItems[4];
         }
 
-        // BUILD DOC AND PREVIEW HERE
         private void ShowDocumentPreviewForm(object templatesDataContext)
         {
-            //// THESE WILL LATER GO IN PREVIEW METHOD
-            //// Save to temp memory
-            //MemoryStream temp = new MemoryStream();
-            //document.Save(temp);
+            Model.Document previewDoc = dbModel.Documents.Find((SelectedDocument as DocumentDisplay).ID);
 
-            //// Convert to doc
-            //Spire.Doc.Document d = new Spire.Doc.Document();
-            //d.LoadFromStream(temp,Spire.Doc.FileFormat.Xml);
-            //d.SaveToFile(temp,Spire.Doc.FileFormat.Docx);
+            XmlDocument filledDocument = new XmlDocument();
+            filledDocument.LoadXml(previewDoc.DOC);
 
-            if (canOpenSubviewForm)
+            //OBJECT OF MISSING "NULL VALUE"
+            object oMissing = System.Reflection.Missing.Value;
+            object oTemplatePath = ExtractionHelper.ResolveAppPath()+@"\Resources\WordTemplates\ContractTemplate.dotx";
+
+            Application wordApp = new Application();
+            Microsoft.Office.Interop.Word.Document wordDoc = new Microsoft.Office.Interop.Word.Document();
+
+            wordDoc = wordApp.Documents.Add(ref oTemplatePath, ref oMissing, ref oMissing, ref oMissing);
+
+            foreach (Field myMergeField in wordDoc.Fields)
             {
-                LoadDocumentContent();
+                Range rngFieldCode = myMergeField.Code;
 
-                PreviewDocumentView previewDocumentView = new PreviewDocumentView();
-                previewDocumentView.DataContext = templatesDataContext;
-                previewDocumentView.Show();
-                canOpenSubviewForm = false;
+                rngFieldCode.Font.Name = "Arial";
+                rngFieldCode.Font.Size = 11;
+                rngFieldCode.Font.Bold = -1;
+
+                string fieldText = rngFieldCode.Text;
+
+                // ONLY GETTING THE MAILMERGE FIELDS
+                if (fieldText.StartsWith(" MERGEFIELD"))
+                {
+                    // THE TEXT COMES IN THE FORMAT OF
+                    // MERGEFIELD  MyFieldName  \\* MERGEFORMAT
+                    // THIS HAS TO BE EDITED TO GET ONLY THE FIELDNAME "MyFieldName"
+                    int endMerge = fieldText.IndexOf("\\");
+                    int fieldNameLength = fieldText.Length - endMerge;
+                    string fieldName = fieldText.Substring(11, endMerge - 11);
+
+                    // GIVES THE FIELDNAMES AS THE USER HAD ENTERED IN .dot FILE
+                    fieldName = fieldName.Trim();
+
+                    // **** FIELD REPLACEMENT IMPLEMENTATION GOES HERE ****//
+                    // THE PROGRAMMER CAN HAVE HIS OWN IMPLEMENTATIONS HERE
+                    //if (fieldName == "ContractNumber")
+                    //{
+                    //    myMergeField.Select();
+                    //    wordApp.Selection.TypeText(filledDocument.SelectSingleNode("ContractTemplate/Title/ContractNumber").InnerText);
+                    //}
+
+                    myMergeField.Select();
+
+                    switch (fieldName)
+                    {
+                        case "ContractNumber":
+                            wordApp.Selection.TypeText(filledDocument.SelectSingleNode("ContractTemplate/Title/ContractNumber").InnerText);
+                            break;
+                        case "Today":
+                            wordApp.Selection.TypeText(filledDocument.SelectSingleNode("ContractTemplate/Title/CurrDate").InnerText);
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+
             }
-        }
-
-        private void PrintDocument(object obj)
-        {
-            // Implement using DocumentViewer, make another view for this -> simple with button for print
+            wordDoc.SaveAs(ExtractionHelper.ResolveAppPath()+@"\Resources\TemporaryDocuments\myfile2.doc");
+            wordApp.Documents.Open(ExtractionHelper.ResolveAppPath()+@"\Resources\TemporaryDocuments\myfile2.doc");
+            //wordApp.Application.Quit();
         }
         #endregion
         #endregion
