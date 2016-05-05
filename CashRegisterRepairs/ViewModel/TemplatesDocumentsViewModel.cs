@@ -395,8 +395,10 @@ namespace CashRegisterRepairs.ViewModel
                 }
 
             }
-            wordDoc.SaveAs(ExtractionHelper.ResolveAppPath()+@"\Resources\TemporaryDocuments\myfile2.doc");
-            wordApp.Documents.Open(ExtractionHelper.ResolveAppPath()+@"\Resources\TemporaryDocuments\myfile2.doc");
+            string tempFilePath = ExtractionHelper.ResolveAppPath() + @"\Resources\TemporaryDocuments\"+Guid.NewGuid()+".doc";
+
+            wordDoc.SaveAs(tempFilePath);
+            wordApp.Documents.Open(tempFilePath);
             //wordApp.Application.Quit();
         }
         #endregion
