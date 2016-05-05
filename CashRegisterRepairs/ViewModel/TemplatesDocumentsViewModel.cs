@@ -296,8 +296,8 @@ namespace CashRegisterRepairs.ViewModel
             template.SelectSingleNode("ContractTemplate/Client/ClientManager/Value").InnerText = document.Client.Manager.NAME;
 
             // Device
-            Site site = dbModel.Sites.Where(s => s.CLIENT_ID == document.CLIENT_ID).FirstOrDefault();
-            Device device = dbModel.Devices.Where(d => d.SITE_ID == site.ID).FirstOrDefault();
+            Site site = dbModel.Sites.Where(s => s.NAME.Equals(SelectedSite)).FirstOrDefault();
+            Device device = dbModel.Devices.Where(d => (d.DeviceModel.DEVICE_NUM_PREFIX + d.DEVICE_NUM_POSTFIX).Equals(SelectedDevice)).FirstOrDefault();
             template.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceModel/Value").InnerText = device.DeviceModel.MODEL;
             template.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceNumber/Value").InnerText = device.DEVICE_NUM_POSTFIX;
             template.SelectSingleNode("ContractTemplate/DeviceInfo/FiskalNumber/Value").InnerText = device.FISCAL_NUM_POSTFIX;
