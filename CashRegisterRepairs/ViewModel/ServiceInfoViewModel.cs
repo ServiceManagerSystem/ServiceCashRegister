@@ -11,30 +11,11 @@ namespace CashRegisterRepairs.ViewModel
 {
     public class ServiceInfoViewModel : INotifyPropertyChanged, IViewModel
     {
-        // NOTIFY
-        #region NOTIFY
-        private bool canExecute = true;
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
-        }
-        #endregion
-
-        // DISPLAY PROP
-        private ServiceProfileDisplay _profileDisplay;
-        public ServiceProfileDisplay ProfileDisplay
-        {
-            get { return _profileDisplay; }
-            set { _profileDisplay = value; NotifyPropertyChanged(); }
-        }
-
-        // CTOR
         public ServiceInfoViewModel()
         {
+            // Load current profile
+            LoadServiceProfile();
+
             // Disable editing at first
             IsFocusable = false;
             IsUnmodifable = true;
@@ -42,19 +23,10 @@ namespace CashRegisterRepairs.ViewModel
             // Initialize commands
             EnableEditingCommand = new TemplateCommand(EnableEditing, param => this.canExecute);
             SaveServiceProfileCommand = new TemplateCommand(SaveServiceProfile, param => this.canExecute);
-
-            // Load current profile
-            LoadServiceProfile();
         }
 
         // METHODS
         #region METHODS
-        private void EnableEditing(object obj)
-        {
-            IsFocusable = true;
-            IsUnmodifable = false;
-        }
-
         private void LoadServiceProfile()
         {
             string[] serviceProfileItems = ExtractionHelper.FetchServiceProfile();
@@ -67,7 +39,13 @@ namespace CashRegisterRepairs.ViewModel
             ProfileDisplay.Phone = serviceProfileItems[4];
         }
 
-        private void SaveServiceProfile(object obj)
+        private void EnableEditing(object commandParameter)
+        {
+            IsFocusable = true;
+            IsUnmodifable = false;
+        }
+
+        private void SaveServiceProfile(object commandParameter)
         {
             StringBuilder profileBuilder = new StringBuilder();
             profileBuilder
@@ -79,6 +57,7 @@ namespace CashRegisterRepairs.ViewModel
 
             File.WriteAllText(ExtractionHelper.FetchServiceProfilePath(), profileBuilder.ToString());
 
+            // TODO: Replace this with metro dialog
             MessageBox.Show("Промените по профила са запазени!","ПРОМЯНА",MessageBoxButton.OK,MessageBoxImage.Information);
         }
         #endregion
@@ -100,8 +79,15 @@ namespace CashRegisterRepairs.ViewModel
         }
         #endregion
 
-        // PROPS
-        #region PROPS
+        // PROPERTIES
+        #region PROPERTIES
+        private ServiceProfileDisplay _profileDisplay;
+        public ServiceProfileDisplay ProfileDisplay
+        {
+            get { return _profileDisplay; }
+            set { _profileDisplay = value; NotifyPropertyChanged(); }
+        }
+
         private bool _isUnmodifable;
         public bool IsUnmodifable
         {
@@ -114,6 +100,18 @@ namespace CashRegisterRepairs.ViewModel
         {
             get { return _isFocusable; }
             set { _isFocusable = value; NotifyPropertyChanged(); }
+        }
+        #endregion
+
+        #region INotifyPropertyChanged implementation
+        private bool canExecute = true;
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
         }
         #endregion
     }

@@ -63,7 +63,8 @@
                 ItemsSource="{Binding Sites}"
                 SelectedItem="{Binding SelectedSite}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ToolTip="Избери с двоен клик за добавяне на апарат към съответния обект.">
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding NAME}" Header="Име"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding PHONE}" Header="Телефон"/>
