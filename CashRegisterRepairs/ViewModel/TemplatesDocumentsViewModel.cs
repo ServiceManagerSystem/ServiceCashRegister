@@ -26,8 +26,8 @@ namespace CashRegisterRepairs.ViewModel
         // COLLECTIONS
         #region COLLECTIONS
         #region Grid filling collections
-        private ObservableCollection<Model.Template> _templates;
-        public ObservableCollection<Model.Template> Templates
+        private ObservableCollection<Template> _templates;
+        public ObservableCollection<Template> Templates
         {
             get { return _templates; }
             set { _templates = value; }
@@ -72,7 +72,7 @@ namespace CashRegisterRepairs.ViewModel
             placeholder = App.Current.MainWindow as MetroWindow;
 
             // Initialize backing datagrid collections
-            _templates = new ObservableCollection<Model.Template>(dbModel.Templates);
+            _templates = new ObservableCollection<Template>(dbModel.Templates);
             Documents = new ObservableCollection<DocumentDisplay>();
 
             // Initialize backing collections for combo boxes and their content 
@@ -109,7 +109,7 @@ namespace CashRegisterRepairs.ViewModel
         {
             Documents.Clear();
 
-            foreach (Model.Document doc in dbModel.Documents)
+            foreach (Document doc in dbModel.Documents)
             {
                 if (SelectedTemplate != null && doc.Template.TYPE.Equals((SelectedTemplate as Model.Template).TYPE))
                 {
@@ -117,7 +117,7 @@ namespace CashRegisterRepairs.ViewModel
                     {
                         Documents.Clear();
 
-                        foreach (Model.Document foundDoc in dbModel.Documents.Where(d => d.Device.Site.Client.NAME.Equals(SelectedClient)))
+                        foreach (Document foundDoc in dbModel.Documents.Where(d => d.Device.Site.Client.NAME.Equals(SelectedClient)))
                         {
                             DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Device.Site.Client, doc.Device.Site, doc.Device);
                             Documents.Add(docDisplay);
@@ -127,7 +127,7 @@ namespace CashRegisterRepairs.ViewModel
                         {
                             Documents.Clear();
 
-                            foreach (Model.Document foundDoc in dbModel.Documents.Where(d => d.Device.Site.NAME.Equals(SelectedSite)))
+                            foreach (Document foundDoc in dbModel.Documents.Where(d => d.Device.Site.NAME.Equals(SelectedSite)))
                             {
                                 DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Device.Site.Client, doc.Device.Site, doc.Device);
                                 Documents.Add(docDisplay);
@@ -137,7 +137,7 @@ namespace CashRegisterRepairs.ViewModel
                             {
                                 Documents.Clear();
 
-                                foreach (Model.Document foundDoc in dbModel.Documents.Where(d => (d.Device.DeviceModel.DEVICE_NUM_PREFIX + doc.Device.DEVICE_NUM_POSTFIX).Equals(SelectedDevice)))
+                                foreach (Document foundDoc in dbModel.Documents.Where(d => (d.Device.DeviceModel.DEVICE_NUM_PREFIX + doc.Device.DEVICE_NUM_POSTFIX).Equals(SelectedDevice)))
                                 {
                                     DocumentDisplay docDisplay = new DocumentDisplay(doc, doc.Device.Site.Client, doc.Device.Site, doc.Device);
                                     Documents.Add(docDisplay);
@@ -205,16 +205,17 @@ namespace CashRegisterRepairs.ViewModel
         }
         #endregion
 
-        #region Document manipulation  methods
-        private void AddDocument(object commandParameter)
+        #region Document manipulation methods
+        // TODO: Figure out of async await causes trouble
+        private async void AddDocument(object commandParameter)
         {
             if(SelectedTemplate == null)
             {
-                placeholder.ShowMessageAsync("ГРЕШКА","Няма избран шаблон!");
+                await placeholder.ShowMessageAsync("ГРЕШКА","Няма избран шаблон!");
                 return;
             }
 
-            Model.Document document = new Model.Document();
+            Document document = new Document();
             document.Template = SelectedTemplate as Model.Template;
             document.Device = dbModel.Devices.Where(d => (d.DeviceModel.DEVICE_NUM_PREFIX+ d.DEVICE_NUM_POSTFIX).Equals(SelectedDevice)).FirstOrDefault();
             document.Device.Site = dbModel.Sites.Where(s => s.NAME.Equals(SelectedSite)).FirstOrDefault();
@@ -252,12 +253,13 @@ namespace CashRegisterRepairs.ViewModel
             ShowDocumentsOfSelectedTemplate(null);
         }
 
-        private void FillProtocolXml(Model.Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
+        // TODO: Extract all these to Helper -> XmlDataFiller
+        private void FillProtocolXml(Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
         {
             throw new NotImplementedException();
         }
 
-        private void FillCertificateXml(Model.Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
+        private void FillCertificateXml(Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
         {
             //Client
             template.SelectSingleNode("CertificateTemplate/Title/CurrDate").InnerText = DateTime.Today.ToShortDateString();
@@ -288,7 +290,7 @@ namespace CashRegisterRepairs.ViewModel
             template.SelectSingleNode("CertificateTemplate/NAPInfo/NAPDate/Value").InnerText = document.Device.NAP_DATE.ToString();
         }
 
-        private void FillContractXml(Model.Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
+        private void FillContractXml(Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
         {
             // Title
             template.SelectSingleNode("ContractTemplate/Title/ContractNumber").InnerText = hackedId.ToString();
@@ -324,8 +326,8 @@ namespace CashRegisterRepairs.ViewModel
 
         private void ShowDocumentPreviewForm(object templatesDataContext)
         {
-            Model.Document documentToPreview = dbModel.Documents.Find((SelectedDocument as DocumentDisplay).ID);
-            Model.Template selectedTemplate = (SelectedTemplate as Model.Template);
+            Document documentToPreview = dbModel.Documents.Find((SelectedDocument as DocumentDisplay).ID);
+            Template selectedTemplate = (SelectedTemplate as Template);
 
             MSWordDocumentGenerator.BuildWordDocumentFromTemplate(documentToPreview, selectedTemplate);
         }

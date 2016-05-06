@@ -8,6 +8,11 @@ namespace CashRegisterRepairs.Utilities.Helpers
         private static Application wordApp;
         private static readonly XmlDocument xmlWithData = new XmlDocument();
 
+        public static void CloseMSWord()
+        {
+            wordApp.Quit();
+        }
+
         public static void BuildWordDocumentFromTemplate(Model.Document documentToPreview, Model.Template template)
         {
             string templateType = template.TYPE;
@@ -57,7 +62,6 @@ namespace CashRegisterRepairs.Utilities.Helpers
                 }
             }
 
-            //string tempFilePath = PathFinder.ResolveAppPath() + @"\Resources\TemporaryDocuments\" + Guid.NewGuid() + ".doc";
             string tempFilePath = PathFinder.FetchTemporaryWordDocumentFullPath();
             wordDoc.SaveAs(tempFilePath);
             wordApp.Documents.Open(tempFilePath);
@@ -65,6 +69,7 @@ namespace CashRegisterRepairs.Utilities.Helpers
 
         public static void FillContractTemplateField(string contractField)
         {
+            // TODO: Impl contract
             switch (contractField)
             {
                 case "ContractNumber":
@@ -78,21 +83,37 @@ namespace CashRegisterRepairs.Utilities.Helpers
             }
         }
 
-        public static void CloseMSWord()
-        {
-            wordApp.Quit();
-        }
-
-        internal static void FillCertificateTemplateField(string fieldName)
+        public static void FillCertificateTemplateField(string certificateField)
         {
             // TODO: Impl certificate 
-            return;
+            switch (certificateField)
+            {
+                case "....":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("....").InnerText);
+                    break;
+                case "...":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("...").InnerText);
+                    break;
+                default:
+                    break;
+            }
         }
 
-        internal static void FillProtocolTemplateField(string fieldName)
+        public static void FillProtocolTemplateField(string protocolField)
         {
             // TODO: Impl protocol
-            return;
+            switch (protocolField)
+            {
+                case "...":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("...").InnerText);
+                    break;
+                case "......":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("......").InnerText);
+                    break;
+                default:
+                    break;
+            }
         }
+
     }
 }
