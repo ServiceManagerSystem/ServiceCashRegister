@@ -1,10 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 using System.IO;
-using CashRegisterRepairs.Utilities;
+using System.Linq;
+using System.Windows.Input;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
+using CashRegisterRepairs.Utilities.Helpers;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -12,32 +13,6 @@ namespace CashRegisterRepairs.ViewModel
     {
         private ObservableCollection<IViewModel> _tabViewModels;
         public ObservableCollection<IViewModel> TabViewModels { get { return _tabViewModels; } }
-
-        private bool canExecuteCommand = true;
-
-        private int _selectedTab;
-        public int SelectedTab
-        {
-            get { return _selectedTab; }
-            set { _selectedTab = value; NotifyPropertyChanged(); }
-        }
-
-        private ICommand _removeTempDocsCommand;
-        public ICommand RemoveTempDocsCommand
-        {
-            get { return _removeTempDocsCommand; }
-            set { _removeTempDocsCommand = value; }
-        }
-
-        private void RemoveTempDocs(object commandParameter)
-        {
-            string[] tempDocs = Directory.GetFiles(ExtractionHelper.ResolveAppPath() + @"\Resources\TemporaryDocuments\");
-
-            foreach (string path in tempDocs)
-            {
-                File.Delete(path);
-            }
-        }
 
         public PlaceholderViewModel()
         {
@@ -51,6 +26,30 @@ namespace CashRegisterRepairs.ViewModel
             RemoveTempDocsCommand = new TemplateCommand(RemoveTempDocs,param => this.canExecuteCommand);
         }
 
+        private void RemoveTempDocs(object commandParameter)
+        {
+            string[] tempDocs = Directory.GetFiles(PathFinder.temporaryDocumentsPath);
+
+            tempDocs.ToList().ForEach(temp => File.Delete(temp));
+
+            MSWordDocumentGenerator.CloseMSWord();
+        }
+
+        private ICommand _removeTempDocsCommand;
+        public ICommand RemoveTempDocsCommand
+        {
+            get { return _removeTempDocsCommand; }
+            set { _removeTempDocsCommand = value; }
+        }
+
+        private int _selectedTab;
+        public int SelectedTab
+        {
+            get { return _selectedTab; }
+            set { _selectedTab = value; NotifyPropertyChanged(); }
+        }
+
+        private bool canExecuteCommand = true;
         #region INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propName = "")

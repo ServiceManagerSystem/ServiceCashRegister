@@ -2,10 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- Images/Icons -->
-    <BitmapImage x:Key="appIcon" UriSource="/Resources/cash-register-icon.png"/>
-    <BitmapImage x:Key="addIcon" UriSource="/Resources/plus-icon.png"/>
-    <BitmapImage x:Key="clearIcon" UriSource="/Resources/clear-icon.png"/>
-    <BitmapImage x:Key="mapImage" UriSource="/Resources/service_map.png"/>
+    <BitmapImage x:Key="appIcon" UriSource="/Resources/Images/cash-register-icon.png"/>
+    <BitmapImage x:Key="addIcon" UriSource="/Resources/Images/plus-icon.png"/>
+    <BitmapImage x:Key="clearIcon" UriSource="/Resources/Images/clear-icon.png"/>
+    <BitmapImage x:Key="mapImage" UriSource="/Resources/Images/service_map.png"/>
   
     <!-- Generic labels style -->
     <Style x:Key="GenericLabelStyle" TargetType="{x:Type Label}">

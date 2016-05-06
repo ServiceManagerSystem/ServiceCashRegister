@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Security;
+using System.Runtime.InteropServices;
 
-namespace CashRegisterRepairs.Utilities
+namespace CashRegisterRepairs.Utilities.PasswordHandlers
 {
-    public class AuthenticationService : IAuthenticationService
+    public class LoginHandler : ILoginHandler
     {
         public bool Login(string username, SecureString password)
         {

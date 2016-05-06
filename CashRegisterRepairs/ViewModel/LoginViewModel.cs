@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Windows;
+using System.Security;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CashRegisterRepairs.View;
-using System.Security;
-using CashRegisterRepairs.Utilities;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using CashRegisterRepairs.Utilities.PasswordHandlers;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -15,7 +15,7 @@ namespace CashRegisterRepairs.ViewModel
     {
         // FIELDS
         #region FIELDS
-        IAuthenticationService loginService = new AuthenticationService();
+        ILoginHandler loginHandler = new LoginHandler();
         private bool canExecuteCommand = true;
         #endregion
 
@@ -28,7 +28,6 @@ namespace CashRegisterRepairs.ViewModel
         private async void TryLogin(object commandParameter)
         {
             MetroWindow loginView = Application.Current.Windows[0] as MetroWindow;
-            // use for other forms -> var metroWindow = (Application.Current.MainWindow as MetroWindow);
 
             if (string.IsNullOrEmpty(Username) || Password == null)
             {
@@ -36,7 +35,7 @@ namespace CashRegisterRepairs.ViewModel
                 return;
             }
 
-            if (loginService.Login(Username, Password))
+            if (loginHandler.Login(Username, Password))
             {
                 PlaceholderView home = new PlaceholderView();
                 App.Current.MainWindow = home;

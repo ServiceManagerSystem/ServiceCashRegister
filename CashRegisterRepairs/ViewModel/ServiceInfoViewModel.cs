@@ -1,18 +1,24 @@
-﻿using CashRegisterRepairs.Utilities;
+﻿using CashRegisterRepairs.Utilities.GridDisplayObjects;
+using CashRegisterRepairs.Utilities.Helpers;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Windows;
 using System.Windows.Input;
 
 namespace CashRegisterRepairs.ViewModel
 {
     public class ServiceInfoViewModel : INotifyPropertyChanged, IViewModel
     {
+        private readonly MetroWindow placeholder;
+
         public ServiceInfoViewModel()
         {
+            placeholder = App.Current.MainWindow as MetroWindow;
+
             // Load current profile
             LoadServiceProfile();
 
@@ -29,7 +35,7 @@ namespace CashRegisterRepairs.ViewModel
         #region METHODS
         private void LoadServiceProfile()
         {
-            string[] serviceProfileItems = ExtractionHelper.FetchServiceProfile();
+            string[] serviceProfileItems = PathFinder.FetchServiceProfile();
 
             ProfileDisplay = new ServiceProfileDisplay();
             ProfileDisplay.Name = serviceProfileItems[0];
@@ -55,10 +61,9 @@ namespace CashRegisterRepairs.ViewModel
                 .AppendLine(ProfileDisplay.Manager)
                 .AppendLine(ProfileDisplay.Phone);
 
-            File.WriteAllText(ExtractionHelper.FetchServiceProfilePath(), profileBuilder.ToString());
+            File.WriteAllText(PathFinder.serviceProfilePath, profileBuilder.ToString());
 
-            // TODO: Replace this with metro dialog
-            MessageBox.Show("Промените по профила са запазени!","ПРОМЯНА",MessageBoxButton.OK,MessageBoxImage.Information);
+            placeholder.ShowMessageAsync("ПРОМЯНА", "Промените по профила са запазени!");
 
             IsFocusable = false;
             IsUnmodifable = true;

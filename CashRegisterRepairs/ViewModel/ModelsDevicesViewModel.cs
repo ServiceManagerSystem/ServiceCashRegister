@@ -9,6 +9,9 @@ using CashRegisterRepairs.Model;
 using CashRegisterRepairs.Utilities;
 using CashRegisterRepairs.View;
 using System.Collections.Generic;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using CashRegisterRepairs.Utilities.GridDisplayObjects;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -16,6 +19,7 @@ namespace CashRegisterRepairs.ViewModel
     {
         // FIELDS & COLLECTIONS
         #region FIELDS
+        private readonly MetroWindow placeholder;
         private readonly CashRegisterServiceContext dbModel;
         private readonly PlaceholderViewModel tabNavigator; // reference to the main view model in order to change tab dynamically
         private bool canExecuteCommand = true; // command enable/disable
@@ -55,6 +59,7 @@ namespace CashRegisterRepairs.ViewModel
         {
             // Initialize DB context and navigator reference
             dbModel = new CashRegisterServiceContext();
+            placeholder = App.Current.MainWindow as MetroWindow;
             tabNavigator = tabNav;
 
             // Initializing datagrid backing collections
@@ -100,8 +105,7 @@ namespace CashRegisterRepairs.ViewModel
 
             if (!isCommitExecuted)
             {
-                // TODO: Replace this with metro dialog
-                MessageBox.Show("Няма добавени записи!", "ИНФО", MessageBoxButton.OK, MessageBoxImage.Information);
+                placeholder.ShowMessageAsync("ИНФО", "Няма добавени записи!");
                 return;
             }
 
@@ -121,8 +125,7 @@ namespace CashRegisterRepairs.ViewModel
 
             if (newEntries > 0)
             {
-                // TODO: Replace this with metro dialog
-                MessageBox.Show("Добавени " + newEntries + " записа!", "ИНФО", MessageBoxButton.OK, MessageBoxImage.Information);
+                placeholder.ShowMessageAsync("ИНФО", "Добавени " + newEntries + " записа!");
                 isCommitExecuted = false;
             }
         }
@@ -159,8 +162,7 @@ namespace CashRegisterRepairs.ViewModel
 
                 if (Devices.Count == 0)
                 {
-                    // TODO: Replace with metro dialog
-                    MessageBox.Show("Няма апарати от този модел!", "ИНФО", MessageBoxButton.OK, MessageBoxImage.Information);
+                    placeholder.ShowMessageAsync("ИНФО", "Няма апарати от този модел!");
                 }
             }
         }
@@ -197,7 +199,7 @@ namespace CashRegisterRepairs.ViewModel
         {
             if (SelectedModel == null)
             {
-                // TODO: Sjow error
+                placeholder.ShowMessageAsync("ГРЕШКА", "Няма избран модел!");
                 return;
             }
 
@@ -266,10 +268,9 @@ namespace CashRegisterRepairs.ViewModel
                 modelsCache.ForEach(model => Models.Add(model));
                 dbModel.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // TODO: Handle error
-                throw;
+                placeholder.ShowMessageAsync("ГРЕШКА", e.InnerException.InnerException.Message);
             }
 
             isCommitExecuted = true;
@@ -304,10 +305,9 @@ namespace CashRegisterRepairs.ViewModel
                 devicesCache.ForEach(device => dbModel.Devices.Add(device));
                 dbModel.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // TODO: Handle error
-                throw;
+                placeholder.ShowMessageAsync("ГРЕШКА", e.InnerException.InnerException.Message);
             }
 
             LoadDevicesInGrid(SelectedModel as DeviceModel);

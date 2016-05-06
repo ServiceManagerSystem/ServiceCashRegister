@@ -1,6 +1,6 @@
 ﻿using CashRegisterRepairs.Model;
 
-namespace CashRegisterRepairs.Utilities
+namespace CashRegisterRepairs.Utilities.GridDisplayObjects
 {
     public class ClientDisplay
     {

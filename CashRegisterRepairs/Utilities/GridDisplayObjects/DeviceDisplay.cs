@@ -1,7 +1,7 @@
-﻿using CashRegisterRepairs.Model;
-using System;
+﻿using System;
+using CashRegisterRepairs.Model;
 
-namespace CashRegisterRepairs.Utilities
+namespace CashRegisterRepairs.Utilities.GridDisplayObjects
 {
     public class DeviceDisplay
     {

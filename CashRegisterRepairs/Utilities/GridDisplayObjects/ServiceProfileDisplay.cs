@@ -1,4 +1,4 @@
-﻿namespace CashRegisterRepairs.Utilities
+﻿namespace CashRegisterRepairs.Utilities.GridDisplayObjects
 {
     public class ServiceProfileDisplay
     {

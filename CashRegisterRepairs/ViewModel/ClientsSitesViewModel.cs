@@ -11,6 +11,9 @@ using CashRegisterRepairs.Model;
 using CashRegisterRepairs.Utilities;
 using CashRegisterRepairs.View;
 using CashRegisterRepairs.ViewModel.Interfaces;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using CashRegisterRepairs.Utilities.GridDisplayObjects;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -18,6 +21,7 @@ namespace CashRegisterRepairs.ViewModel
     {
         // FIELDS & COLLECTIONS
         #region FIELDS
+        private readonly MetroWindow placeholder;
         private readonly CashRegisterServiceContext dbModel;
         private bool canExecuteCommand = true; // command enable/disable
         private bool canOpenSubviewForm = true; // addition forms enable/disable
@@ -58,6 +62,7 @@ namespace CashRegisterRepairs.ViewModel
         {
             // Initialize DB context
             dbModel = new CashRegisterServiceContext();
+            placeholder = App.Current.MainWindow as MetroWindow;
 
             // Initializing datagrid backing collections
             _sites = new ObservableCollection<Site>();
@@ -275,7 +280,7 @@ namespace CashRegisterRepairs.ViewModel
         {
             if (string.IsNullOrEmpty(EGN) && string.IsNullOrEmpty(BULSTAT))
             {
-                // TODO: Print dialog/msg for invalid data
+                placeholder.ShowMessageAsync("ГРЕШКА","Невалидни/невъведени данни!");
                 return;
             }
 
@@ -312,8 +317,7 @@ namespace CashRegisterRepairs.ViewModel
             }
             catch (Exception e)
             {
-                // TODO: Replace with metro dialog or custom control
-                MessageBox.Show("ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
+                placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
                 throw;
             }
 
@@ -348,8 +352,7 @@ namespace CashRegisterRepairs.ViewModel
             }
             catch (Exception e)
             {
-                // TODO: Replace with metro dialog or custom control
-                MessageBox.Show("ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
+                placeholder.ShowMessageAsync("ГРЕШКА","ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
             }
             sitesCache.ForEach(site => Sites.Add(site));
 
@@ -385,8 +388,7 @@ namespace CashRegisterRepairs.ViewModel
             }
             catch (Exception e)
             {
-                // TODO: Replace with metro dialog or custom control
-                MessageBox.Show("ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
+                placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
             }
 
             isCommitExecuted = true;
