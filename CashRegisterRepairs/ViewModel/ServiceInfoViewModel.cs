@@ -53,10 +53,15 @@ namespace CashRegisterRepairs.ViewModel
 
         private async void SaveServiceProfile(object commandParameter)
         {
+            if (FieldValidator.HasAnEmptyField(ProfileDisplay))
+            {
+                await placeholder.ShowMessageAsync("ГРЕШКА", "Не са позволени празни полета!");
+                return;
+            }
+
             string[] serviceProfileItems = PathFinder.FetchServiceProfile();
 
             StringBuilder profileBuilder = new StringBuilder(string.Join(",", serviceProfileItems).Trim());
-
             profileBuilder.Replace(serviceProfileItems[0], ProfileDisplay.Name.Trim())
             .Replace(serviceProfileItems[1], ProfileDisplay.Bulstat.Trim())
             .Replace(serviceProfileItems[2], ProfileDisplay.Address.Trim())
