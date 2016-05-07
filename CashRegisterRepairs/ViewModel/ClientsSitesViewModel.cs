@@ -12,6 +12,8 @@ using CashRegisterRepairs.ViewModel.Interfaces;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using CashRegisterRepairs.Utilities.GridDisplayObjects;
+using System.Reflection;
+using CashRegisterRepairs.Utilities.Helpers;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -286,10 +288,11 @@ namespace CashRegisterRepairs.ViewModel
             client.COMMENT = string.IsNullOrEmpty(COMMENT) ? "-" : COMMENT;
             client.Manager = manager;
 
-            // TODO: Validate fields -  pass only object than handle it appropriately, imoplement in a Validator class
-
-            managersCache.Add(manager);
-            clientsCache.Add(client);
+            if (!FieldValidator.HasAnEmptyField(manager) && !FieldValidator.HasAnEmptyField(client))
+            {
+                managersCache.Add(manager);
+                clientsCache.Add(client);
+            } 
 
             ClearFieldsClients();
         }
@@ -327,7 +330,10 @@ namespace CashRegisterRepairs.ViewModel
             site.PHONE = SitePhone;
             site.Client = dbModel.Clients.Find((SelectedClient as ClientDisplay).ID);
 
-            sitesCache.Add(site);
+            if (!FieldValidator.HasAnEmptyField(site))
+            {
+                sitesCache.Add(site);
+            }
 
             ClearFieldsSites();
         }
@@ -367,7 +373,10 @@ namespace CashRegisterRepairs.ViewModel
             device.Site = dbModel.Sites.Find((SelectedSite as Site).ID);
             device.DeviceModel = dbModel.DeviceModels.ToList().Where(model => model.MODEL == SelectedDeviceModel).FirstOrDefault();
 
-            devicesCache.Add(device);
+            if (!FieldValidator.HasAnEmptyField(device))
+            {
+                devicesCache.Add(device);
+            }
 
             ClearFieldsDevices();
         }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using CashRegisterRepairs.Utilities.GridDisplayObjects;
+using CashRegisterRepairs.Utilities.Helpers;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -104,13 +105,13 @@ namespace CashRegisterRepairs.ViewModel
             devicesCache.Clear();
         }
 
-        public void ShowAdditionCount(string formIdentifier)
+        public async void ShowAdditionCount(string formIdentifier)
         {
             int newEntries = 0;
 
             if (!isCommitExecuted)
             {
-                placeholder.ShowMessageAsync("ИНФО", "Няма добавени записи!");
+                await placeholder.ShowMessageAsync("ИНФО", "Няма добавени записи!");
                 return;
             }
 
@@ -145,8 +146,6 @@ namespace CashRegisterRepairs.ViewModel
         #region Grid loading methods
         private void ShowDevicesOfSelectedModel(object commandParameter)
         {
-            Devices.Clear();
-
             if (SelectedModel != null)
             {
                 DeviceModel selectedModelFromGrid = SelectedModel as DeviceModel;
@@ -157,6 +156,8 @@ namespace CashRegisterRepairs.ViewModel
 
         private void LoadDevicesInGrid(DeviceModel selectedModelFromGrid)
         {
+            Devices.Clear();
+
             foreach (Device device in dbModel.Devices.ToList())
             {
                 if (device.MODEL_ID == selectedModelFromGrid.ID)
@@ -183,11 +184,11 @@ namespace CashRegisterRepairs.ViewModel
             }
         }
 
-        private void ShowDevicesAdditionForm(object modelsDataContext)
+        private async void ShowDevicesAdditionForm(object modelsDataContext)
         {
             if (SelectedModel == null)
             {
-                placeholder.ShowMessageAsync("ГРЕШКА", "Няма избран модел!");
+                await placeholder.ShowMessageAsync("ГРЕШКА", "Няма избран модел!");
                 return;
             }
 
@@ -239,9 +240,10 @@ namespace CashRegisterRepairs.ViewModel
             devModel.DEVICE_NUM_PREFIX = DeviceNumPre;
             devModel.FISCAL_NUM_PREFIX = FiscalNumPre;
 
-            // Validate fields -  pass only object than handle it appropriately, imoplement in a Validator class
-
-            modelsCache.Add(devModel);
+            if (!FieldValidator.HasAnEmptyField(devModel))
+            {
+                modelsCache.Add(devModel);
+            }
 
             ClearFieldsModels();
         }
@@ -280,9 +282,10 @@ namespace CashRegisterRepairs.ViewModel
             device.Site = dbModel.Sites.Where(site => site.NAME.Equals(SelectedSiteName)).FirstOrDefault();
             device.DeviceModel = dbModel.DeviceModels.Find((SelectedModel as DeviceModel).ID);
 
-            // TODO: Validate fields
-
-            devicesCache.Add(device);
+            if (!FieldValidator.HasAnEmptyField(device))
+            {
+                devicesCache.Add(device);
+            }
 
             ClearFieldsDevices();
         }

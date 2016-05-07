@@ -55,15 +55,15 @@ namespace CashRegisterRepairs.ViewModel
         {
             string[] serviceProfileItems = PathFinder.FetchServiceProfile();
 
-            StringBuilder profileBuilder = new StringBuilder(string.Join(",", serviceProfileItems));
+            StringBuilder profileBuilder = new StringBuilder(string.Join(",", serviceProfileItems).Trim());
 
-            profileBuilder.Replace(serviceProfileItems[0], ProfileDisplay.Name)
-            .Replace(serviceProfileItems[1], ProfileDisplay.Bulstat)
-            .Replace(serviceProfileItems[2], ProfileDisplay.Address)
-            .Replace(serviceProfileItems[3], ProfileDisplay.Manager)
-            .Replace(serviceProfileItems[4], ProfileDisplay.Phone);
+            profileBuilder.Replace(serviceProfileItems[0], ProfileDisplay.Name.Trim())
+            .Replace(serviceProfileItems[1], ProfileDisplay.Bulstat.Trim())
+            .Replace(serviceProfileItems[2], ProfileDisplay.Address.Trim())
+            .Replace(serviceProfileItems[3], ProfileDisplay.Manager.Trim())
+            .Replace(serviceProfileItems[4], ProfileDisplay.Phone.Trim());
 
-            File.WriteAllText(PathFinder.serviceProfilePath, profileBuilder.ToString());
+            File.WriteAllText(PathFinder.serviceProfilePath, profileBuilder.ToString().Trim());
 
             await placeholder.ShowMessageAsync("ПРОМЯНА", "Промените по профила са запазени!");
 
