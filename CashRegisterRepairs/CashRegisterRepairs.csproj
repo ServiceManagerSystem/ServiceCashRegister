@@ -78,68 +78,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Resources\LoginInfo.cs" />
-    <Compile Include="Utilities\ClientDisplay.cs" />
-    <Compile Include="Utilities\DeviceDisplay.cs" />
-    <Compile Include="Utilities\DocumentDisplay.cs" />
-    <Compile Include="Utilities\ServiceProfileDisplay.cs" />
-    <Compile Include="Utilities\TransitionContext.cs" />
-    <Compile Include="ViewModel\AddClientViewModel.cs" />
-    <Compile Include="ViewModel\AddDeviceViewModel.cs" />
-    <Compile Include="ViewModel\AddDocumentViewModel.cs" />
-    <Compile Include="ViewModel\AddModelViewModel.cs" />
-    <Compile Include="ViewModel\AddSiteViewModel.cs" />
-    <Compile Include="ViewModel\AddTemplateViewModel.cs" />
-    <Compile Include="ViewModel\Interfaces\IAdditionVM.cs" />
-    <Compile Include="ViewModel\Interfaces\IViewModel.cs" />
-    <Compile Include="ViewModel\LoginViewModel.cs" />
-    <Compile Include="ViewModel\PlaceholderViewModel.cs" />
-    <Compile Include="ViewModel\ClientsSitesViewModel.cs" />
-    <Compile Include="ViewModel\ModelsDevicesViewModel.cs" />
-    <Compile Include="ViewModel\ServiceInfoViewModel.cs" />
-    <Compile Include="ViewModel\Utilities\TemplateCommand.cs" />
-    <Compile Include="ViewModel\TemplatesDocumentsViewModel.cs" />
-    <Compile Include="View\AddClientView.xaml.cs">
-      <DependentUpon>AddClientView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\AddDeviceView.xaml.cs">
-      <DependentUpon>AddDeviceView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\AddDocumentView.xaml.cs">
-      <DependentUpon>AddDocumentView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\AddModelView.xaml.cs">
-      <DependentUpon>AddModelView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\AddSiteView.xaml.cs">
-      <DependentUpon>AddSiteView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\AddTemplateView.xaml.cs">
-      <DependentUpon>AddTemplateView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\ClientsSitesView.xaml.cs">
-      <DependentUpon>ClientsSitesView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\LoginView.xaml.cs">
-      <DependentUpon>LoginView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\ModelsDevicesView.xaml.cs">
-      <DependentUpon>ModelsDevicesView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\PlaceholderView.xaml.cs">
-      <DependentUpon>PlaceholderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\PreviewDocumentView.xaml.cs">
-      <DependentUpon>PreviewDocumentView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\ServiceView.xaml.cs">
-      <DependentUpon>ServiceView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\TemplatesDocumentsView.xaml.cs">
-      <DependentUpon>TemplatesDocumentsView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Model\CashRegisterServiceModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -176,6 +114,56 @@
     <Compile Include="Model\Template.cs">
       <DependentUpon>CashRegisterServiceModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\GridDisplayObjects\ClientDisplay.cs" />
+    <Compile Include="Utilities\GridDisplayObjects\DeviceDisplay.cs" />
+    <Compile Include="Utilities\GridDisplayObjects\DocumentDisplay.cs" />
+    <Compile Include="Utilities\GridDisplayObjects\ServiceProfileDisplay.cs" />
+    <Compile Include="Utilities\Helpers\MSWordDocumentGenerator.cs" />
+    <Compile Include="Utilities\Helpers\PathFinder.cs" />
+    <Compile Include="Utilities\PasswordHandlers\ILoginHandler.cs" />
+    <Compile Include="Utilities\PasswordHandlers\LoginHandler.cs" />
+    <Compile Include="Utilities\PasswordHandlers\PasswordBoxBindingBehavior.cs" />
+    <Compile Include="ViewModel\Interfaces\IViewModel.cs" />
+    <Compile Include="ViewModel\Interfaces\IViewModelUtilityExtensions.cs" />
+    <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\PlaceholderViewModel.cs" />
+    <Compile Include="ViewModel\ClientsSitesViewModel.cs" />
+    <Compile Include="ViewModel\ModelsDevicesViewModel.cs" />
+    <Compile Include="ViewModel\ServiceInfoViewModel.cs" />
+    <Compile Include="ViewModel\Utilities\TemplateCommand.cs" />
+    <Compile Include="ViewModel\TemplatesDocumentsViewModel.cs" />
+    <Compile Include="View\AddClientView.xaml.cs">
+      <DependentUpon>AddClientView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddDeviceView.xaml.cs">
+      <DependentUpon>AddDeviceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddModelView.xaml.cs">
+      <DependentUpon>AddModelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddSiteView.xaml.cs">
+      <DependentUpon>AddSiteView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ClientsSitesView.xaml.cs">
+      <DependentUpon>ClientsSitesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ModelsDevicesView.xaml.cs">
+      <DependentUpon>ModelsDevicesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PlaceholderView.xaml.cs">
+      <DependentUpon>PlaceholderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServiceView.xaml.cs">
+      <DependentUpon>ServiceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TemplatesDocumentsView.xaml.cs">
+      <DependentUpon>TemplatesDocumentsView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -206,25 +194,16 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Resources\WordTemplates\CertificateTemplate.dotx" />
+    <None Include="Resources\WordTemplates\ContractTemplate.dotx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\plus-icon.png" />
+    <Folder Include="Resources\TemporaryDocuments\" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Model\CashRegisterServiceModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>CashRegisterServiceModel.edmx</DependentUpon>
-      <LastGenOutput>CashRegisterServiceModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Model\CashRegisterServiceModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>CashRegisterServiceModel.edmx</DependentUpon>
-      <LastGenOutput>CashRegisterServiceModel.cs</LastGenOutput>
-    </Content>
     <Resource Include="Resources\Service.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -243,19 +222,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\AddDocumentView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\AddModelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\AddSiteView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\AddTemplateView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -275,10 +246,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\PreviewDocumentView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\ServiceView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -287,6 +254,53 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\plus-icon.png" />
+    <Resource Include="Resources\Images\cash-register-icon.png" />
+    <Resource Include="Resources\Images\clear-icon.png" />
+    <Resource Include="Resources\Images\service_map.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Word">
+      <Guid>{00020905-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Model\CashRegisterServiceModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CashRegisterServiceModel.edmx</DependentUpon>
+      <LastGenOutput>CashRegisterServiceModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\CashRegisterServiceModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CashRegisterServiceModel.edmx</DependentUpon>
+      <LastGenOutput>CashRegisterServiceModel.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

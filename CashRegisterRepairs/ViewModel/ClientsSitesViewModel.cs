@@ -6,9 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Collections.Generic;
 using CashRegisterRepairShop.View;
-using System.Windows;
 using CashRegisterRepairs.Model;
-using CashRegisterRepairs.Utilities;
 using CashRegisterRepairs.View;
 using CashRegisterRepairs.ViewModel.Interfaces;
 using MahApps.Metro.Controls;
@@ -103,9 +101,18 @@ namespace CashRegisterRepairs.ViewModel
         public void EnableSubview(object comingFromForm)
         {
             canOpenSubviewForm = true;
-            ResetFocusToSaveButton();
+
+            ClearCaches();
 
             ShowAdditionCount(comingFromForm as string);
+        }
+
+        public void ClearCaches()
+        {
+            clientsCache.Clear();
+            managersCache.Clear();
+            sitesCache.Clear();
+            devicesCache.Clear();
         }
 
         public void ShowAdditionCount(string formIdentifier)
@@ -115,7 +122,7 @@ namespace CashRegisterRepairs.ViewModel
             if (!isCommitExecuted)
             {
                 // Replace this with metro dialog
-                MessageBox.Show("Няма добавени записи!", "ИНФО", MessageBoxButton.OK, MessageBoxImage.Information);
+                placeholder.ShowMessageAsync("ИНФО" , "Няма добавени записи!");
                 return;
             }
 
@@ -140,21 +147,9 @@ namespace CashRegisterRepairs.ViewModel
             if (newEntries > 0)
             {
                 // Replace this with metro dialog
-                MessageBox.Show("Добавени " + newEntries + " записа!", "ИНФО", MessageBoxButton.OK, MessageBoxImage.Information);
+                placeholder.ShowMessageAsync("ИНФО" , "Добавени " + newEntries + " записа!");
                 isCommitExecuted = false;
             }
-        }
-
-        public void SwapFocusToCommitButton()
-        {
-            FocusSaveButton = false;
-            FocusCommitButton = true;
-        }
-
-        public void ResetFocusToSaveButton()
-        {
-            FocusSaveButton = true;
-            FocusCommitButton = false;
         }
         #endregion
 
@@ -180,12 +175,6 @@ namespace CashRegisterRepairs.ViewModel
                 ClientDisplay selectedClientFromGrid = SelectedClient as ClientDisplay;
 
                 IEnumerable<Site> sitesFromDB = dbModel.Sites.ToList().Where(site => site.CLIENT_ID == selectedClientFromGrid.ID);
-                if (sitesFromDB.Count() == 0)
-                {
-                    // Replace this with metro dialog
-                    MessageBox.Show("Няма обекти към този клиент!", "ИНФО", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
-                }
 
                 // Load sites in grid
                 sitesFromDB.ToList().ForEach(Sites.Add);
@@ -212,7 +201,7 @@ namespace CashRegisterRepairs.ViewModel
                 if (SelectedClient == null)
                 {
                     // Replace this with metro dialog
-                    MessageBox.Show("Няма избран клиент!", "ГРЕШКА", MessageBoxButton.OK, MessageBoxImage.Information);
+                    placeholder.ShowMessageAsync("ИНФО" , "Няма избран клиент!");
                     return;
                 }
 
@@ -303,27 +292,29 @@ namespace CashRegisterRepairs.ViewModel
             clientsCache.Add(client);
 
             ClearFieldsClients();
-
-            SwapFocusToCommitButton();
         }
 
-        public void CommitClientRecords(object commandParameter)
+        public async void CommitClientRecords(object commandParameter)
         {
             try
             {
                 managersCache.ForEach(manager => dbModel.Managers.Add(manager));
                 clientsCache.ForEach(client => dbModel.Clients.Add(client));
                 dbModel.SaveChanges();
+
+                LoadClientsInGrid();
+
+                isCommitExecuted = true;
             }
             catch (Exception e)
             {
-                placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
-                throw;
+                await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
             }
-
-            LoadClientsInGrid();
-
-            isCommitExecuted = true;
+            finally
+            {
+                managersCache.Clear();
+                clientsCache.Clear();
+            }
         }
         #endregion
 
@@ -339,24 +330,28 @@ namespace CashRegisterRepairs.ViewModel
             sitesCache.Add(site);
 
             ClearFieldsSites();
-
-            SwapFocusToCommitButton();
         }
 
-        private void CommitSites(object commandParameter)
+        private async void CommitSites(object commandParameter)
         {
             try
             {
                 sitesCache.ForEach(site => dbModel.Sites.Add(site));
                 dbModel.SaveChanges();
+
+                sitesCache.ForEach(site => Sites.Add(site));
+
+                isCommitExecuted = true;     
             }
             catch (Exception e)
             {
-                placeholder.ShowMessageAsync("ГРЕШКА","ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
+                await placeholder.ShowMessageAsync("ГРЕШКА","ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
             }
-            sitesCache.ForEach(site => Sites.Add(site));
-
-            isCommitExecuted = true;
+            finally
+            {
+                sitesCache.Clear();
+            }
+    
         }
         #endregion
 
@@ -375,23 +370,25 @@ namespace CashRegisterRepairs.ViewModel
             devicesCache.Add(device);
 
             ClearFieldsDevices();
-
-            SwapFocusToCommitButton();
         }
 
-        public void CommitDevicesRecords(object commandParameter)
+        public async void CommitDevicesRecords(object commandParameter)
         {
             try
             {
                 devicesCache.ForEach(device => dbModel.Devices.Add(device));
                 dbModel.SaveChanges();
+
+                isCommitExecuted = true;
             }
             catch (Exception e)
             {
-                placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
+               await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
             }
-
-            isCommitExecuted = true;
+            finally
+            {
+                sitesCache.Clear();
+            }
         }
         #endregion
         #endregion
@@ -515,21 +512,6 @@ namespace CashRegisterRepairs.ViewModel
 
         // PROPERTIES
         #region PROPERTIES
-        #region Focus properties
-        private bool _focusSaveButton = true;
-        public bool FocusSaveButton
-        {
-            get { return _focusSaveButton; }
-            set { _focusSaveButton = value; NotifyPropertyChanged(); }
-        }
-
-        private bool _focusCommitButton = false;
-        public bool FocusCommitButton
-        {
-            get { return _focusCommitButton; }
-            set { _focusCommitButton = value; NotifyPropertyChanged(); }
-        }
-        #endregion
 
         #region Client properties
         private string _clientName = string.Empty;
