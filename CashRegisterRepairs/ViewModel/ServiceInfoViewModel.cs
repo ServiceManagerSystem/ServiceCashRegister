@@ -1,13 +1,13 @@
-﻿using CashRegisterRepairs.Utilities.GridDisplayObjects;
-using CashRegisterRepairs.Utilities.Helpers;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Input;
+using System.ComponentModel;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using System.Runtime.CompilerServices;
+using CashRegisterRepairs.Utilities.Helpers;
+using CashRegisterRepairs.Utilities.GridDisplayObjects;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -40,8 +40,8 @@ namespace CashRegisterRepairs.ViewModel
             ProfileDisplay = new ServiceProfileDisplay();
             ProfileDisplay.Name = serviceProfileItems[0];
             ProfileDisplay.Bulstat = serviceProfileItems[1];
-            ProfileDisplay.Manager = serviceProfileItems[2];
-            ProfileDisplay.Address = serviceProfileItems[3];
+            ProfileDisplay.Address = serviceProfileItems[2];
+            ProfileDisplay.Manager = serviceProfileItems[3];
             ProfileDisplay.Phone = serviceProfileItems[4];
         }
 
@@ -51,19 +51,21 @@ namespace CashRegisterRepairs.ViewModel
             IsUnmodifable = false;
         }
 
-        private void SaveServiceProfile(object commandParameter)
+        private async void SaveServiceProfile(object commandParameter)
         {
-            StringBuilder profileBuilder = new StringBuilder();
-            profileBuilder
-                .AppendLine(ProfileDisplay.Name)
-                .AppendLine(ProfileDisplay.Bulstat)
-                .AppendLine(ProfileDisplay.Address)
-                .AppendLine(ProfileDisplay.Manager)
-                .AppendLine(ProfileDisplay.Phone);
+            string[] serviceProfileItems = PathFinder.FetchServiceProfile();
+
+            StringBuilder profileBuilder = new StringBuilder(string.Join(",", serviceProfileItems));
+
+            profileBuilder.Replace(serviceProfileItems[0], ProfileDisplay.Name)
+            .Replace(serviceProfileItems[1], ProfileDisplay.Bulstat)
+            .Replace(serviceProfileItems[2], ProfileDisplay.Address)
+            .Replace(serviceProfileItems[3], ProfileDisplay.Manager)
+            .Replace(serviceProfileItems[4], ProfileDisplay.Phone);
 
             File.WriteAllText(PathFinder.serviceProfilePath, profileBuilder.ToString());
 
-            placeholder.ShowMessageAsync("ПРОМЯНА", "Промените по профила са запазени!");
+            await placeholder.ShowMessageAsync("ПРОМЯНА", "Промените по профила са запазени!");
 
             IsFocusable = false;
             IsUnmodifable = true;

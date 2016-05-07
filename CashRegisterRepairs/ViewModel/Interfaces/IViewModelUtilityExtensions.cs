@@ -2,9 +2,8 @@
 {
     public interface IViewModelUtilityExtentions
     {
+        void ClearCaches();
         void EnableSubview(object comingFromForm);
         void ShowAdditionCount(string formIdentifier);
-        void SwapFocusToCommitButton();
-        void ResetFocusToSaveButton();
     }
 }

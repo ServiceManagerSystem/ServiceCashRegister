@@ -46,12 +46,9 @@
             <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource ProfileLabelStyle}" Content="Телефон:"/>
             <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Phone}"/>
 
-            <!-- AccessKeyManager.AccessKeyPressed="{Binding}" -->
             <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
                 <Button Content="Отключи" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding EnableEditingCommand}" Height="25" Margin="0,0,10,0"/>
                 <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveServiceProfileCommand}" Height="25"/>
-                <!--<AccessText Text="Запази(_S)"/>
-                </Button>-->
             </StackPanel>
 
             <Image Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Source="{StaticResource mapImage}" Margin="0,35,0,0"/>

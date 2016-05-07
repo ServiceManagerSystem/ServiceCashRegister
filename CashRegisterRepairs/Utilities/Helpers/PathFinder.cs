@@ -15,7 +15,7 @@ namespace CashRegisterRepairs.Utilities.Helpers
 
         public static string[] FetchServiceProfile()
         {
-            return File.ReadAllText(serviceProfilePath).Split('\n');
+            return File.ReadAllText(serviceProfilePath).Split(',');
         }
 
         public static string FetchTemporaryWordDocumentFullPath()

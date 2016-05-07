@@ -31,8 +31,6 @@ namespace CashRegisterRepairs.ViewModel
             string[] tempDocs = Directory.GetFiles(PathFinder.temporaryDocumentsPath);
 
             tempDocs.ToList().ForEach(temp => File.Delete(temp));
-
-            MSWordDocumentGenerator.CloseMSWord();
         }
 
         private ICommand _removeTempDocsCommand;

@@ -43,8 +43,8 @@
         <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SitePhone, UpdateSourceTrigger=PropertyChanged}"/>
 
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button IsDefault="{Binding FocusSaveButton}" Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveSiteCommand}" Margin="0,0,5,0"/>
-            <Button IsDefault="{Binding FocusCommitButton}" Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitSiteCommand}" />
+            <Button IsDefault="True" Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveSiteCommand}" Margin="0,0,5,0"/>
+            <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitSiteCommand}" />
         </StackPanel>
         
     </Grid>
