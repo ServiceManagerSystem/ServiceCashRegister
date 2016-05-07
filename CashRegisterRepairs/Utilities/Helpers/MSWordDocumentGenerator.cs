@@ -8,11 +8,11 @@ namespace CashRegisterRepairs.Utilities.Helpers
         private static Application wordApp;
         private static readonly XmlDocument xmlWithData = new XmlDocument();
 
-        public static void BuildWordDocumentFromTemplate(Model.Document documentToPreview, Model.Template template)
+        public static void BuildWordDocumentFromTemplate(Model.Document document, Model.Template template)
         {
             string templateType = template.TYPE;
 
-            xmlWithData.LoadXml(documentToPreview.DOC);
+            xmlWithData.LoadXml(document.DOC);
 
             object oMissing = System.Reflection.Missing.Value;
             object oTemplatePath = PathFinder.FetchWordTemplatePath(templateType);

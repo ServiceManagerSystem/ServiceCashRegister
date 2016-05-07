@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Xml;
 using System.Linq;
+using System.Windows.Input;
+using System.ComponentModel;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using CashRegisterRepairs.Model;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Input;
 using CashRegisterRepairs.Utilities.Helpers;
 using CashRegisterRepairs.Utilities.GridDisplayObjects;
-using System.Collections.Generic;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -18,10 +18,10 @@ namespace CashRegisterRepairs.ViewModel
     {
         // FIELDS
         #region FIELDS
-        private readonly MetroWindow placeholder;
-        private readonly CashRegisterServiceContext dbModel;
         public static DeviceDisplay selectedDevice;
         private bool canExecuteCommand = true; // command enable/disable
+        private readonly CashRegisterServiceContext dbModel;
+        private readonly MetroWindow placeholder;
         #endregion
 
         // COLLECTIONS
@@ -68,30 +68,31 @@ namespace CashRegisterRepairs.ViewModel
 
         public TemplatesDocumentsViewModel()
         {
-            // Initialize DB context
+            // Initialize prerequisites( DB Context and placeholder reference )
             dbModel = new CashRegisterServiceContext();
             placeholder = App.Current.MainWindow as MetroWindow;
 
-            // Initialize backing datagrid collections
+            // Initialize data grid backing collections
             _templates = new ObservableCollection<Template>(dbModel.Templates);
             Documents = new ObservableCollection<DocumentDisplay>();
 
-            // Initialize backing collections for combo boxes and their content 
+            // Initialize combo box backing collections
             Sites = new ObservableCollection<string>();
             Clients = new ObservableCollection<string>();
             Devices = new ObservableCollection<string>();
 
-            // Enable client choice only at first
+            // Initialize combo box access properties - allow for Client selection ONLY at start
             IsClientEnabled = true;
             IsSiteEnabled = false;
             IsDeviceEnabled = false;
 
-            // Fill combo box for clients ONLY
+            // Accordingly load ONLY the client combo box content
             dbModel.Clients.ToList().ForEach(client => Clients.Add(client.NAME));
 
-            // Initialize commands
+            // Display commands
             DisplayDocumentsInGridCommand = new TemplateCommand(ShowDocumentsOfSelectedTemplate, param => this.canExecuteCommand);
             ShowDocumentPreviewCommand = new TemplateCommand(ShowDocumentPreviewForm, param => this.canExecuteCommand);
+            ToggleTemplateStatusCommand = new TemplateCommand(ToggleTemplateStatus, param => this.canExecuteCommand);
 
             // Addition commands
             AddDocumentCommand = new TemplateCommand(AddDocument, param => this.canExecuteCommand);
@@ -111,31 +112,27 @@ namespace CashRegisterRepairs.ViewModel
 
             List<Document> filteredDocs = new List<Document>();
 
-            foreach (Document document in dbModel.Documents)
+            string templateType = (SelectedTemplate as Template) != null ? (SelectedTemplate as Template).TYPE : string.Empty;
+
+            if (SelectedTemplate != null)
             {
-                string templateType = (SelectedTemplate as Template) != null ?(SelectedTemplate as Template).TYPE : string.Empty;
+                filteredDocs = dbModel.Documents.Where(d => d.Template.TYPE.Equals(templateType)).ToList();
+                ApplyFilter(filteredDocs);
 
-                if (SelectedTemplate != null && document.Template.TYPE.Equals(templateType))
+                if (!string.IsNullOrEmpty(SelectedClient))
                 {
-
-                    filteredDocs = dbModel.Documents.Where(d => d.Template.TYPE.Equals(templateType)).ToList();
+                    filteredDocs = filteredDocs.Where(d => d.Device.Site.Client.NAME.Equals(SelectedClient)).ToList();
                     ApplyFilter(filteredDocs);
 
-                    if (!string.IsNullOrEmpty(SelectedClient))
+                    if (!string.IsNullOrEmpty(SelectedSite))
                     {
-                        filteredDocs = filteredDocs.Where(d => d.Device.Site.Client.NAME.Equals(SelectedClient)).ToList();
+                        filteredDocs = filteredDocs.Where(d => d.Device.Site.NAME.Equals(SelectedSite)).ToList();
                         ApplyFilter(filteredDocs);
 
-                        if (!string.IsNullOrEmpty(SelectedSite))
+                        if (!string.IsNullOrEmpty(SelectedDevice))
                         {
-                            filteredDocs = filteredDocs.Where(d => d.Device.Site.NAME.Equals(SelectedSite)).ToList();
+                            filteredDocs = filteredDocs.Where(d => (d.Device.DeviceModel.DEVICE_NUM_PREFIX + d.Device.DEVICE_NUM_POSTFIX).Equals(SelectedDevice)).ToList();
                             ApplyFilter(filteredDocs);
-
-                            if (!string.IsNullOrEmpty(SelectedDevice))
-                            {
-                                filteredDocs = filteredDocs.Where(d => (d.Device.DeviceModel.DEVICE_NUM_PREFIX + d.Device.DEVICE_NUM_POSTFIX).Equals(SelectedDevice)).ToList();
-                                ApplyFilter(filteredDocs);
-                            }
                         }
                     }
                 }
@@ -148,10 +145,10 @@ namespace CashRegisterRepairs.ViewModel
         {
             Documents.Clear();
 
-            foreach (Document foundDoc in filteredDocs)
+            foreach (Document doc in filteredDocs)
             {
-                DocumentDisplay docDisplay = new DocumentDisplay(foundDoc, foundDoc.Device.Site.Client, foundDoc.Device.Site, foundDoc.Device);
-                Documents.Add(docDisplay);
+                DocumentDisplay documentDisplay = new DocumentDisplay(doc, doc.Device.Site.Client, doc.Device.Site, doc.Device);
+                Documents.Add(documentDisplay);
             }
         }
         #endregion
@@ -205,7 +202,6 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
 
         #region Document manipulation methods
-        // TODO: Figure out of async await causes trouble
         private async void AddDocument(object commandParameter)
         {
             if(SelectedTemplate == null)
@@ -220,26 +216,26 @@ namespace CashRegisterRepairs.ViewModel
             document.Device.Site = dbModel.Sites.Where(s => s.NAME.Equals(SelectedSite)).FirstOrDefault();
             document.Device.Site.Client = dbModel.Clients.Where(client => client.NAME.Equals(SelectedClient)).FirstOrDefault();
             document.START_DATE = DateTime.Today;
-            document.END_DATE = document.START_DATE.AddYears(1); //document.END_DATE = document.START_DATE.AddYears(1); 
+            document.END_DATE = document.START_DATE.AddYears(1);
 
             XmlDocument template = new XmlDocument();
             template.LoadXml(document.Template.TEMPLATE_CONTENT);
 
-            int hackedId = dbModel.Documents.Where(x => x.Template.TYPE.Equals(document.Template.TYPE)).Count();
-            hackedId++;
+            int internalId = dbModel.Documents.Where(x => x.Template.TYPE.Equals(document.Template.TYPE)).Count();
+            internalId++;
 
-            string[] serviceProfileItems = PathFinder.FetchServiceProfile();
+            string[] serviceProfile = PathFinder.FetchServiceProfile();
 
             switch (document.Template.TYPE)
             {
                 case "Договор":
-                    FillContractXml(document, template, hackedId, serviceProfileItems);
+                    XmlDataFiller.FillContractXml(document, template, internalId, serviceProfile);
                     break;
                 case "Свидетелство":
-                    FillCertificateXml(document, template, hackedId, serviceProfileItems);
+                    XmlDataFiller.FillCertificateXml(document, template, internalId, serviceProfile);
                     break;
                 case "Протокол":
-                    FillProtocolXml(document, template, hackedId, serviceProfileItems);
+                    XmlDataFiller.FillProtocolXml(document, template, internalId, serviceProfile);
                     break;
                 default:
                     break;
@@ -252,100 +248,49 @@ namespace CashRegisterRepairs.ViewModel
             ShowDocumentsOfSelectedTemplate(null);
         }
 
-        // TODO: Extract all these to Helper -> XmlDataFiller
-        private void FillProtocolXml(Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void FillCertificateXml(Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
-        {
-            //Client
-            template.SelectSingleNode("CertificateTemplate/Title/CurrDate").InnerText = " " + DateTime.Today.ToShortDateString();
-            template.SelectSingleNode("CertificateTemplate/Bulstat/Value").InnerText = " " + document.Device.Site.Client.BULSTAT;
-            template.SelectSingleNode("CertificateTemplate/EGN/Value").InnerText = " " + document.Device.Site.Client.EGN;
-            template.SelectSingleNode("CertificateTemplate/Owner/Client/Value").InnerText = " " + document.Device.Site.Client.NAME;
-            template.SelectSingleNode("CertificateTemplate/Owner/Address/Value").InnerText = " " + document.Device.Site.Client.ADDRESS;
-            template.SelectSingleNode("CertificateTemplate/Owner/Manager/Value").InnerText = " " + document.Device.Site.Client.Manager.NAME;
-            
-            //Site
-            template.SelectSingleNode("CertificateTemplate/Owner/Site/Value").InnerText = " " + document.Device.Site.NAME;
-
-            //Device
-            template.SelectSingleNode("CertificateTemplate/Device/Model/Value").InnerText = " " + document.Device.DeviceModel.MODEL;
-            template.SelectSingleNode("CertificateTemplate/Device/Certificate/Value").InnerText = " " + document.Device.DeviceModel.CERTIFICATE;
-            template.SelectSingleNode("CertificateTemplate/Device/DeviceNum/Value").InnerText = " " + document.Device.DeviceModel.DEVICE_NUM_PREFIX + document.Device.DEVICE_NUM_POSTFIX;
-            template.SelectSingleNode("CertificateTemplate/Device/FiscalNum/Value").InnerText = " " + document.Device.DeviceModel.FISCAL_NUM_PREFIX + document.Device.FISCAL_NUM_POSTFIX;
-
-            //Service
-            template.SelectSingleNode("CertificateTemplate/ServiceInfo/BulstatAndName/Value").InnerText = " " + serviceProfileItems[0] + " " + serviceProfileItems[1];
-            template.SelectSingleNode("CertificateTemplate/ServiceInfo/AddressAndPhone/Value").InnerText = " " + serviceProfileItems[2] + " " + serviceProfileItems[4];
-            template.SelectSingleNode("CertificateTemplate/ServiceInfo/ServiceManager/Value").InnerText = " " + serviceProfileItems[3];
-            template.SelectSingleNode("CertificateTemplate/ServiceInfo/Contract/Value").InnerText = " " + hackedId.ToString();
-            template.SelectSingleNode("CertificateTemplate/ServiceInfo/Contract/StartDate/Value").InnerText = " " + document.START_DATE.ToShortDateString();
-
-            //NAP info
-            template.SelectSingleNode("CertificateTemplate/NAPInfo/NAPNumber/Value").InnerText = " " + document.Device.NAP_NUMBER;
-            template.SelectSingleNode("CertificateTemplate/NAPInfo/NAPDate/Value").InnerText = " " + document.Device.NAP_DATE.ToShortDateString();
-        }
-
-        private void FillContractXml(Document document, XmlDocument template, int hackedId, string[] serviceProfileItems)
-        {
-            // Title
-            template.SelectSingleNode("ContractTemplate/Title/ContractNumber").InnerText = " " + hackedId.ToString();
-            template.SelectSingleNode("ContractTemplate/Title/CurrDate").InnerText = " " + DateTime.Today.Date.ToShortDateString();
-            template.SelectSingleNode("ContractTemplate/FreeText/Value").InnerText = " " + DateTime.Today.Date.ToShortDateString();
-
-            // Service
-            template.SelectSingleNode("ContractTemplate/Service/ServiceName/Value").InnerText = " " + serviceProfileItems[0];
-            template.SelectSingleNode("ContractTemplate/Service/ServiceManager/Value").InnerText = " " + serviceProfileItems[2];
-
-            // Client
-            template.SelectSingleNode("ContractTemplate/Client/ClientName/Value").InnerText = " " + document.Device.Site.Client.NAME;
-            template.SelectSingleNode("ContractTemplate/Client/ClientBulstat/Value").InnerText = " " + document.Device.Site.Client.BULSTAT;
-            template.SelectSingleNode("ContractTemplate/Client/ClientAddress/Value").InnerText = " " + document.Device.Site.Client.ADDRESS;
-            template.SelectSingleNode("ContractTemplate/Client/ClientManager/Value").InnerText = " " + document.Device.Site.Client.Manager.NAME;
-
-            // Device
-            template.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceModel/Value").InnerText = " " + document.Device.DeviceModel.MODEL;
-            template.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceNumber/Value").InnerText = " " + document.Device.DEVICE_NUM_POSTFIX;
-            template.SelectSingleNode("ContractTemplate/DeviceInfo/FiskalNumber/Value").InnerText = " " + document.Device.FISCAL_NUM_POSTFIX;
-            template.SelectSingleNode("ContractTemplate/DeviceInfo/Value").InnerText = " 5500 лв.";
-
-            // Contract
-            template.SelectSingleNode("ContractTemplate/ContractText/Text/StartDate").InnerText = " " + document.START_DATE.ToShortDateString();
-            template.SelectSingleNode("ContractTemplate/ContractText/Text/EndDate").InnerText = " " + document.END_DATE.ToShortDateString();
-
-            // Annex 1
-            template.SelectSingleNode("ContractTemplate/ContractText/ServiceAddres/Value").InnerText = " " + serviceProfileItems[3];
-            template.SelectSingleNode("ContractTemplate/ContractText/ServicePhone/Value").InnerText = " " + serviceProfileItems[4];
-        }
-
-        private void ShowDocumentPreviewForm(object templatesDataContext)
+        private void ShowDocumentPreviewForm(object commandParameter)
         {
             Document documentToPreview = dbModel.Documents.Find((SelectedDocument as DocumentDisplay).ID);
-            Template selectedTemplate = (SelectedTemplate as Template);
+            Template templateToBuildFrom = (SelectedTemplate as Template);
 
-            MSWordDocumentGenerator.BuildWordDocumentFromTemplate(documentToPreview, selectedTemplate);
+            MSWordDocumentGenerator.BuildWordDocumentFromTemplate(documentToPreview, templateToBuildFrom);
         }
+
+        private async void ToggleTemplateStatus(object commandParameter)
+        {
+            if(SelectedTemplate == null)
+            {
+               await placeholder.ShowMessageAsync("ГРЕШКА", "Няма избран шаблон!");
+                return;
+            }
+
+            string templateType = (SelectedTemplate as Template).TYPE;
+            string templateStatus = (SelectedTemplate as Template).STATUS.Equals("ЗАДЪЛЖИТЕЛЕН") ? "НЕЗАДЪЛЖИТЕЛЕН" : "ЗАДЪЛЖИТЕЛЕН";
+
+            dbModel.Templates.Where(template => template.TYPE.Equals(templateType)).FirstOrDefault().STATUS = templateStatus;
+            try
+            {
+                dbModel.SaveChanges();
+                Templates.Clear();
+                dbModel.Templates.ToList().ForEach(template => Templates.Add(template));
+            }
+            catch (Exception e)
+            {
+                await placeholder.ShowMessageAsync("ПРОБЛЕМ С БД", "Несъответствие с база данни: "+ e.InnerException.InnerException.Message);
+            }   
+        }
+
         #endregion
         #endregion
 
         // COMMANDS
         #region COMMANDS
-        private ICommand _enableSubviewDisplay;
-        public ICommand EnableSubviewDisplay
-        {
-            get { return _enableSubviewDisplay; }
-            set { _enableSubviewDisplay = value; }
-        }
-
         #region Template commands
-        private ICommand _addTemplateCommand;
-        public ICommand AddTemplateCommand
+        private ICommand _toggleTemplateStatusCommand;
+        public ICommand ToggleTemplateStatusCommand
         {
-            get { return _addTemplateCommand; }
-            set { _addTemplateCommand = value; }
+            get { return _toggleTemplateStatusCommand; }
+            set { _toggleTemplateStatusCommand = value; }
         }
         #endregion
 
@@ -357,32 +302,18 @@ namespace CashRegisterRepairs.ViewModel
             set { _addDocumentCommand = value; }
         }
 
-        private ICommand _openFileCommand;
-        public ICommand OpenDocumentCommand
-        {
-            get { return _openFileCommand; }
-            set { _openFileCommand = value; }
-        }
-
-        private ICommand _viewDocumentCommand;
+        private ICommand _showDocumentPreviewCommand;
         public ICommand ShowDocumentPreviewCommand
         {
-            get { return _viewDocumentCommand; }
-            set { _viewDocumentCommand = value; }
+            get { return _showDocumentPreviewCommand; }
+            set { _showDocumentPreviewCommand = value; }
         }
 
-        private ICommand _printDocumentCommand;
-        public ICommand PrintDocumentCommand
-        {
-            get { return _printDocumentCommand; }
-            set { _printDocumentCommand = value; }
-        }
-
-        private ICommand _displayDocumentsCommand;
+        private ICommand _displayDocumentsInGridCommand;
         public ICommand DisplayDocumentsInGridCommand
         {
-            get { return _displayDocumentsCommand; }
-            set { _displayDocumentsCommand = value; }
+            get { return _displayDocumentsInGridCommand; }
+            set { _displayDocumentsInGridCommand = value; }
         }
         #endregion
 
@@ -449,50 +380,27 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
 
         // PROPERTIES
-        #region PROPERTIES
-        private string _documentContent;
-        public string DocumentContent
-        {
-            get { return _documentContent; }
-            set { _documentContent = value; NotifyPropertyChanged(); }
-        }
-
-        #region Focus properties
-        private bool _focusSaveButton = true;
-        public bool FocusSaveButton
-        {
-            get { return _focusSaveButton; }
-            set { _focusSaveButton = value; NotifyPropertyChanged(); }
-        }
-
-        private bool _focusCommitButton = false;
-        public bool FocusCommitButton
-        {
-            get { return _focusCommitButton; }
-            set { _focusCommitButton = value; NotifyPropertyChanged(); }
-        }
-        #endregion
-        
+        #region PROPERTIES 
         #region ComboBox enable/disable properties
-        private bool _isClientAuto;
+        private bool _isClientEnabled;
         public bool IsClientEnabled
         {
-            get { return _isClientAuto; }
-            set { _isClientAuto = value; NotifyPropertyChanged(); }
+            get { return _isClientEnabled; }
+            set { _isClientEnabled = value; NotifyPropertyChanged(); }
         }
 
-        private bool _isSiteAuto;
+        private bool _isSiteEnabled;
         public bool IsSiteEnabled
         {
-            get { return _isSiteAuto; }
-            set { _isSiteAuto = value; NotifyPropertyChanged(); }
+            get { return _isSiteEnabled; }
+            set { _isSiteEnabled = value; NotifyPropertyChanged(); }
         }
 
-        private bool _isDeviceAuto;
+        private bool _isDeviceEnabled;
         public bool IsDeviceEnabled
         {
-            get { return _isDeviceAuto; }
-            set { _isDeviceAuto = value; NotifyPropertyChanged(); }
+            get { return _isDeviceEnabled; }
+            set { _isDeviceEnabled = value; NotifyPropertyChanged(); }
         }
         #endregion
         #endregion

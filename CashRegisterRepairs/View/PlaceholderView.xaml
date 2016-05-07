@@ -15,8 +15,11 @@
         WindowTransitionsEnabled="False"
         WindowStartupLocation="CenterScreen"
         Title="СЕРВИЗ" Height="600" Width="1000">
-    
+
     <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding CheckRequiredDocumentsCommand}"/>
+        </i:EventTrigger>
         <i:EventTrigger EventName="Closed">
             <i:InvokeCommandAction Command="{Binding RemoveTempDocsCommand}"/>
         </i:EventTrigger>

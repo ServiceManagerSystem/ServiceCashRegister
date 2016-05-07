@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.ComponentModel;
 using System.Collections.Generic;
-using CashRegisterRepairShop.View;
 using CashRegisterRepairs.Model;
 using CashRegisterRepairs.View;
-using CashRegisterRepairs.ViewModel.Interfaces;
+using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using CashRegisterRepairs.Utilities.GridDisplayObjects;
-using System.Reflection;
+using CashRegisterRepairs.ViewModel.Interfaces;
 using CashRegisterRepairs.Utilities.Helpers;
+using CashRegisterRepairs.Utilities.GridDisplayObjects;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -22,6 +20,7 @@ namespace CashRegisterRepairs.ViewModel
         // FIELDS & COLLECTIONS
         #region FIELDS
         private readonly MetroWindow placeholder;
+        private readonly PlaceholderViewModel tabNavigator;
         private readonly CashRegisterServiceContext dbModel;
         private bool canExecuteCommand = true; // command enable/disable
         private bool canOpenSubviewForm = true; // addition forms enable/disable
@@ -58,11 +57,12 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
         #endregion
 
-        public ClientsSitesViewModel()
+        public ClientsSitesViewModel(PlaceholderViewModel tabNav)
         {
             // Initialize DB context
             dbModel = new CashRegisterServiceContext();
             placeholder = App.Current.MainWindow as MetroWindow;
+            tabNavigator = tabNav;
 
             // Initializing datagrid backing collections
             _sites = new ObservableCollection<Site>();
@@ -117,14 +117,13 @@ namespace CashRegisterRepairs.ViewModel
             devicesCache.Clear();
         }
 
-        public void ShowAdditionCount(string formIdentifier)
+        public async void ShowAdditionCount(string formIdentifier)
         {
             int newEntries = 0;
 
             if (!isCommitExecuted)
             {
-                // Replace this with metro dialog
-                placeholder.ShowMessageAsync("ИНФО" , "Няма добавени записи!");
+                await placeholder.ShowMessageAsync("ИНФО" , "Няма добавени записи!");
                 return;
             }
 
@@ -148,8 +147,7 @@ namespace CashRegisterRepairs.ViewModel
 
             if (newEntries > 0)
             {
-                // Replace this with metro dialog
-                placeholder.ShowMessageAsync("ИНФО" , "Добавени " + newEntries + " записа!");
+                await placeholder.ShowMessageAsync("ИНФО" , "Добавени " + newEntries + " записа!");
                 isCommitExecuted = false;
             }
         }
@@ -396,7 +394,10 @@ namespace CashRegisterRepairs.ViewModel
             }
             finally
             {
-                sitesCache.Clear();
+                devicesCache.Clear();
+
+                (App.Current.Windows.OfType<AddDeviceView>().SingleOrDefault(w => w.Name == "DeviceAdditionForm") as MetroWindow).Close();
+                tabNavigator.SelectedTab = 1;
             }
         }
         #endregion

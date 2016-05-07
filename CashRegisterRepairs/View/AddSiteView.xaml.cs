@@ -1,6 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 
-namespace CashRegisterRepairShop.View
+namespace CashRegisterRepairs.View
 {
     public partial class AddSiteView : MetroWindow
     {
