@@ -108,8 +108,6 @@ namespace CashRegisterRepairs.ViewModel
         #region Grid loading methods
         private void ShowDocumentsOfSelectedTemplate(object commandParameter)
         {
-            Documents.Clear();
-
             List<Document> filteredDocs = new List<Document>();
 
             string templateType = (SelectedTemplate as Template) != null ? (SelectedTemplate as Template).TYPE : string.Empty;
