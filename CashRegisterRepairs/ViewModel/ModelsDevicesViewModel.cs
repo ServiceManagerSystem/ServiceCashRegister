@@ -3,10 +3,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
 using CashRegisterRepairs.Model;
-using CashRegisterRepairs.Utilities;
 using CashRegisterRepairs.View;
 using System.Collections.Generic;
 using MahApps.Metro.Controls;
@@ -94,9 +92,16 @@ namespace CashRegisterRepairs.ViewModel
         public void EnableSubview(object comingFromForm)
         {
             canOpenSubviewForm = true;
-            ResetFocusToSaveButton();
+
+            ClearCaches();
 
             ShowAdditionCount(comingFromForm as string);
+        }
+
+        public void ClearCaches()
+        {
+            modelsCache.Clear();
+            devicesCache.Clear();
         }
 
         public void ShowAdditionCount(string formIdentifier)
@@ -130,18 +135,6 @@ namespace CashRegisterRepairs.ViewModel
             }
         }
 
-        public void SwapFocusToCommitButton()
-        {
-            FocusSaveButton = false;
-            FocusCommitButton = true;
-        }
-
-        public void ResetFocusToSaveButton()
-        {
-            FocusSaveButton = true;
-            FocusCommitButton = false;
-        }
-
         private void SwitchToDocumentsTab(object selectedDevice)
         {
             TemplatesDocumentsViewModel.selectedDevice = selectedDevice as DeviceDisplay;
@@ -159,11 +152,6 @@ namespace CashRegisterRepairs.ViewModel
                 DeviceModel selectedModelFromGrid = SelectedModel as DeviceModel;
 
                 LoadDevicesInGrid(selectedModelFromGrid);
-
-                if (Devices.Count == 0)
-                {
-                    placeholder.ShowMessageAsync("ИНФО", "Няма апарати от този модел!");
-                }
             }
         }
 
@@ -256,24 +244,27 @@ namespace CashRegisterRepairs.ViewModel
             modelsCache.Add(devModel);
 
             ClearFieldsModels();
-
-            SwapFocusToCommitButton();
         }
 
-        private void CommitModels(object commandParameter)
+        private async void CommitModels(object commandParameter)
         {
             try
             {
                 modelsCache.ForEach(model => dbModel.DeviceModels.Add(model));
-                modelsCache.ForEach(model => Models.Add(model));
                 dbModel.SaveChanges();
+
+                modelsCache.ForEach(model => Models.Add(model));
+
+                isCommitExecuted = true;
             }
             catch (Exception e)
             {
-                placeholder.ShowMessageAsync("ГРЕШКА", e.InnerException.InnerException.Message);
+                await placeholder.ShowMessageAsync("ГРЕШКА", e.InnerException.InnerException.Message);
             }
-
-            isCommitExecuted = true;
+            finally
+            {
+                modelsCache.Clear();
+            }
         }
         #endregion
 
@@ -294,26 +285,30 @@ namespace CashRegisterRepairs.ViewModel
             devicesCache.Add(device);
 
             ClearFieldsDevices();
-
-            SwapFocusToCommitButton();
         }
 
-        private void CommitDeviceRecords(object commandParameter)
+        private async void CommitDeviceRecords(object commandParameter)
         {
             try
             {
                 devicesCache.ForEach(device => dbModel.Devices.Add(device));
                 dbModel.SaveChanges();
+
+                LoadDevicesInGrid(SelectedModel as DeviceModel);
+
+                isCommitExecuted = true;
             }
             catch (Exception e)
             {
-                placeholder.ShowMessageAsync("ГРЕШКА", e.InnerException.InnerException.Message);
+                await placeholder.ShowMessageAsync("ГРЕШКА", e.InnerException.InnerException.Message);
             }
-
-            LoadDevicesInGrid(SelectedModel as DeviceModel);
-
-            isCommitExecuted = true;
+            finally
+            {
+                devicesCache.Clear();
+            }  
         }
+
+
         #endregion
         #endregion
 
@@ -420,21 +415,6 @@ namespace CashRegisterRepairs.ViewModel
 
         // PROPERTIES
         #region PROPERTIES
-        #region Focus properties
-        private bool _focusSaveButton = true;
-        public bool FocusSaveButton
-        {
-            get { return _focusSaveButton; }
-            set { _focusSaveButton = value; NotifyPropertyChanged(); }
-        }
-
-        private bool _focusCommitButton = false;
-        public bool FocusCommitButton
-        {
-            get { return _focusCommitButton; }
-            set { _focusCommitButton = value; NotifyPropertyChanged(); }
-        }
-        #endregion
 
         #region Model properties
         private string _manufacturer = string.Empty;

@@ -8,11 +8,6 @@ namespace CashRegisterRepairs.Utilities.Helpers
         private static Application wordApp;
         private static readonly XmlDocument xmlWithData = new XmlDocument();
 
-        public static void CloseMSWord()
-        {
-            wordApp.Quit();
-        }
-
         public static void BuildWordDocumentFromTemplate(Model.Document documentToPreview, Model.Template template)
         {
             string templateType = template.TYPE;
@@ -29,11 +24,6 @@ namespace CashRegisterRepairs.Utilities.Helpers
             foreach (Field myMergeField in wordDoc.Fields)
             {
                 Range rngFieldCode = myMergeField.Code;
-
-                // TODO: Fix these to format correctly
-                rngFieldCode.Font.Name = "Arial";
-                rngFieldCode.Font.Size = 11;
-                rngFieldCode.Font.Bold = -1;
 
                 string fieldText = rngFieldCode.Text;
 
@@ -69,14 +59,58 @@ namespace CashRegisterRepairs.Utilities.Helpers
 
         public static void FillContractTemplateField(string contractField)
         {
-            // TODO: Impl contract
             switch (contractField)
             {
                 case "ContractNumber":
                     wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/Title/ContractNumber").InnerText);
                     break;
-                case "Today":
+                case "CurrDate":
                     wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/Title/CurrDate").InnerText);
+                    break;
+                case "FreeText":
+                     wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/FreeText/Value").InnerText);
+                    break;
+                case "ServiceName":
+                     wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/Service/ServiceName/Value").InnerText);
+                    break;
+                case "ServiceManager":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/Service/ServiceManager/Value").InnerText);
+                    break;
+                case "ClientName":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/Client/ClientName/Value").InnerText);
+                    break;
+                case "ClientBulstat":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/Client/ClientBulstat/Value").InnerText);
+                    break;
+                case "ClientAddress":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/Client/ClientAddress/Value").InnerText);
+                    break;
+                case "ClientManager":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/Client/ClientManager/Value").InnerText);
+                    break;
+                case "DeviceModel":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceModel/Value").InnerText);
+                    break;
+                case "DeviceNumber":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceNumber/Value").InnerText);
+                    break;
+                case "FiscalNumber":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/DeviceInfo/FiskalNumber/Value").InnerText);
+                    break;
+                case "Price":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/DeviceInfo/Value").InnerText);
+                    break;
+                case "StartDate":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/ContractText/Text/StartDate").InnerText);
+                    break;
+                case "EndDate":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/ContractText/Text/EndDate").InnerText);
+                    break;
+                case "ServiceAddress":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/ContractText/ServiceAddres/Value").InnerText);
+                    break;
+                case "ServicePhone":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ContractTemplate/ContractText/ServicePhone/Value").InnerText);
                     break;
                 default:
                     break;
@@ -85,14 +119,58 @@ namespace CashRegisterRepairs.Utilities.Helpers
 
         public static void FillCertificateTemplateField(string certificateField)
         {
-            // TODO: Impl certificate 
             switch (certificateField)
             {
-                case "....":
-                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("....").InnerText);
+                case "CurrDate":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/Title/CurrDate").InnerText);
                     break;
-                case "...":
-                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("...").InnerText);
+                case "Bulstat":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/Bulstat/Value").InnerText);
+                    break;
+                case "Client":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/Owner/Client/Value").InnerText);
+                    break;
+                case "Address":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/Owner/Address/Value").InnerText);
+                    break;
+                case "Manager":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/Owner/Manager/Value").InnerText);
+                    break;
+                case "Site":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/Owner/Site/Value").InnerText);
+                    break;
+                case "Model":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/Device/Model/Value").InnerText);
+                    break;
+                case "Certificate":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/Device/Certificate/Value").InnerText);
+                    break;
+                case "DeviceNum":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/Device/DeviceNum/Value").InnerText);
+                    break;
+                case "FisicalNum":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/Device/FiscalNum/Value").InnerText);
+                    break;
+                case "ServiceBulstatAndName":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/ServiceInfo/BulstatAndName/Value").InnerText);
+                    break;
+                case "AddressAndPhone":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/ServiceInfo/AddressAndPhone/Value").InnerText);
+                    break;
+                case "ServiceManager":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/ServiceInfo/ServiceManager/Value").InnerText);
+                    break;
+                case "Contract":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/ServiceInfo/Contract/Value").InnerText);
+                    break;
+                case "StartDate":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/ServiceInfo/Contract/StartDate/Value").InnerText);
+                    break;
+                case "NAPNumber":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/NAPInfo/NAPNumber/Value").InnerText);
+                    break;
+                case "NAPDate":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("CertificateTemplate/NAPInfo/NAPDate/Value").InnerText);
                     break;
                 default:
                     break;
