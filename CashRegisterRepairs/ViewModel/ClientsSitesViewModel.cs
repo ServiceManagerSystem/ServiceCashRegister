@@ -265,11 +265,11 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
 
         #region Clients(SAVE+COMMIT)
-        public void SaveClientRecord(object commandParameter)
+        public async void SaveClientRecord(object commandParameter)
         {
             if (string.IsNullOrEmpty(EGN) && string.IsNullOrEmpty(BULSTAT))
             {
-                placeholder.ShowMessageAsync("ГРЕШКА","Невалидни/невъведени данни!");
+                await placeholder.ShowMessageAsync("ГРЕШКА","Невалидни/невъведени данни!");
                 return;
             }
 
@@ -320,7 +320,7 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
 
         #region Sites(SAVE+COMMIT)
-        private void SaveSite(object commandParameter)
+        private async void SaveSite(object commandParameter)
         {
             Site site = new Site();
             site.NAME = SiteName;
@@ -331,6 +331,11 @@ namespace CashRegisterRepairs.ViewModel
             if (!FieldValidator.HasAnEmptyField(site))
             {
                 sitesCache.Add(site);
+             
+            }
+            else
+            {
+                await placeholder.ShowMessageAsync("ГРЕШКА", "Невалидни/невъведени данни!");
             }
 
             ClearFieldsSites();

@@ -231,7 +231,7 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
 
         #region Models(SAVE+COMMIT)
-        private void SaveModelRecord(object commandParameter)
+        private async void SaveModelRecord(object commandParameter)
         {
             DeviceModel devModel = new DeviceModel();
             devModel.MANUFACTURER = Manufacturer;
@@ -243,6 +243,10 @@ namespace CashRegisterRepairs.ViewModel
             if (!FieldValidator.HasAnEmptyField(devModel))
             {
                 modelsCache.Add(devModel);
+            }
+            else
+            {
+                await placeholder.ShowMessageAsync("ГРЕШКА", "Невалидни/невъведени данни!");
             }
 
             ClearFieldsModels();
@@ -271,7 +275,7 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
 
         #region Devices(SAVE+COMMIT)
-        public void SaveDeviceRecord(object commandParameter)
+        public async void SaveDeviceRecord(object commandParameter)
         {
             Device device = new Device();
             device.SIM = SIM;
@@ -285,6 +289,10 @@ namespace CashRegisterRepairs.ViewModel
             if (!FieldValidator.HasAnEmptyField(device))
             {
                 devicesCache.Add(device);
+            }
+            else
+            {
+               await placeholder.ShowMessageAsync("ГРЕШКА", "Невалидни/невъведени данни!");
             }
 
             ClearFieldsDevices();
