@@ -1,10 +1,10 @@
-﻿using CashRegisterRepairs.Model;
+﻿using System.Linq;
+using CashRegisterRepairs.Model;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CashRegisterRepairs.Utilities.Helpers
 {
-    public static class DocumentWatchdog
+    public class DocumentWatchdog
     {
         private static bool isContractRequired;
         private static bool isCertificateRequired;
