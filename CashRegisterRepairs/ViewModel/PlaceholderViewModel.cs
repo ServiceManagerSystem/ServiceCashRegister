@@ -36,6 +36,8 @@ namespace CashRegisterRepairs.ViewModel
             MetroWindow placeholder = (App.Current.MainWindow as MetroWindow);
             List<string> problematicDevices = new List<string>();
 
+            DocumentWatchdog.DetermineRequiredDocuments();
+
             using(CashRegisterServiceContext dbModel = new CashRegisterServiceContext())
             {
                 dbModel.Devices.ToList().ForEach(device => CheckDeviceDocuments(device, problematicDevices));
