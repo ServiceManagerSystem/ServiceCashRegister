@@ -131,7 +131,7 @@ namespace CashRegisterRepairs.ViewModel
 
             if (newEntries > 0)
             {
-                placeholder.ShowMessageAsync("ИНФО", "Добавени " + newEntries + " записа!");
+                await placeholder.ShowMessageAsync("ИНФО", "Добавени " + newEntries + " записа!");
                 isCommitExecuted = false;
             }
         }
