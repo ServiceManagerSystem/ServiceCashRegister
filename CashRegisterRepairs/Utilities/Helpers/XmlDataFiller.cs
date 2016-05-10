@@ -25,9 +25,9 @@ namespace CashRegisterRepairs.Utilities.Helpers
 
             // Device
             template.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceModel/Value").InnerText = " " + document.Device.DeviceModel.MODEL;
-            template.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceNumber/Value").InnerText = " " + document.Device.DEVICE_NUM_POSTFIX;
-            template.SelectSingleNode("ContractTemplate/DeviceInfo/FiskalNumber/Value").InnerText = " " + document.Device.FISCAL_NUM_POSTFIX;
-            template.SelectSingleNode("ContractTemplate/DeviceInfo/Value").InnerText = " 5500 лв.";
+            template.SelectSingleNode("ContractTemplate/DeviceInfo/DeviceNumber/Value").InnerText = "              " + document.Device.DEVICE_NUM_POSTFIX;
+            template.SelectSingleNode("ContractTemplate/DeviceInfo/FiskalNumber/Value").InnerText = "    " + document.Device.FISCAL_NUM_POSTFIX;
+            template.SelectSingleNode("ContractTemplate/DeviceInfo/Value").InnerText ="                              " + " 5500 лв.";
 
             // Contract
             template.SelectSingleNode("ContractTemplate/ContractText/Text/StartDate").InnerText = " " + document.START_DATE.ToShortDateString();
