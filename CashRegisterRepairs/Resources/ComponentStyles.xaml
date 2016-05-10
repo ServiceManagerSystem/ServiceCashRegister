@@ -3,7 +3,7 @@
 
     <!-- Images/Icons -->
     <BitmapImage x:Key="appIcon" UriSource="/Resources/Images/cash-register-icon.png"/>
-    <BitmapImage x:Key="addIcon" UriSource="/Resources/Images/plus-icon.png"/>
+    <BitmapImage x:Key="addIcon" UriSource="/Resources/Images/plus-icon-alt.png"/>
     <BitmapImage x:Key="clearIcon" UriSource="/Resources/Images/clear-icon.png"/>
     <BitmapImage x:Key="mapImage" UriSource="/Resources/Images/service_map.png"/>
   
@@ -91,7 +91,7 @@
         <Setter Property="Height" Value="20"/>
         <Setter Property="Width" Value="70"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Background" Value="RoyalBlue"/>
+        <Setter Property="Background" Value="Silver"/>
         <Setter Property="BorderBrush" Value="DarkGray"/>
         <Setter Property="BorderThickness" Value="2"/>
         <Setter Property="FontWeight" Value="UltraBold"/>
