@@ -3,13 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using CashRegisterRepairs.Utilities.Helpers;
 using CashRegisterRepairs.Model;
-using System.Collections.Generic;
+using CashRegisterRepairs.Utilities.Helpers;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -28,37 +28,40 @@ namespace CashRegisterRepairs.ViewModel
             _tabViewModels.Add(new ServiceInfoViewModel());
 
             RemoveTempDocsCommand = new TemplateCommand(RemoveTempDocs,param => this.canExecuteCommand);
-            CheckRequiredDocumentsCommand = new TemplateCommand(CheckDevicesForRequiredDocuments, param => this.canExecuteCommand);
+            CheckRequiredDocumentsCommand = new TemplateCommand(DetermineDevicesMissingRequiredDocument, param => this.canExecuteCommand);
         }
 
-        private async void CheckDevicesForRequiredDocuments(object commandParameter)
+        private async void DetermineDevicesMissingRequiredDocument(object commandParameter)
         {
             MetroWindow placeholder = (App.Current.MainWindow as MetroWindow);
-            List<string> problematicDevices = new List<string>();
+            List<string> devicesMissingRequiredDocument = new List<string>();
 
             DocumentWatchdog.DetermineRequiredDocuments();
 
             using(CashRegisterServiceContext dbModel = new CashRegisterServiceContext())
             {
-                dbModel.Devices.ToList().ForEach(device => CheckDeviceDocuments(device, problematicDevices));
+                dbModel.Devices.ToList().ForEach(device => ValidateDeviceIsInOrder(device, devicesMissingRequiredDocument));
             }
 
-            if(problematicDevices.Count != 0)
+            if(devicesMissingRequiredDocument.Count != 0)
             {
-                await placeholder.ShowMessageAsync("ПРЕДУПРЕЖДЕНИЕ", "Липсват задължителни документи за следните апарати:" + "\n" + string.Join("\n", problematicDevices));
+                await placeholder.ShowMessageAsync("ПРЕДУПРЕЖДЕНИЕ", "Липсват задължителни документи за следните апарати: \n"+ string.Join("\n", devicesMissingRequiredDocument));
             }
         }
 
-        private void CheckDeviceDocuments(Device device, List<string> problematicDevices)
+        private void ValidateDeviceIsInOrder(Device device, List<string> devicesMissingRequiredDocument)
         {
-            DocumentWatchdog.InspectDocumentsForDevice(device, problematicDevices);
+            DocumentWatchdog.InspectDocumentsForDevice(device, devicesMissingRequiredDocument);
         }
 
         private void RemoveTempDocs(object commandParameter)
         {
             string[] tempDocs = Directory.GetFiles(PathFinder.temporaryDocumentsPath);
 
-            tempDocs.ToList().ForEach(temp => File.Delete(temp));
+            if(tempDocs != null)
+            {
+                tempDocs.ToList().ForEach(temp => File.Delete(temp));
+            }         
         }
 
         private ICommand _removeTempDocsCommand;

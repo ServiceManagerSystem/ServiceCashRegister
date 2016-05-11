@@ -27,7 +27,7 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource ProfileLabelStyle}" Content="Фирма:" />
-            <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Name}"/>
+            <TextBox Controls:TextBoxHelper.ClearTextButton="True" Grid.Row="0" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Name}"/>
 
             <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource ProfileLabelStyle}" Content="Булстат:"/>
             <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Bulstat}"/>
@@ -42,14 +42,29 @@
             <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Phone}"/>
 
             <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button IsDefault="True" Content="Отключи" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding EnableEditingCommand}" Height="25" Margin="0,0,10,0"/>
-                <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveServiceProfileCommand}" Height="25"/>
+                <Button IsDefault="True" Content="Отключи" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding EnableEditingCommand}" Height="25" Margin="0,0,10,0">
+                    <Button.ToolTip>
+                        <ToolTip Style="{StaticResource ToolTipStyle}" Content="Отключи полетата за промяна."/>
+                    </Button.ToolTip>
+                </Button>
+                <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveServiceProfileCommand}" Height="25">
+                    <Button.ToolTip>
+                        <ToolTip Style="{StaticResource ToolTipStyle}" Content="Запази промените."/>
+                    </Button.ToolTip>
+                </Button>
             </StackPanel>
 
-            <Button Grid.Row="5" Grid.Column="2" Content="Сервиз" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding ResetLocationCommand}" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,30,0"/>
+            <Button Grid.Row="5" Grid.Column="2" Content="Сервиз(_S)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding ResetLocationCommand}"  Height="25" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,30,0">
+                <Button.ToolTip>
+                    <ToolTip Style="{StaticResource ToolTipStyle}" Content="Изпълним с комбинация ALT + S."/>
+                </Button.ToolTip>
+            </Button>
 
-            <m:Map Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Center="{Binding ServiceLocation}" IsHitTestVisible="{Binding IsMapEnabled}" BorderBrush="DarkGray" BorderThickness="3" CredentialsProvider="pmxh6w8CvyNwK8t2CfuZ~f19h0fvCqPMPIbJ_z53v8A~Ap9CqfWDKczf8jy0lzYI2q8k2JR8fQT4YaDw8eUEwA_1Y8V8L4eV1JncFVoinG2S" Margin="30,35,30,35" Mode="Road" ZoomLevel="15">
-                <!-- Service coordinates: 43.242803, 23.131294 -->
+            <m:Map Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Center="{Binding ServiceLocation}" IsHitTestVisible="{Binding IsMapEnabled}"
+                   CredentialsProvider="pmxh6w8CvyNwK8t2CfuZ~f19h0fvCqPMPIbJ_z53v8A~Ap9CqfWDKczf8jy0lzYI2q8k2JR8fQT4YaDw8eUEwA_1Y8V8L4eV1JncFVoinG2S"
+                   BorderBrush="DarkGray" BorderThickness="3" Margin="30,35,30,35"
+                   Mode="Road" ZoomLevel="15">
+                <!-- Service coordinates: 43.2428090266163,23.1319484590025 -->
                 <m:Pushpin Location="{Binding ServiceLocation, Mode=TwoWay}" Background="Red" ToolTip="СЕРВИЗ"/>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseRightButtonDown">

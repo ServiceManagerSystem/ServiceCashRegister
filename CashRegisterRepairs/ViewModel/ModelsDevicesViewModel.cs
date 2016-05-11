@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.ComponentModel;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using CashRegisterRepairs.Model;
 using CashRegisterRepairs.View;
-using System.Collections.Generic;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using CashRegisterRepairs.Utilities.GridDisplayObjects;
 using CashRegisterRepairs.Utilities.Helpers;
+using CashRegisterRepairs.Utilities.GridDisplayObjects;
 
 namespace CashRegisterRepairs.ViewModel
 {

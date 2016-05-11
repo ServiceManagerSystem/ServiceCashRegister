@@ -39,8 +39,8 @@ namespace CashRegisterRepairs.ViewModel
 
             // Disable editing at first
             IsMapEnabled = false;
-            IsFocusable = false;
-            IsUnmodifable = true;
+            IsTextBoxFocusable = false;
+            IsTextBoxUnmodifable = true;
 
             // Initialize commands
             EnableEditingCommand = new TemplateCommand(EnableEditing, param => this.canExecute);
@@ -91,8 +91,8 @@ namespace CashRegisterRepairs.ViewModel
         private void EnableEditing(object commandParameter)
         {
             IsMapEnabled = true;
-            IsFocusable = true;
-            IsUnmodifable = false;
+            IsTextBoxFocusable = true;
+            IsTextBoxUnmodifable = false;
         }
 
         private async void SaveServiceProfile(object commandParameter)
@@ -129,8 +129,8 @@ namespace CashRegisterRepairs.ViewModel
             else
             {
                 IsMapEnabled = false;
-                IsFocusable = false;
-                IsUnmodifable = true;
+                IsTextBoxFocusable = false;
+                IsTextBoxUnmodifable = true;
             }
         }
         #endregion
@@ -183,14 +183,14 @@ namespace CashRegisterRepairs.ViewModel
         }
 
         private bool _isUnmodifable;
-        public bool IsUnmodifable
+        public bool IsTextBoxUnmodifable
         {
             get { return _isUnmodifable; }
             set { _isUnmodifable = value; NotifyPropertyChanged(); }
         }
 
         private bool _isFocusable;
-        public bool IsFocusable
+        public bool IsTextBoxFocusable
         {
             get { return _isFocusable; }
             set { _isFocusable = value; NotifyPropertyChanged(); }

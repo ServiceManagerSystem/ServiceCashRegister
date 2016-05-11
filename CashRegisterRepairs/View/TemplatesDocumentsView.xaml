@@ -58,6 +58,9 @@
 
             <StackPanel Orientation="Horizontal" Height="30" VerticalAlignment="Bottom">
                 <Button Style="{StaticResource AdditionButton}" Command="{Binding ClearComboBoxCommand}" Margin="10,0,0,0">
+                    <Button.ToolTip>
+                        <ToolTip Style="{StaticResource ToolTipStyle}" Content="Изчиства избраните апарат, обект и клиент и нулира филтъра."/>
+                    </Button.ToolTip>
                     <StackPanel>
                         <Image Source="{StaticResource clearIcon}"/>
                     </StackPanel>
@@ -69,18 +72,26 @@
             <StackPanel Orientation="Horizontal" Height="30">
                 <Label Style="{StaticResource GenericLabelStyle}" Content="Шаблони"/>
                 <Button Style="{StaticResource AdditionButton}" Command="{Binding ToggleTemplateStatusCommand}">
+                    <Button.ToolTip>
+                        <ToolTip Style="{StaticResource ToolTipStyle}" Content="Променя статута на шаблон - ЗАДЪЛЖИТЕЛЕН на НЕЗАДЪЛЖИТЕЛЕН и обратно."/>
+                    </Button.ToolTip>
                     <StackPanel>
-                        <Image Source="{StaticResource addIcon}"/>
+                        <Image Source="{StaticResource editIcon}"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
-            
+
             <DataGrid  
                 Style="{StaticResource CoolDataGridStyle}"
                 ItemsSource="{Binding Templates}"
                 SelectedItem="{Binding SelectedTemplate}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+                
+                <DataGrid.ToolTip>
+                    <ToolTip Style="{StaticResource ToolTipStyle}" Content="Избери с еднократен ляв клик за филтриране по шаблон."/>
+                </DataGrid.ToolTip>
+                
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding TYPE}" Header="Tип"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding STATUS}" Header="Статут"/>
@@ -100,19 +111,26 @@
             <StackPanel Orientation="Horizontal" Height="30">
                 <Label Style="{StaticResource GenericLabelStyle}" Content="Документи"/>
                 <Button Style="{StaticResource AdditionButton}" Command="{Binding AddDocumentCommand}">
+                    <Button.ToolTip>
+                        <ToolTip Style="{StaticResource ToolTipStyle}" Content="Попълва документ по шаблон за указаните апарат, обект и клиент."/>
+                    </Button.ToolTip>
                     <StackPanel>
                         <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
-            
+
             <DataGrid 
                 Style="{StaticResource CoolDataGridStyle}"
                 ItemsSource="{Binding Documents}"
                 SelectedItem="{Binding SelectedDocument}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                ToolTip="Избери с двоен клик за преглед(preview) на документ.">
+                ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                <DataGrid.ToolTip>
+                    <ToolTip Style="{StaticResource ToolTipStyle}" Content="Избери с двоен клик за преглед(preview) на документ."/>
+                </DataGrid.ToolTip>
+
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding DEVICE}" Header="Апарат"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding SITE}" Header="Oбект"/>
@@ -121,7 +139,7 @@
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding END_DATE}" Header="Изтича"/>
                 </DataGrid.Columns>
 
-                <!-- LINK TO DOCUMENT VIEWER -->
+                <!-- Link to document generation for preview -->
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDoubleClick">
                         <i:InvokeCommandAction Command="{Binding ShowDocumentPreviewCommand}" CommandParameter="{Binding .}"/>
