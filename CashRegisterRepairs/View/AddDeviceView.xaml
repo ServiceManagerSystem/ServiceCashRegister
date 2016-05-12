@@ -9,7 +9,7 @@
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Name="DeviceAdditionForm"
                       Height="350"
-                      Width="300"
+                      Width="310"
                       Title="Нов апарат"
                       ResizeMode="CanMinimize"
                       GlowBrush="Yellow"
@@ -24,8 +24,8 @@
     <Grid Background="PeachPuff">
         
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="115"/>
+            <ColumnDefinition Width="195"/>
         </Grid.ColumnDefinitions>
         
         <Grid.RowDefinitions>
@@ -61,8 +61,8 @@
         <DatePicker Grid.Row="6" Grid.Column="1" SelectedDate="{Binding NAP_DATE, UpdateSourceTrigger=PropertyChanged}" Width="150" Margin="0,0,5,0" VerticalAlignment="Center"/>
 
         <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button IsDefault="True" Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveDeviceCommand}" Margin="0,0,5,0"/>
-            <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitDevicesCommand}"/>
+            <Button IsDefault="True" Content="Добави(_D)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveDeviceCommand}" Margin="0,0,5,0"/>
+            <Button Content="Запази(_Z)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitDevicesCommand}" Margin="0,0,5,0"/>
         </StackPanel>
 
     </Grid>

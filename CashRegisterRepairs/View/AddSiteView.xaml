@@ -9,7 +9,7 @@
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Title="Нов Обект"
                       Height="190"
-                      Width="300"
+                      Width="310"
                       GlowBrush="Yellow"
                       ResizeMode="CanMinimize"
                       WindowStartupLocation="CenterScreen">
@@ -23,7 +23,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="190"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -43,8 +43,8 @@
         <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding SitePhone, UpdateSourceTrigger=PropertyChanged}"/>
 
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button IsDefault="True" Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveSiteCommand}" Margin="0,0,5,0"/>
-            <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitSiteCommand}" />
+            <Button IsDefault="True" Content="Добави(_D)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveSiteCommand}" Margin="0,0,5,0"/>
+            <Button Content="Запази(_Z)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitSiteCommand}" Margin="0,0,5,0"/>
         </StackPanel>
         
     </Grid>

@@ -96,7 +96,7 @@
     <!-- SaveOperations Buttons style -->
     <Style x:Key="SaveOperationsButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Height" Value="25"/>
-        <Setter Property="Width" Value="80"/>
+        <Setter Property="Width" Value="85"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Background" Value="Silver"/>
         <Setter Property="BorderBrush" Value="DarkGray"/>

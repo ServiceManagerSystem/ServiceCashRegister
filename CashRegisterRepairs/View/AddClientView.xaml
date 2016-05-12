@@ -9,7 +9,7 @@
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Title="Нов Клиент"
                       Height="400"
-                      Width="300"
+                      Width="310"
                       GlowBrush="Yellow"
                       WindowStartupLocation="CenterScreen"
                       ResizeMode="CanMinimize">
@@ -23,8 +23,8 @@
     <Grid Background="PeachPuff">
         
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         
         <Grid.RowDefinitions>
@@ -64,8 +64,8 @@
         <TextBox Grid.Row="7" Grid.Column="1" TextWrapping="Wrap" Text="{Binding COMMENT, UpdateSourceTrigger=PropertyChanged}"  Margin="0,0,15,0" />
 
         <StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button IsDefault="True" Content="Добави" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveClientAndManagerCommand}" Margin="0,0,5,0"/>
-            <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitClientsAndManagersCommand}"/>
+            <Button IsDefault="True" Content="Добави(_D)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveClientAndManagerCommand}" Margin="0,0,5,0"/>
+            <Button Content="Запази(_Z)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitClientsAndManagersCommand}" Margin="0,0,5,0"/>
         </StackPanel>
 
     </Grid>
