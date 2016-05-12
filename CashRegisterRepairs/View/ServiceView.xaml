@@ -14,8 +14,8 @@
         <Grid Background="PeachPuff">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="650"/>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="630"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -42,12 +42,12 @@
             <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource ProfileTextBoxStyle}" Text="{Binding ProfileDisplay.Phone}"/>
 
             <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button IsDefault="True" Content="Отключи" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding EnableEditingCommand}" Height="25" Margin="0,0,10,0">
+                <Button IsDefault="True" Content="Отключи(_O)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding EnableEditingCommand}" Height="25" Width="100" Margin="0,0,10,0">
                     <Button.ToolTip>
                         <ToolTip Style="{StaticResource ToolTipStyle}" Content="Отключи полетата за промяна."/>
                     </Button.ToolTip>
                 </Button>
-                <Button Content="Запази" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveServiceProfileCommand}" Height="25">
+                <Button Content="Запази(_Z)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveServiceProfileCommand}" Height="25" Width="100">
                     <Button.ToolTip>
                         <ToolTip Style="{StaticResource ToolTipStyle}" Content="Запази промените."/>
                     </Button.ToolTip>

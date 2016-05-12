@@ -7,13 +7,13 @@
              xmlns:local="clr-namespace:CashRegisterRepairs.View"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
-    
+
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding AutofillComboBoxCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    
+
     <Grid Background="PeachPuff">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -21,7 +21,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
-        
+
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel>
                 <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericLabelStyle}" Content="Клиент"/>
@@ -37,11 +37,11 @@
             <StackPanel Margin="10,0,0,0">
                 <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource GenericLabelStyle}" Content="Обект"/>
                 <ComboBox Grid.Row="0" Grid.Column="0" IsEnabled="{Binding IsSiteEnabled}" ItemsSource="{Binding Sites}" SelectedItem="{Binding SelectedSite}" Height="30" Width="200" HorizontalAlignment="Center">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding FillComboBoxCommand}" CommandParameter="site"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                 </ComboBox>
             </StackPanel>
 
@@ -87,17 +87,17 @@
                 SelectedItem="{Binding SelectedTemplate}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
                 ScrollViewer.VerticalScrollBarVisibility="Auto">
-                
+
                 <DataGrid.ToolTip>
                     <ToolTip Style="{StaticResource ToolTipStyle}" Content="Избери с еднократен ляв клик за филтриране по шаблон."/>
                 </DataGrid.ToolTip>
-                
+
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding TYPE}" Header="Tип"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding STATUS}" Header="Статут"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding DATE_ADDED}" Header="Добавен"/>
                 </DataGrid.Columns>
-                
+
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding DisplayDocumentsInGridCommand}"/>
@@ -150,3 +150,4 @@
         </StackPanel>
     </Grid>
 </UserControl>
+    

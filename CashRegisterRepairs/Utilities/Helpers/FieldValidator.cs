@@ -5,6 +5,11 @@ namespace CashRegisterRepairs.Utilities.Helpers
 {
     public static class FieldValidator
     {
+        private static List<string> exclusions = new List<string>()
+        {
+            "BULSTAT", "EGN"
+        };
+
         private static List<char> allowedSpecialSymbols = new List<char>()
         {
             '.','"','&','(',')','-','+',' '
@@ -32,7 +37,7 @@ namespace CashRegisterRepairs.Utilities.Helpers
         {
             foreach (PropertyInfo pi in businessObject.GetType().GetProperties())
             {
-                if (pi.PropertyType == typeof(string))
+                if (pi.PropertyType == typeof(string) && !exclusions.Contains(pi.Name))
                 {
                     string value = (string)pi.GetValue(businessObject);
                     foreach (char c in value)

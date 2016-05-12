@@ -19,6 +19,9 @@
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource GenericLabelStyle}" Content="Модели"/>
                 <Button Style="{StaticResource AdditionButton}" Command="{Binding AddModelCommand}" CommandParameter="{Binding .}">
+                    <Button.ToolTip>
+                        <ToolTip Style="{StaticResource ToolTipStyle}" Content="Пренасочва към формата за добавяне на модели."/>
+                    </Button.ToolTip>
                     <StackPanel>
                         <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
@@ -30,6 +33,11 @@
                       ItemsSource="{Binding Models}"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
                       ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                <DataGrid.ToolTip>
+                    <ToolTip Style="{StaticResource ToolTipStyle}" Content="Избери с единичен клик за филтриране на апаратите по модел."/>
+                </DataGrid.ToolTip>
+
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding MODEL}" Header="Модел"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding MANUFACTURER}" Header="Производител"/>
@@ -51,6 +59,9 @@
             <StackPanel Orientation="Horizontal" Height="30">
                 <Label Style="{StaticResource GenericLabelStyle}" Content="Апарати"/>
                 <Button Style="{StaticResource AdditionButton}" Command="{Binding AddDeviceCommand}" CommandParameter="{Binding .}">
+                    <Button.ToolTip>
+                        <ToolTip Style="{StaticResource ToolTipStyle}" Content="Пренасочва към формата за добавяне на апарати."/>
+                    </Button.ToolTip>
                     <StackPanel>
                         <Image Source="{StaticResource addIcon}"/>
                     </StackPanel>
@@ -60,8 +71,12 @@
                       ItemsSource="{Binding Devices}"
                       SelectedItem="{Binding SelectedDevice}"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      ToolTip="Избери с двоен клик за подготвяне на документ.">
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                <DataGrid.ToolTip>
+                    <ToolTip Style="{StaticResource ToolTipStyle}" Content="Избери с двоен клик за подготвяне на документ."/>
+                </DataGrid.ToolTip>
+
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding SITE_NAME}" Header="Обект"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding CLIENT_NAME}" Header="Клиент"/>
