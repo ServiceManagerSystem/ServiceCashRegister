@@ -64,8 +64,16 @@
         <TextBox Grid.Row="7" Grid.Column="1" TextWrapping="Wrap" Text="{Binding COMMENT, UpdateSourceTrigger=PropertyChanged}"  Margin="0,0,15,0" />
 
         <StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button IsDefault="True" Content="Добави(_D)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveClientAndManagerCommand}" Margin="0,0,5,0"/>
-            <Button Content="Запази(_Z)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitClientsAndManagersCommand}" Margin="0,0,5,0"/>
+            <Button IsDefault="True" Content="Добави(_D)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveClientAndManagerCommand}" Margin="0,0,5,0">
+                <Button.ToolTip>
+                    <ToolTip Style="{StaticResource ToolTipStyle}" Content="Добавя клиента в кеш(опашка)."/>
+                </Button.ToolTip>
+            </Button>
+            <Button Content="Запази(_Z)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitClientsAndManagersCommand}" Margin="0,0,5,0">
+                <Button.ToolTip>
+                    <ToolTip Style="{StaticResource ToolTipStyle}" Content="Запазва всички клиенти от кеша(опашката)."/>
+                </Button.ToolTip>
+            </Button>
         </StackPanel>
 
     </Grid>

@@ -52,8 +52,16 @@
         <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource AdditionTextBoxStyle}" Text="{Binding FiscalNumPre, UpdateSourceTrigger=PropertyChanged}"/>
         
         <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button IsDefault="True" Content="Добави(_D)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveModelsCommand}" Margin="0,0,5,0"/>
-            <Button Content="Запази(_Z)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitModelsCommand}" Margin="0,0,5,0"/>
+            <Button IsDefault="True" Content="Добави(_D)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding SaveModelsCommand}" Margin="0,0,5,0">
+                <Button.ToolTip>
+                    <ToolTip Style="{StaticResource ToolTipStyle}" Content="Добавя модела в кеш(опашка)."/>
+                </Button.ToolTip>
+            </Button>
+            <Button Content="Запази(_Z)" Style="{StaticResource SaveOperationsButtonStyle}" Command="{Binding CommitModelsCommand}" Margin="0,0,5,0">
+                <Button.ToolTip>
+                    <ToolTip Style="{StaticResource ToolTipStyle}" Content="Запазва всички моделис от кеша(опашката)."/>
+                </Button.ToolTip>
+            </Button>
         </StackPanel>
         
     </Grid>
