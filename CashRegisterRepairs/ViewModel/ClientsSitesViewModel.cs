@@ -350,17 +350,16 @@ namespace CashRegisterRepairs.ViewModel
 
                 sitesCache.ForEach(site => Sites.Add(site));
 
-                isCommitExecuted = true;     
+                isCommitExecuted = true;
             }
             catch (Exception e)
             {
-                await placeholder.ShowMessageAsync("ГРЕШКА","ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
+                await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
             }
             finally
             {
                 sitesCache.Clear();
             }
-    
         }
         #endregion
 

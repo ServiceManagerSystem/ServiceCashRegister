@@ -40,7 +40,7 @@ namespace CashRegisterRepairs.ViewModel
 
             using(CashRegisterServiceContext dbModel = new CashRegisterServiceContext())
             {
-                dbModel.Devices.ToList().ForEach(device => ValidateDeviceIsInOrder(device, devicesMissingRequiredDocument));
+                dbModel.Devices.ToList().ForEach(device => ValidateDevicePaperwork(device, devicesMissingRequiredDocument));
             }
 
             if(devicesMissingRequiredDocument.Count != 0)
@@ -49,7 +49,7 @@ namespace CashRegisterRepairs.ViewModel
             }
         }
 
-        private void ValidateDeviceIsInOrder(Device device, List<string> devicesMissingRequiredDocument)
+        private void ValidateDevicePaperwork(Device device, List<string> devicesMissingRequiredDocument)
         {
             DocumentWatchdog.InspectDocumentsForDevice(device, devicesMissingRequiredDocument);
         }
@@ -61,7 +61,9 @@ namespace CashRegisterRepairs.ViewModel
             if(tempDocs != null)
             {
                 tempDocs.ToList().ForEach(temp => File.Delete(temp));
-            }         
+            }
+
+            App.Current.Windows.OfType<MetroWindow>().ToList().ForEach(w => w.Close());
         }
 
         private ICommand _removeTempDocsCommand;
