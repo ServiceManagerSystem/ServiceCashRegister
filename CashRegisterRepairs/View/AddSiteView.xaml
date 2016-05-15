@@ -12,6 +12,7 @@
                       Width="310"
                       GlowBrush="Yellow"
                       ResizeMode="CanMinimize"
+                      Name="SiteAdditionForm"
                       WindowStartupLocation="CenterScreen">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">

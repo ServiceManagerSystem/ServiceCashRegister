@@ -85,7 +85,7 @@ namespace CashRegisterRepairs.ViewModel
             AddDeviceCommand = new TemplateCommand(ShowDevicesAdditionForm, param => this.canExecuteCommand);
 
             // Clients commands
-            SaveClientAndManagerCommand = new TemplateCommand(SaveClientRecord, param => this.canExecuteCommand);
+            SaveClientAndManagerCommand = new TemplateCommand(SaveClient, param => this.canExecuteCommand);
             CommitClientsAndManagersCommand = new TemplateCommand(CommitClientRecords, param => this.canExecuteCommand);
 
             // Sites commands
@@ -93,7 +93,7 @@ namespace CashRegisterRepairs.ViewModel
             CommitSiteCommand = new TemplateCommand(CommitSites, param => this.canExecuteCommand);
 
             // Devices commands
-            SaveDeviceCommand = new TemplateCommand(SaveDeviceRecord, param => this.canExecuteCommand);
+            SaveDeviceCommand = new TemplateCommand(SaveDevice, param => this.canExecuteCommand);
             CommitDevicesCommand = new TemplateCommand(CommitDevicesRecords, param => this.canExecuteCommand);
         }
 
@@ -265,11 +265,17 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
 
         #region Clients(SAVE+COMMIT)
-        public async void SaveClientRecord(object commandParameter)
+        public async void SaveClient(object commandParameter)
         {
             if (string.IsNullOrEmpty(EGN) && string.IsNullOrEmpty(BULSTAT))
             {
-                await placeholder.ShowMessageAsync("ГРЕШКА","Невалидни/невъведени данни!");
+                await placeholder.ShowMessageAsync("ГРЕШКА","Клиентът трябва да е физическо лице ИЛИ фирма!");
+                return;
+            }
+
+            if(!string.IsNullOrEmpty(EGN) && !string.IsNullOrEmpty(BULSTAT))
+            {
+                await placeholder.ShowMessageAsync("ГРЕШКА", "Невалидни/невъведени данни!");
                 return;
             }
 
@@ -286,13 +292,17 @@ namespace CashRegisterRepairs.ViewModel
             client.COMMENT = string.IsNullOrEmpty(COMMENT) ? "-" : COMMENT;
             client.Manager = manager;
 
-            if (!FieldValidator.HasAnEmptyField(manager) && !FieldValidator.HasAnEmptyField(client))
+            if (!FieldValidator.HasAnEmptyField(manager) && !FieldValidator.HasAnIncorrectlyFormattedField(client))
             {
                 managersCache.Add(manager);
                 clientsCache.Add(client);
-            } 
-
-            ClearFieldsClients();
+                ClearFieldsClients();
+            }
+            else
+            {
+                await placeholder.ShowMessageAsync("ГРЕШКА", "Невалидни/невъведени данни!");
+                return;
+            }
         }
 
         public async void CommitClientRecords(object commandParameter)
@@ -309,12 +319,13 @@ namespace CashRegisterRepairs.ViewModel
             }
             catch (Exception e)
             {
-                await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
+                await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С ЗАПАЗВАНЕТО В БД: \n" + e.InnerException.InnerException.Message);
             }
             finally
             {
                 managersCache.Clear();
                 clientsCache.Clear();
+                (App.Current.Windows.OfType<AddClientView>().SingleOrDefault(w => w.Name == "ClientAdditionForm") as MetroWindow).Close();
             }
         }
         #endregion
@@ -328,17 +339,15 @@ namespace CashRegisterRepairs.ViewModel
             site.PHONE = SitePhone;
             site.Client = dbModel.Clients.Find((SelectedClient as ClientDisplay).ID);
 
-            if (!FieldValidator.HasAnEmptyField(site))
+            if (!FieldValidator.HasAnEmptyField(site) && !FieldValidator.HasAnIncorrectlyFormattedField(site))
             {
                 sitesCache.Add(site);
-             
+                ClearFieldsSites();
             }
             else
             {
                 await placeholder.ShowMessageAsync("ГРЕШКА", "Невалидни/невъведени данни!");
-            }
-
-            ClearFieldsSites();
+            }  
         }
 
         private async void CommitSites(object commandParameter)
@@ -354,17 +363,18 @@ namespace CashRegisterRepairs.ViewModel
             }
             catch (Exception e)
             {
-                await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
+                await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С ЗАПАЗВАНЕТО В БД: \n" + e.InnerException.InnerException.Message);
             }
             finally
             {
                 sitesCache.Clear();
+                (App.Current.Windows.OfType<AddSiteView>().SingleOrDefault(w => w.Name == "SiteAdditionForm") as MetroWindow).Close();
             }
         }
         #endregion
 
         #region Devices(SAVE+COMMIT)
-        public void SaveDeviceRecord(object commandParameter)
+        public async void SaveDevice(object commandParameter)
         {
             Device device = new Device();
             device.SIM = SIM;
@@ -375,12 +385,15 @@ namespace CashRegisterRepairs.ViewModel
             device.Site = dbModel.Sites.Find((SelectedSite as Site).ID);
             device.DeviceModel = dbModel.DeviceModels.ToList().Where(model => model.MODEL == SelectedDeviceModel).FirstOrDefault();
 
-            if (!FieldValidator.HasAnEmptyField(device))
+            if (!FieldValidator.HasAnEmptyField(device) && !FieldValidator.HasAnIncorrectlyFormattedField(device))
             {
                 devicesCache.Add(device);
+                ClearFieldsDevices();
             }
-
-            ClearFieldsDevices();
+            else
+            {
+                await placeholder.ShowMessageAsync("ГРЕШКА", "Невалидни/невъведени данни!");
+            }      
         }
 
         public async void CommitDevicesRecords(object commandParameter)
@@ -394,7 +407,7 @@ namespace CashRegisterRepairs.ViewModel
             }
             catch (Exception e)
             {
-               await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С БАЗАТА: " + e.InnerException.InnerException.Message);
+               await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С ЗАПАЗВАНЕТО В БД: \n" + e.InnerException.InnerException.Message);
             }
             finally
             {

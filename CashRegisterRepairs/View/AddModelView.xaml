@@ -8,6 +8,7 @@
                       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
                       Title="Нов Модел"
+                      Name="ModelAdditionForm"
                       Height="240"
                       Width="310"
                       GlowBrush="Yellow"

@@ -78,12 +78,12 @@ namespace CashRegisterRepairs.ViewModel
             AddDeviceCommand = new TemplateCommand(ShowDevicesAdditionForm, param => this.canExecuteCommand);
 
             // Models commands
-            SaveModelsCommand = new TemplateCommand(SaveModelRecord, param => this.canExecuteCommand);
+            SaveModelsCommand = new TemplateCommand(SaveModel, param => this.canExecuteCommand);
             CommitModelsCommand = new TemplateCommand(CommitModels, param => this.canExecuteCommand);
 
             // Devices commands
             DisplayDevicesCommand = new TemplateCommand(ShowDevicesOfSelectedModel, param => this.canExecuteCommand);
-            SaveDeviceCommand = new TemplateCommand(SaveDeviceRecord, param => this.canExecuteCommand);
+            SaveDeviceCommand = new TemplateCommand(SaveDevice, param => this.canExecuteCommand);
             CommitDevicesCommand = new TemplateCommand(CommitDeviceRecords, param => this.canExecuteCommand);
         }
 
@@ -231,7 +231,7 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
 
         #region Models(SAVE+COMMIT)
-        private async void SaveModelRecord(object commandParameter)
+        private async void SaveModel(object commandParameter)
         {
             DeviceModel devModel = new DeviceModel();
             devModel.MANUFACTURER = Manufacturer;
@@ -240,16 +240,15 @@ namespace CashRegisterRepairs.ViewModel
             devModel.DEVICE_NUM_PREFIX = DeviceNumPre;
             devModel.FISCAL_NUM_PREFIX = FiscalNumPre;
 
-            if (!FieldValidator.HasAnEmptyField(devModel))
+            if (!FieldValidator.HasAnEmptyField(devModel) && !FieldValidator.HasAnIncorrectlyFormattedField(devModel))
             {
                 modelsCache.Add(devModel);
+                ClearFieldsModels();
             }
             else
             {
                 await placeholder.ShowMessageAsync("ГРЕШКА", "Невалидни/невъведени данни!");
             }
-
-            ClearFieldsModels();
         }
 
         private async void CommitModels(object commandParameter)
@@ -265,17 +264,18 @@ namespace CashRegisterRepairs.ViewModel
             }
             catch (Exception e)
             {
-                await placeholder.ShowMessageAsync("ГРЕШКА", e.InnerException.InnerException.Message);
+                await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С ЗАПАЗВАНЕТО В БД: \n" + e.InnerException.InnerException.Message);
             }
             finally
             {
                 modelsCache.Clear();
+                (App.Current.Windows.OfType<AddModelView>().SingleOrDefault(w => w.Name == "ModelAdditionForm") as MetroWindow).Close();
             }
         }
         #endregion
 
         #region Devices(SAVE+COMMIT)
-        public async void SaveDeviceRecord(object commandParameter)
+        public async void SaveDevice(object commandParameter)
         {
             Device device = new Device();
             device.SIM = SIM;
@@ -286,16 +286,15 @@ namespace CashRegisterRepairs.ViewModel
             device.Site = dbModel.Sites.Where(site => site.NAME.Equals(SelectedSiteName)).FirstOrDefault();
             device.DeviceModel = dbModel.DeviceModels.Find((SelectedModel as DeviceModel).ID);
 
-            if (!FieldValidator.HasAnEmptyField(device))
+            if (!FieldValidator.HasAnEmptyField(device) && !FieldValidator.HasAnIncorrectlyFormattedField(device))
             {
                 devicesCache.Add(device);
+                ClearFieldsDevices();
             }
             else
             {
                await placeholder.ShowMessageAsync("ГРЕШКА", "Невалидни/невъведени данни!");
             }
-
-            ClearFieldsDevices();
         }
 
         private async void CommitDeviceRecords(object commandParameter)
@@ -311,7 +310,7 @@ namespace CashRegisterRepairs.ViewModel
             }
             catch (Exception e)
             {
-                await placeholder.ShowMessageAsync("ГРЕШКА", e.InnerException.InnerException.Message);
+                await placeholder.ShowMessageAsync("ГРЕШКА", "ПРОБЛЕМ С ЗАПАЗВАНЕТО В БД: \n" + e.InnerException.InnerException.Message);
             }
             finally
             {

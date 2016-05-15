@@ -12,6 +12,7 @@
                       Width="310"
                       GlowBrush="Yellow"
                       WindowStartupLocation="CenterScreen"
+                      Name="ClientAdditionForm"
                       ResizeMode="CanMinimize">
 
     <i:Interaction.Triggers>
