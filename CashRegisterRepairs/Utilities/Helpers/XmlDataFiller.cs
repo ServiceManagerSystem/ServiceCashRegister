@@ -71,7 +71,28 @@ namespace CashRegisterRepairs.Utilities.Helpers
 
         public static void FillProtocolXml(Document document, XmlDocument template, int internalId, string[] serviceProfile)
         {
-            throw new NotImplementedException();
+            template.SelectSingleNode("ProtocolTemplate/CurrDate").InnerText = DateTime.Today.ToShortDateString();
+
+            //Client info
+            template.SelectSingleNode("ProtocolTemplate/Owner/ClientAndAddress/Value").InnerText = document.Device.Site.Client.NAME + "   " + document.Device.Site.Client.ADDRESS;
+            template.SelectSingleNode("ProtocolTemplate/Owner/ClientManager/Value").InnerText = document.Device.Site.Client.Manager.NAME;
+
+            //Site info
+            template.SelectSingleNode("ProtocolTemplate/Owner/ClientSite/Value").InnerText = document.Device.Site.NAME;
+
+            //Device info
+            template.SelectSingleNode("ProtocolTemplate/Owner/DeviceModel/Value").InnerText = document.Device.DeviceModel.MODEL;
+            template.SelectSingleNode("ProtocolTemplate/Owner/DeviceCertificate/Value").InnerText = document.Device.DeviceModel.CERTIFICATE; ;
+            template.SelectSingleNode("ProtocolTemplate/Owner/ClientBulstat/Value").InnerText = document.Device.Site.Client.BULSTAT;
+            template.SelectSingleNode("ProtocolTemplate/Owner/DeviceNumber/Value").InnerText = document.Device.DeviceModel.DEVICE_NUM_PREFIX + document.Device.DEVICE_NUM_POSTFIX;
+            template.SelectSingleNode("ProtocolTemplate/Owner/FiscalNumber/Value").InnerText = document.Device.DeviceModel.FISCAL_NUM_PREFIX + document.Device.FISCAL_NUM_POSTFIX;
+            template.SelectSingleNode("ProtocolTemplate/Owner/Value").InnerText = document.Device.Site.Client.TDD;
+
+            //Service info
+            template.SelectSingleNode("ProtocolTemplate/Service/ServiceAddressAndPhone/Value").InnerText = serviceProfile[2] + "   " + serviceProfile[4];
+            template.SelectSingleNode("ProtocolTemplate/Service/ManagerAndPhone/Value").InnerText = serviceProfile[3] + "   " + serviceProfile[4];
+            template.SelectSingleNode("ProtocolTemplate/Service/ServiceName/Value").InnerText = serviceProfile[0];
+            template.SelectSingleNode("ProtocolTemplate/Service/ServiceBulstat/Value").InnerText = serviceProfile[1];
         }
 
 
