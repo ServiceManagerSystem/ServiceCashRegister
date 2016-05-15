@@ -179,14 +179,49 @@ namespace CashRegisterRepairs.Utilities.Helpers
 
         public static void FillProtocolTemplateField(string protocolField)
         {
-            // TODO: Impl protocol
             switch (protocolField)
             {
-                case "...":
-                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("...").InnerText);
+                case "CurrDate":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/CurrDate").InnerText);
                     break;
-                case "......":
-                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("......").InnerText);
+                case "ClientAndAddress":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Owner/ClientAndAddress/Value").InnerText);
+                    break;
+                case "ClientManager":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Owner/ClientManager/Value").InnerText);
+                    break;
+                case "ClientSite":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Owner/ClientSite/Value").InnerText);
+                    break;
+                case "DeviceModel":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Owner/DeviceModel/Value").InnerText);
+                    break;
+                case "DeviceCertificate":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Owner/DeviceCertificate/Value").InnerText);
+                    break;
+                case "ClientBulstat":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Owner/ClientBulstat/Value").InnerText);
+                    break;
+                case "DeviceNumber":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Owner/DeviceNumber/Value").InnerText);
+                    break;
+                case "FiscalNumber":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Owner/FiscalNumber/Value").InnerText);
+                    break;
+                case "TDD":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Owner/Value").InnerText);
+                    break;
+                case "ServiceAddressAndPhone":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Service/ServiceAddressAndPhone/Value").InnerText);
+                    break;
+                case "ManagerAndPhone":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Service/ManagerAndPhone/Value").InnerText);
+                    break;
+                case "ServiceName":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Service/ServiceName/Value").InnerText);
+                    break;
+                case "ServiceBulstat":
+                    wordApp.Selection.TypeText(xmlWithData.SelectSingleNode("ProtocolTemplate/Service/ServiceBulstat/Value").InnerText);
                     break;
                 default:
                     break;
