@@ -10,6 +10,7 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using CashRegisterRepairs.Model;
 using CashRegisterRepairs.Utilities.Helpers;
+using CashRegisterRepairs.View;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -20,6 +21,7 @@ namespace CashRegisterRepairs.ViewModel
 
         public PlaceholderViewModel()
         {
+            App.Current.MainWindow = (App.Current.Windows.OfType<PlaceholderView>().SingleOrDefault(w => w.Name == "PlaceholderWindow") as MetroWindow);
             // Initialize VMs of all TABS
             _tabViewModels = new ObservableCollection<IViewModel>();
             _tabViewModels.Add(new ClientsSitesViewModel(this));

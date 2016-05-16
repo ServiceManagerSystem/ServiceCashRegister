@@ -38,7 +38,6 @@ namespace CashRegisterRepairs.ViewModel
             if (loginHandler.Login(Username, Password))
             {
                 PlaceholderView home = new PlaceholderView();
-                App.Current.MainWindow = home;
                 home.Show();
 
                 loginView.Close();

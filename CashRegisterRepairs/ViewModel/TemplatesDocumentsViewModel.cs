@@ -170,10 +170,6 @@ namespace CashRegisterRepairs.ViewModel
 
         private void FillComboBox(object formIdentifier)
         {
-            // Reload clients
-            Clients.Clear();
-            dbModel.Clients.ToList().ForEach(client => Clients.Add(client.NAME));
-
             switch (formIdentifier as string)
             {
                 case "client":
@@ -186,7 +182,12 @@ namespace CashRegisterRepairs.ViewModel
                     Devices.Clear();
                     dbModel.Devices.ToList().Where(device => device.Site.NAME == SelectedSite).ToList().ForEach(d => Devices.Add(d.DeviceModel.DEVICE_NUM_PREFIX + d.DEVICE_NUM_POSTFIX));
                     break;
+                case "device":
+                    break;
                 default:
+                    // Reload clients
+                    Clients.Clear();
+                    dbModel.Clients.ToList().ForEach(client => Clients.Add(client.NAME));
                     break;
             }
 

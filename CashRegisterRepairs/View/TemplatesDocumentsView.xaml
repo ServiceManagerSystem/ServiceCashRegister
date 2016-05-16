@@ -9,11 +9,16 @@
              d:DesignHeight="600" d:DesignWidth="1000">
 
     <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding AutofillComboBoxCommand}"/>
+        <i:EventTrigger EventName="Initialized">
             <i:InvokeCommandAction Command="{Binding FillComboBoxCommand}"/>
         </i:EventTrigger>
+        
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding AutofillComboBoxCommand}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
+    
+    
 
     <Grid Background="PeachPuff">
         <Grid.RowDefinitions>

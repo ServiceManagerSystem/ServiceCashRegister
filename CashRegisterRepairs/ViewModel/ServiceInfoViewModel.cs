@@ -29,6 +29,7 @@ namespace CashRegisterRepairs.ViewModel
         public ServiceInfoViewModel()
         {
             placeholder = App.Current.MainWindow as MetroWindow;
+            //Console.WriteLine(placeholder);
 
             // Load current profile
             LoadServiceProfile();
