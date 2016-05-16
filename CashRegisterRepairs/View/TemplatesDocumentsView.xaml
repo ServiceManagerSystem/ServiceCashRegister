@@ -11,6 +11,7 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding AutofillComboBoxCommand}"/>
+            <i:InvokeCommandAction Command="{Binding FillComboBoxCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 

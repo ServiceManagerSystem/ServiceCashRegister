@@ -284,12 +284,12 @@ namespace CashRegisterRepairs.ViewModel
             manager.PHONE = PHONE;
 
             Client client = new Client();
-            client.EGN = string.IsNullOrEmpty(EGN) ? "-" : EGN;
+            client.EGN = EGN;
             client.NAME = NAME;
             client.TDD = TDD;
             client.ADDRESS = ADDRESS;
-            client.BULSTAT = string.IsNullOrEmpty(BULSTAT) ? "-" : BULSTAT;
-            client.COMMENT = string.IsNullOrEmpty(COMMENT) ? "-" : COMMENT;
+            client.BULSTAT = BULSTAT;
+            client.COMMENT = COMMENT;
             client.Manager = manager;
 
             if (!FieldValidator.HasAnEmptyField(manager) && !FieldValidator.HasAnIncorrectlyFormattedField(client))

@@ -126,12 +126,10 @@ namespace CashRegisterRepairs.ViewModel
 
                 await placeholder.ShowMessageAsync("ПРОМЯНА", "Промените по профила са запазени!");
             }
-            else
-            {
-                IsMapEnabled = false;
-                IsTextBoxFocusable = false;
-                IsTextBoxUnmodifable = true;
-            }
+
+            IsMapEnabled = false;
+            IsTextBoxFocusable = false;
+            IsTextBoxUnmodifable = true;
         }
         #endregion
 

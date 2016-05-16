@@ -20,7 +20,7 @@ namespace CashRegisterRepairs.ViewModel
         #region FIELDS
         private readonly MetroWindow placeholder;
         private readonly CashRegisterServiceContext dbModel;
-        private readonly PlaceholderViewModel tabNavigator; // reference to the main view model in order to change tab dynamically
+        private readonly PlaceholderViewModel tabNavigator;  // reference to the main view model in order to change tab dynamically
         private bool canExecuteCommand = true; // command enable/disable
         private bool canOpenSubviewForm = true; // addition forms enable/disable
         private bool isCommitExecuted = false; // flag whether the commit was executed or not

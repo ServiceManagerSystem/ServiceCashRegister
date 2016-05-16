@@ -16,7 +16,7 @@ namespace CashRegisterRepairs.ViewModel
     public class PlaceholderViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<IViewModel> _tabViewModels;
-        public ObservableCollection<IViewModel> TabViewModels { get { return _tabViewModels; } }
+        public ObservableCollection<IViewModel> TabViewModels {  get { return _tabViewModels; } }
 
         public PlaceholderViewModel()
         {

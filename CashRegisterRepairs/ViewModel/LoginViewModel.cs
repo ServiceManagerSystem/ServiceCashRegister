@@ -24,7 +24,7 @@ namespace CashRegisterRepairs.ViewModel
             LoginCommand = new TemplateCommand(TryLogin, param => this.canExecuteCommand);
         }
 
-        // METHODS
+        //  METHODS
         private async void TryLogin(object commandParameter)
         {
             MetroWindow loginView = Application.Current.Windows[0] as MetroWindow;

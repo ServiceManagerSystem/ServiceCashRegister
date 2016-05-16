@@ -170,6 +170,10 @@ namespace CashRegisterRepairs.ViewModel
 
         private void FillComboBox(object formIdentifier)
         {
+            // Reload clients
+            Clients.Clear();
+            dbModel.Clients.ToList().ForEach(client => Clients.Add(client.NAME));
+
             switch (formIdentifier as string)
             {
                 case "client":
