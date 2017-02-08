@@ -138,9 +138,17 @@
                 </DataGrid.ToolTip>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding DEVICE}" Header="Апарат"/>
-                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding SITE}" Header="Oбект"/>
-                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding CLIENT}" Header="Клиент"/>
+                    <DataGridTextColumn IsReadOnly="True" Header="Апарат">
+                        <DataGridTextColumn.Binding>
+                            <!--Practically a concatenation of bindings. How to use: http://stackoverflow.com/a/11014784-->
+                            <MultiBinding StringFormat="{}{0}{1}">
+                                <Binding Path="Device.DeviceModel.DEVICE_NUM_PREFIX"/>
+                                <Binding Path="Device.DEVICE_NUM_POSTFIX"/>
+                            </MultiBinding>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding Device.Site.NAME}" Header="Oбект"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding Device.Site.Client.NAME}" Header="Клиент"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding START_DATE}" Header="В сила от"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding END_DATE}" Header="Изтича"/>
                 </DataGrid.Columns>

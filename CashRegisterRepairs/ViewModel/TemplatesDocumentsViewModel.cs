@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using CashRegisterRepairs.Utilities.Helpers;
-using CashRegisterRepairs.Utilities.GridDisplayObjects;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -18,7 +17,7 @@ namespace CashRegisterRepairs.ViewModel
     {
         // FIELDS
         #region FIELDS
-        public static DeviceDisplay selectedDevice;
+        public static Device selectedDevice;
         private bool canExecuteCommand = true; // command enable/disable
         private readonly CashRegisterServiceContext dbModel;
         private readonly MetroWindow placeholder;
@@ -34,8 +33,8 @@ namespace CashRegisterRepairs.ViewModel
             set { _templates = value; }
         }
 
-        private ObservableCollection<DocumentDisplay> _documents;
-        public ObservableCollection<DocumentDisplay> Documents
+        private ObservableCollection<Document> _documents;
+        public ObservableCollection<Document> Documents
         {
             get { return _documents; }
             set { _documents = value; }
@@ -74,7 +73,7 @@ namespace CashRegisterRepairs.ViewModel
 
             // Initialize data grid backing collections
             _templates = new ObservableCollection<Template>(dbModel.Templates);
-            Documents = new ObservableCollection<DocumentDisplay>();
+            Documents = new ObservableCollection<Document>();
 
             // Initialize combo box backing collections
             Sites = new ObservableCollection<string>();
@@ -90,7 +89,7 @@ namespace CashRegisterRepairs.ViewModel
             dbModel.Clients.ToList().ForEach(client => Clients.Add(client.NAME));
 
             // Display commands
-            DisplayDocumentsInGridCommand = new TemplateCommand(ShowDocumentsOfSelectedTemplate, param => this.canExecuteCommand);
+            DisplayDocumentsInGridCommand = new TemplateCommand(RefreshDocuments, param => this.canExecuteCommand);
             ShowDocumentPreviewCommand = new TemplateCommand(ShowDocumentPreviewForm, param => this.canExecuteCommand);
             ToggleTemplateStatusCommand = new TemplateCommand(ToggleTemplateStatus, param => this.canExecuteCommand);
 
@@ -106,7 +105,16 @@ namespace CashRegisterRepairs.ViewModel
         // METHODS
         #region METHODS
         #region Grid loading methods
-        private void ShowDocumentsOfSelectedTemplate(object commandParameter)
+        //TODO: Add refresh button( next to + )
+        private void RefreshTemplates(object commandParameter)
+        {
+            Templates.Clear();
+
+            dbModel.Templates.ToList().ForEach(Templates.Add);
+        }
+
+        //TODO: Refactor filtering
+        private void RefreshDocuments(object commandParameter)
         {
             List<Document> filteredDocs = new List<Document>();
 
@@ -143,11 +151,7 @@ namespace CashRegisterRepairs.ViewModel
         {
             Documents.Clear();
 
-            foreach (Document doc in filteredDocs)
-            {
-                DocumentDisplay documentDisplay = new DocumentDisplay(doc, doc.Device.Site.Client, doc.Device.Site, doc.Device);
-                Documents.Add(documentDisplay);
-            }
+            filteredDocs.ForEach(Documents.Add);
         }
         #endregion
 
@@ -156,11 +160,9 @@ namespace CashRegisterRepairs.ViewModel
         {
             if (selectedDevice != null)
             {
-                Device actualDeviceObject = dbModel.Devices.Find(selectedDevice.ID);
-
-                SelectedClient = selectedDevice.CLIENT_NAME;
-                SelectedSite = selectedDevice.SITE_NAME;
-                SelectedDevice = actualDeviceObject.DeviceModel.DEVICE_NUM_PREFIX + selectedDevice.DEVICE_NUM_POSTFIX;
+                SelectedClient = selectedDevice.Site.Client.NAME;
+                SelectedSite = selectedDevice.Site.NAME;
+                SelectedDevice = selectedDevice.DeviceModel.DEVICE_NUM_PREFIX + selectedDevice.DEVICE_NUM_POSTFIX;
 
                 IsClientEnabled = false;
                 IsSiteEnabled = false;
@@ -191,7 +193,7 @@ namespace CashRegisterRepairs.ViewModel
                     break;
             }
 
-            ShowDocumentsOfSelectedTemplate(null);
+            RefreshDocuments(null);
         }
 
         private void ClearComboBox(object commandParamater)
@@ -248,12 +250,12 @@ namespace CashRegisterRepairs.ViewModel
             dbModel.Documents.Add(document);
             dbModel.SaveChanges();
 
-            ShowDocumentsOfSelectedTemplate(null);
+            RefreshDocuments(null);
         }
 
         private void ShowDocumentPreviewForm(object commandParameter)
         {
-            Document documentToPreview = dbModel.Documents.Find((SelectedDocument as DocumentDisplay).ID);
+            Document documentToPreview = dbModel.Documents.Find((SelectedDocument as Document).ID);
             Template templateToBuildFrom = (SelectedTemplate as Template);
 
             MSWordDocumentGenerator.BuildWordDocumentFromTemplate(documentToPreview, templateToBuildFrom);
@@ -274,15 +276,13 @@ namespace CashRegisterRepairs.ViewModel
             try
             {
                 dbModel.SaveChanges();
-                Templates.Clear();
-                dbModel.Templates.ToList().ForEach(template => Templates.Add(template));
+                RefreshTemplates(null);
             }
             catch (Exception e)
             {
                 await placeholder.ShowMessageAsync("ПРОБЛЕМ С БД", "Несъответствие с база данни: "+ e.InnerException.InnerException.Message);
             }   
         }
-
         #endregion
         #endregion
 

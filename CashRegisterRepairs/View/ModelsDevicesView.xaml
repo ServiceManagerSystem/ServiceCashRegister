@@ -78,8 +78,8 @@
                 </DataGrid.ToolTip>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding SITE_NAME}" Header="Обект"/>
-                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding CLIENT_NAME}" Header="Клиент"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding Site.NAME}" Header="Обект"/>
+                    <DataGridTextColumn IsReadOnly="True" Binding="{Binding Site.Client.NAME}" Header="Клиент"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding DEVICE_NUM_POSTFIX}" Header="Сериен № (ПОСТ)"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding FISCAL_NUM_POSTFIX}" Header="Фиск. памет (ПОСТ)"/>
                     <DataGridTextColumn IsReadOnly="True" Binding="{Binding NAP_NUMBER}" Header="НАП номер"/>

@@ -2,7 +2,7 @@
 using System.Security;
 using System.Runtime.InteropServices;
 
-namespace CashRegisterRepairs.Utilities.PasswordHandlers
+namespace CashRegisterRepairs.Utilities.Security
 {
     public class LoginHandler : ILoginHandler
     {

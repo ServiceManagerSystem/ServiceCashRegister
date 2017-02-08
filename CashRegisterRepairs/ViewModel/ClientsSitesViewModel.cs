@@ -11,7 +11,6 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using CashRegisterRepairs.ViewModel.Interfaces;
 using CashRegisterRepairs.Utilities.Helpers;
-using CashRegisterRepairs.Utilities.GridDisplayObjects;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -36,8 +35,8 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
 
         #region Grid filling collections
-        private ObservableCollection<ClientDisplay> _clients;
-        public ObservableCollection<ClientDisplay> Clients
+        private ObservableCollection<Client> _clients;
+        public ObservableCollection<Client> Clients
         {
             get { return _clients; }
             set { _clients = value; }
@@ -66,8 +65,8 @@ namespace CashRegisterRepairs.ViewModel
 
             // Initializing datagrid backing collections
             _sites = new ObservableCollection<Site>();
-            _clients = new ObservableCollection<ClientDisplay>();
-            LoadClientsInGrid();
+            _clients = new ObservableCollection<Client>(dbModel.Clients);
+            //RefreshClients();
 
             // Initialize caches
             managersCache = new List<Manager>();
@@ -77,7 +76,7 @@ namespace CashRegisterRepairs.ViewModel
 
             // Generic commands
             EnableSubviewDisplay = new TemplateCommand(EnableSubview, param => this.canExecuteCommand);
-            DisplaySitesCommand = new TemplateCommand(ShowSitesOfSelectedCLient, param => this.canExecuteCommand);
+            DisplaySitesCommand = new TemplateCommand(RefreshSites, param => this.canExecuteCommand);
 
             // Additions commands
             AddClientCommand = new TemplateCommand(ShowClientsAdditionForm, param => this.canExecuteCommand);
@@ -154,31 +153,26 @@ namespace CashRegisterRepairs.ViewModel
         #endregion
 
         #region Grid loading methods
-        private void LoadClientsInGrid()
+        //TODO: Add refresh buttons( next to + )
+        private void RefreshClients(object commandParameter)
         {
             Clients.Clear();
 
-            foreach (Client client in dbModel.Clients.ToList())
-            {
-                Manager manager = client.Manager;
-                ClientDisplay clientDisplay = new ClientDisplay(client, manager);
-                Clients.Add(clientDisplay);
-            }
+            dbModel.Clients.ToList().ForEach(Clients.Add);
         }
 
-        private void ShowSitesOfSelectedCLient(object commandParameter)
+        private async void RefreshSites(object commandParameter)
         {
             Sites.Clear();
 
-            if (SelectedClient != null)
+            Client selectedClientFromGrid = (SelectedClient as Client);
+            if (selectedClientFromGrid == null)
             {
-                ClientDisplay selectedClientFromGrid = SelectedClient as ClientDisplay;
-
-                IEnumerable<Site> sitesFromDB = dbModel.Sites.ToList().Where(site => site.CLIENT_ID == selectedClientFromGrid.ID);
-
-                // Load sites in grid
-                sitesFromDB.ToList().ForEach(Sites.Add);
+                await placeholder.ShowMessageAsync("ГРЕШКА", "Няма избран клиент!");
+                return;
             }
+
+            dbModel.Sites.Where(s => s.CLIENT_ID == selectedClientFromGrid.ID).ToList().ForEach(Sites.Add);
         }
         #endregion
 
@@ -301,7 +295,6 @@ namespace CashRegisterRepairs.ViewModel
             else
             {
                 await placeholder.ShowMessageAsync("ГРЕШКА", "Невалидни/невъведени данни!");
-                return;
             }
         }
 
@@ -313,7 +306,7 @@ namespace CashRegisterRepairs.ViewModel
                 clientsCache.ForEach(client => dbModel.Clients.Add(client));
                 dbModel.SaveChanges();
 
-                LoadClientsInGrid();
+                RefreshClients(null);
 
                 isCommitExecuted = true;
             }
@@ -337,7 +330,7 @@ namespace CashRegisterRepairs.ViewModel
             site.NAME = SiteName;
             site.ADDRESS = SiteAddress;
             site.PHONE = SitePhone;
-            site.Client = dbModel.Clients.Find((SelectedClient as ClientDisplay).ID);
+            site.Client = dbModel.Clients.Find((SelectedClient as Client).ID);
 
             if (!FieldValidator.HasAnEmptyField(site) && !FieldValidator.HasAnIncorrectlyFormattedField(site))
             {
@@ -357,7 +350,7 @@ namespace CashRegisterRepairs.ViewModel
                 sitesCache.ForEach(site => dbModel.Sites.Add(site));
                 dbModel.SaveChanges();
 
-                sitesCache.ForEach(site => Sites.Add(site));
+                sitesCache.ForEach(Sites.Add);
 
                 isCommitExecuted = true;
             }

@@ -12,7 +12,7 @@ namespace CashRegisterRepairs.Utilities.Helpers
 
         private static List<char> allowedSpecialSymbols = new List<char>()
         {
-            '.','"','&','(',')','-','+',' '
+            '.','"','&','(',')','-','+',' ', '/', '\\'
         };
 
         public static bool HasAnEmptyField(object businessObject)

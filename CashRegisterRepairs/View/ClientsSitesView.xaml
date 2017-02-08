@@ -43,8 +43,8 @@
                     <DataGridTextColumn Binding="{Binding BULSTAT}" IsReadOnly="True" Header="Булстат"/>
                     <DataGridTextColumn Binding="{Binding ADDRESS}" IsReadOnly="True" Header="Aдрес"/>
                     <DataGridTextColumn Binding="{Binding TDD}" IsReadOnly="True" Header="ТДД"/>
-                    <DataGridTextColumn Binding="{Binding MANAGER}" IsReadOnly="True" Header="Управител"/>
-                    <DataGridTextColumn Binding="{Binding PHONE}" IsReadOnly="True" Header="Tелефон"/>
+                    <DataGridTextColumn Binding="{Binding Manager.NAME}" IsReadOnly="True" Header="Управител"/>
+                    <DataGridTextColumn Binding="{Binding Manager.PHONE}" IsReadOnly="True" Header="Tелефон"/>
                     <DataGridTextColumn Binding="{Binding COMMENT}" IsReadOnly="True" Header="Kоментар"/>
                 </DataGrid.Columns>
 

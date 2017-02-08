@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Interactivity;
 
-namespace CashRegisterRepairs.Utilities.PasswordHandlers
+namespace CashRegisterRepairs.Utilities.Security
 {
     public class PasswordBoxBindingBehavior : Behavior<PasswordBox>
     {

@@ -10,7 +10,6 @@ using CashRegisterRepairs.View;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using CashRegisterRepairs.Utilities.Helpers;
-using CashRegisterRepairs.Utilities.GridDisplayObjects;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -40,8 +39,8 @@ namespace CashRegisterRepairs.ViewModel
             set { _models = value; }
         }
 
-        private ObservableCollection<DeviceDisplay> _devices;
-        public ObservableCollection<DeviceDisplay> Devices
+        private ObservableCollection<Device> _devices;
+        public ObservableCollection<Device> Devices
         {
             get { return _devices; }
             set { _devices = value; }
@@ -62,7 +61,7 @@ namespace CashRegisterRepairs.ViewModel
             tabNavigator = tabNav;
 
             // Initializing datagrid backing collections
-            _devices = new ObservableCollection<DeviceDisplay>();
+            _devices = new ObservableCollection<Device>();
             Models = new ObservableCollection<DeviceModel>(dbModel.DeviceModels);
 
             // Initialize caches
@@ -82,7 +81,7 @@ namespace CashRegisterRepairs.ViewModel
             CommitModelsCommand = new TemplateCommand(CommitModels, param => this.canExecuteCommand);
 
             // Devices commands
-            DisplayDevicesCommand = new TemplateCommand(ShowDevicesOfSelectedModel, param => this.canExecuteCommand);
+            DisplayDevicesCommand = new TemplateCommand(RefreshDevices, param => this.canExecuteCommand);
             SaveDeviceCommand = new TemplateCommand(SaveDevice, param => this.canExecuteCommand);
             CommitDevicesCommand = new TemplateCommand(CommitDeviceRecords, param => this.canExecuteCommand);
         }
@@ -138,37 +137,32 @@ namespace CashRegisterRepairs.ViewModel
 
         private void SwitchToDocumentsTab(object selectedDevice)
         {
-            TemplatesDocumentsViewModel.selectedDevice = selectedDevice as DeviceDisplay;
+            TemplatesDocumentsViewModel.selectedDevice = selectedDevice as Device;
             tabNavigator.SelectedTab = 2;
         }
         #endregion
 
         #region Grid loading methods
-        private void ShowDevicesOfSelectedModel(object commandParameter)
+        //TODO: Add refresh buttons( next to + )
+        private void RefreshModels(object commandParameter)
         {
-            if (SelectedModel != null)
-            {
-                DeviceModel selectedModelFromGrid = SelectedModel as DeviceModel;
+            Models.Clear();
 
-                LoadDevicesInGrid(selectedModelFromGrid);
-            }
+            dbModel.DeviceModels.ToList().ForEach(Models.Add);
         }
 
-        private void LoadDevicesInGrid(DeviceModel selectedModelFromGrid)
+        private async void RefreshDevices(object commandParameter)
         {
             Devices.Clear();
 
-            foreach (Device device in dbModel.Devices.ToList())
+            DeviceModel selectedModelFromGrid = (SelectedModel as DeviceModel);
+            if (selectedModelFromGrid == null)
             {
-                if (device.MODEL_ID == selectedModelFromGrid.ID)
-                {
-                    Site deviceSite = device.Site;
-                    Client deviceClient = deviceSite.Client;
-
-                    DeviceDisplay deviceDisplay = new DeviceDisplay(device, deviceSite, deviceClient);
-                    Devices.Add(deviceDisplay);
-                }
+                await placeholder.ShowMessageAsync("ГРЕШКА", "Няма избран модел!");
+                return;
             }
+
+            dbModel.Devices.Where(d => d.MODEL_ID == selectedModelFromGrid.ID).ToList().ForEach(Devices.Add);
         }
         #endregion
 
@@ -258,7 +252,7 @@ namespace CashRegisterRepairs.ViewModel
                 modelsCache.ForEach(model => dbModel.DeviceModels.Add(model));
                 dbModel.SaveChanges();
 
-                modelsCache.ForEach(model => Models.Add(model));
+                RefreshModels(null);
 
                 isCommitExecuted = true;
             }
@@ -304,7 +298,7 @@ namespace CashRegisterRepairs.ViewModel
                 devicesCache.ForEach(device => dbModel.Devices.Add(device));
                 dbModel.SaveChanges();
 
-                LoadDevicesInGrid(SelectedModel as DeviceModel);
+                RefreshDevices(null);
 
                 isCommitExecuted = true;
             }
@@ -315,10 +309,9 @@ namespace CashRegisterRepairs.ViewModel
             finally
             {
                 devicesCache.Clear();
+                (App.Current.Windows.OfType<AddDeviceView>().SingleOrDefault(w => w.Name == "DeviceAdditionForm") as MetroWindow).Close();
             }  
         }
-
-
         #endregion
         #endregion
 

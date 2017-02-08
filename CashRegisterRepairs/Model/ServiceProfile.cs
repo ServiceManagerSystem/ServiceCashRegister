@@ -1,6 +1,6 @@
-﻿namespace CashRegisterRepairs.Utilities.GridDisplayObjects
+﻿namespace CashRegisterRepairs.Model
 {
-    public class ServiceProfileDisplay
+    public class ServiceProfile
     {
         public string Name { get; set; }
         public string Bulstat { get; set; }

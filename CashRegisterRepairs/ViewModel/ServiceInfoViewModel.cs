@@ -9,8 +9,8 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Maps.MapControl.WPF;
 using System.Runtime.CompilerServices;
+using CashRegisterRepairs.Model;
 using CashRegisterRepairs.Utilities.Helpers;
-using CashRegisterRepairs.Utilities.GridDisplayObjects;
 
 namespace CashRegisterRepairs.ViewModel
 {
@@ -88,7 +88,7 @@ namespace CashRegisterRepairs.ViewModel
                 Environment.Exit(0);
             }
 
-            ProfileDisplay = new ServiceProfileDisplay();
+            ProfileDisplay = new ServiceProfile();
             ProfileDisplay.Name = serviceProfileItems[0];
             ProfileDisplay.Bulstat = serviceProfileItems[1];
             ProfileDisplay.Address = serviceProfileItems[2];
@@ -183,8 +183,8 @@ namespace CashRegisterRepairs.ViewModel
             set { _serviceLocation = value; NotifyPropertyChanged(); }
         }
 
-        private ServiceProfileDisplay _profileDisplay;
-        public ServiceProfileDisplay ProfileDisplay
+        private ServiceProfile _profileDisplay;
+        public ServiceProfile ProfileDisplay
         {
             get { return _profileDisplay; }
             set { _profileDisplay = value; NotifyPropertyChanged(); }

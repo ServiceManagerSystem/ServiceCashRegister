@@ -134,18 +134,15 @@
     <Compile Include="Model\Template.cs">
       <DependentUpon>CashRegisterServiceModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\GridDisplayObjects\ClientDisplay.cs" />
-    <Compile Include="Utilities\GridDisplayObjects\DeviceDisplay.cs" />
-    <Compile Include="Utilities\GridDisplayObjects\DocumentDisplay.cs" />
-    <Compile Include="Utilities\GridDisplayObjects\ServiceProfileDisplay.cs" />
+    <Compile Include="Model\ServiceProfile.cs" />
     <Compile Include="Utilities\Helpers\DocumentWatchdog.cs" />
     <Compile Include="Utilities\Helpers\FieldValidator.cs" />
     <Compile Include="Utilities\Helpers\MSWordDocumentGenerator.cs" />
     <Compile Include="Utilities\Helpers\PathFinder.cs" />
     <Compile Include="Utilities\Helpers\XmlDataFiller.cs" />
-    <Compile Include="Utilities\PasswordHandlers\ILoginHandler.cs" />
-    <Compile Include="Utilities\PasswordHandlers\LoginHandler.cs" />
-    <Compile Include="Utilities\PasswordHandlers\PasswordBoxBindingBehavior.cs" />
+    <Compile Include="Utilities\Security\ILoginHandler.cs" />
+    <Compile Include="Utilities\Security\LoginHandler.cs" />
+    <Compile Include="Utilities\Security\PasswordBoxBindingBehavior.cs" />
     <Compile Include="ViewModel\Interfaces\IViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IViewModelUtilityExtensions.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
@@ -324,6 +321,8 @@
       <DependentUpon>CashRegisterServiceModel.edmx</DependentUpon>
       <LastGenOutput>CashRegisterServiceModel.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\Images\plus-icon-alt.png" />
+    <Resource Include="Resources\Images\edit-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
