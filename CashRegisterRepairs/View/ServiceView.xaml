@@ -63,7 +63,7 @@
             <m:Map Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Center="{Binding ServiceLocation, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" IsHitTestVisible="{Binding IsMapEnabled}"
                    CredentialsProvider="pmxh6w8CvyNwK8t2CfuZ~f19h0fvCqPMPIbJ_z53v8A~Ap9CqfWDKczf8jy0lzYI2q8k2JR8fQT4YaDw8eUEwA_1Y8V8L4eV1JncFVoinG2S"
                    BorderBrush="DarkGray" BorderThickness="3" Margin="30,35,30,35"
-                   Mode="Road" ZoomLevel="15">
+                   Mode="Road" ZoomLevel="15" Culture="bg">
                 <!-- Service coordinates: 43.2428090266163,23.1319484590025 -->
                 <m:Pushpin Location="{Binding ServiceLocation, Mode=TwoWay}" Background="Red" ToolTip="СЕРВИЗ"/>
                 <i:Interaction.Triggers>

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Windows;
+using System.Globalization;
 using System.Windows.Input;
 using System.ComponentModel;
 using MahApps.Metro.Controls;
@@ -15,6 +16,11 @@ namespace CashRegisterRepairs.ViewModel
 {
     public class ServiceInfoViewModel : INotifyPropertyChanged, IViewModel
     {
+        //CONSTANTS
+        #region CONSTANTS
+        private readonly CultureInfo DEFAULT_CULTURE = new CultureInfo("en-US");
+        #endregion
+
         // FIELDS
         #region FIELDS
         private string serviceLattitude;
@@ -35,7 +41,10 @@ namespace CashRegisterRepairs.ViewModel
             LoadServiceProfile();
 
             // Load current location
-            ServiceLocation = new Location(double.Parse(serviceLattitude),double.Parse(serviceLongtitude));
+            // Parse irregardless of system settings
+            var lattitude = double.Parse(serviceLattitude, DEFAULT_CULTURE.NumberFormat);
+            var longtitude = double.Parse(serviceLongtitude, DEFAULT_CULTURE.NumberFormat);
+            ServiceLocation = new Location(lattitude, longtitude);
             cachedServiceLocation = ServiceLocation;
 
             // Disable editing at first
@@ -60,8 +69,8 @@ namespace CashRegisterRepairs.ViewModel
             Point mousePosition = mouseEventContext.GetPosition(currentMap);
 
             ServiceLocation = currentMap.ViewportPointToLocation(mousePosition);
-            serviceLattitude = ServiceLocation.Latitude.ToString();
-            serviceLongtitude = ServiceLocation.Longitude.ToString();
+            serviceLattitude = ServiceLocation.Latitude.ToString(DEFAULT_CULTURE.NumberFormat);
+            serviceLongtitude = ServiceLocation.Longitude.ToString(DEFAULT_CULTURE.NumberFormat);
         }
 
         private void ResetLocation(object commandParameter)
